@@ -1,5 +1,6 @@
 import useRestaurants from "../hooks/useRestaurants";
 import ImageInfoLayout from "./ImageInfoLayout";
+import Restaurants from "./Restaurants";
 import TopRestaurants from "./TopRestaurants";
 
 const Body = () => {
@@ -9,6 +10,7 @@ const Body = () => {
     <div>
       <ImageInfoLayout resData={resData} />
       <TopRestaurants topResData={resData} />
+      <Restaurants allResData={resData} />
     </div>
   );
 };

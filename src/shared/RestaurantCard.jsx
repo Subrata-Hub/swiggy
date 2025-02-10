@@ -4,7 +4,7 @@ import { IMG_CARD_URL_2 } from "../utils/constant";
 const RestaurantCard = ({ topRes }) => {
   console.log(topRes);
   return (
-    <div className="">
+    <div className="mb-4">
       <div className="w-[283px] h-[182px] flex">
         <img
           src={IMG_CARD_URL_2 + topRes?.cloudinaryImageId}
@@ -19,7 +19,7 @@ const RestaurantCard = ({ topRes }) => {
         ❇️{topRes?.avgRatingString} {} . <span>{topRes?.sla?.slaString}</span>
       </p>
       <p className="ml-2 mt-1 truncate max-w-[275px]">
-        {topRes?.cuisines.join(", ")}
+        {topRes?.cuisines?.join(", ")}
       </p>
       <p className="ml-2">{topRes?.locality}</p>
     </div>
