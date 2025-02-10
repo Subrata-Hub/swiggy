@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+}
+
+
+
+body {
+  margin: 0;
+  padding: 0px;
+  /* background: linear-gradient(232deg,
+      rgba(23, 28, 35, 0.41) 0%,
+      rgba(19, 22, 28, 0.7) 100%); */
+  background: linear-gradient(90deg, rgba(6, 6, 16, 0.9585084033613446) 63%, rgba(1, 0, 13, 1) 74%, rgba(0, 0, 0, 1) 100%);
+  color: white;
+}
+
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* Hide scrollbar for IE & Edge */
+  scrollbar-width: none;
+  /* Hide scrollbar for Firefox */
+}
