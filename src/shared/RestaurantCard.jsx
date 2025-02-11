@@ -15,9 +15,14 @@ const RestaurantCard = ({ topRes }) => {
       <h2 className="mt-3 ml-2 font-semibold text-xl truncate max-w-[275px]">
         {topRes?.name}
       </h2>
-      <p className="ml-2">
-        ❇️{topRes?.avgRatingString} {} . <span>{topRes?.sla?.slaString}</span>
-      </p>
+      <div className="ml-2">
+        <span className="font-mono">
+          {" "}
+          ❇️{topRes?.avgRatingString} {". "}
+        </span>
+
+        <span>{topRes?.sla?.slaString}</span>
+      </div>
       <p className="ml-2 mt-1 truncate max-w-[275px]">
         {topRes?.cuisines?.join(", ")}
       </p>

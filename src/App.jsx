@@ -1,14 +1,17 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-// import Body from "./components/Body";
-// import Navbar from "./components/Navbar";
 import HomePage from "./pages/home";
+import TagsCollectionPage from "./pages/TagsCollectionPage";
 
 function App() {
   const appRouter = createBrowserRouter([
     {
       path: "/",
       element: <HomePage />,
+    },
+    {
+      path: "/collection/:collection_id/:tags/:search_context",
+      element: <TagsCollectionPage />,
     },
   ]);
   return (
