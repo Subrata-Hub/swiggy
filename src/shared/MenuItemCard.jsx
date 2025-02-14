@@ -3,9 +3,32 @@ import { HiChevronUp } from "react-icons/hi2";
 import { HiChevronDown } from "react-icons/hi2";
 import { IMG_MENU } from "../utils/constant";
 import { useState } from "react";
+import veg from "../assets/veg.svg";
+import nonVeg from "../assets/nonVeg.svg";
 
-const MenuItemCard = ({ resMenu }) => {
+const MenuItemCard = ({ resMenu, filterOption }) => {
   const [showMenu, setShowMenu] = useState(true);
+
+  console.log(filterOption);
+
+  const allResMenuData = filterOption === "All" && resMenu?.itemCards;
+
+  const resMenuWithFilterData = resMenu?.itemCards?.filter(
+    (item) => item?.card?.info?.itemAttribute?.vegClassifier === filterOption
+  );
+
+  const bestSeller = resMenu?.itemCards?.filter(
+    (item) =>
+      item?.card?.info?.ratings?.aggregatedRating?.rating?.includes("4") ===
+      filterOption?.includes("4")
+  );
+
+  const resMenuData =
+    filterOption === "VEG" || filterOption === "NONVEG"
+      ? resMenuWithFilterData
+      : bestSeller || allResMenuData;
+
+  console.log(resMenuWithFilterData);
 
   const showAndHideMenu = () => {
     setShowMenu(!showMenu);
@@ -18,7 +41,10 @@ const MenuItemCard = ({ resMenu }) => {
       <div className="flex-col">
         <div className="flex justify-between items-center py-4">
           <h1>
-            {resMenu?.title} (<span>{resMenu?.itemCards?.length}</span>)
+            {resMenu?.title}{" "}
+            {resMenu?.itemCards?.length > 0 && (
+              <span>({resMenu?.itemCards?.length})</span>
+            )}
           </h1>
           {showMenu ? (
             <HiChevronDown
@@ -34,10 +60,16 @@ const MenuItemCard = ({ resMenu }) => {
         </div>
         {showMenu && (
           <div className="h-auto mt-4">
-            {resMenu?.itemCards?.map((resMenuItem) => (
+            {resMenuData?.map((resMenuItem) => (
               <div key={resMenuItem?.card?.info?.id}>
                 <div className="flex justify-between py-6">
                   <div className="w-3/4">
+                    {resMenuItem?.card?.info?.itemAttribute?.vegClassifier ===
+                    "NONVEG" ? (
+                      <img src={nonVeg} />
+                    ) : (
+                      <img src={veg} />
+                    )}
                     <h2 className="text-xl font-semibold">
                       {" "}
                       {resMenuItem?.card?.info?.name}
@@ -55,6 +87,18 @@ const MenuItemCard = ({ resMenu }) => {
                         {resMenuItem?.card?.info?.offerTags?.[0].subTitle}
                       </span>
                     </p>
+                    {resMenuItem?.card?.info?.ratings?.aggregatedRating
+                      ?.rating ? (
+                      <p className="text-[12px] py-3">
+                        ❇️
+                        {`${resMenuItem?.card?.info?.ratings?.aggregatedRating?.rating}(
+                         ${resMenuItem?.card?.info?.ratings?.aggregatedRating?.ratingCountV2}
+                     )`}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+
                     <p>{resMenuItem?.card?.info?.description}</p>
                   </div>
                   {resMenuItem?.card?.info?.imageId && (
