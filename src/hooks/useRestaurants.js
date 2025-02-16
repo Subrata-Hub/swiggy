@@ -6,7 +6,7 @@ const useRestaurants = () => {
   const getResData = async () => {
     try {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=22.723616&lng=88.350805&page_type=DESKTOP_WEB_LISTING`
+        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=22.5743545&lng=88.3628734&page_type=DESKTOP_WEB_LISTING`
       );
       const data = await response.json();
 

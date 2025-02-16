@@ -6,7 +6,7 @@ const ImageInfoLayoutCard = ({ resInfo }) => {
   const link = resInfo?.action?.link;
   const match = link.match(/collection_id=(\d+)/);
   const collectionId = match ? match[1] : null;
-  console.log(collectionId);
+
   return (
     <div className="w-[144px] h-[188px] flex-shrink-0">
       <Link

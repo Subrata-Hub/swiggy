@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/home";
+import HomePage from "./pages/Home";
 import TagsCollectionPage from "./pages/TagsCollectionPage";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
+import MenuItemSearchPage from "./pages/MenuItemSearchPage";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -18,6 +19,10 @@ function App() {
     {
       path: "/city/:location/:restaurantName/:areaName/:restaurantId",
       element: <RestaurantDetailsPage />,
+    },
+    {
+      path: "/city/:location/:restaurantName/:areaName/:restaurantId/search",
+      element: <MenuItemSearchPage />,
     },
   ]);
   return (

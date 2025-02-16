@@ -2,10 +2,9 @@ import { IMG_OFFER_LOGO } from "../utils/constant";
 
 /* eslint-disable react/prop-types */
 const OfferCard = ({ resDetailsData }) => {
-  console.log(resDetailsData);
   return (
     <div className="mx-48 mt-4">
-      <h className="text-xl">Deals for you</h>
+      <h1 className="text-xl">Deals for you</h1>
       <div className="overflow-x-auto hide-scrollbar w-full mt-4 ">
         <div className="flex gap-4">
           {resDetailsData?.map((offcard, index) => (

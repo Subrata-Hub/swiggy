@@ -5,11 +5,19 @@ import { IMG_MENU } from "../utils/constant";
 import { useState } from "react";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
+import { useDispatch } from "react-redux";
+import { addMenuItems } from "../utils/menuItemSlice";
 
 const MenuItemCard = ({ resMenu, filterOption }) => {
   const [showMenu, setShowMenu] = useState(true);
+  const dispatch = useDispatch();
 
-  console.log(filterOption);
+  const searchFilter = resMenu?.itemCards;
+  dispatch(addMenuItems(searchFilter));
+
+  // const query = "Chicken ";
+
+  // console.log(filterOption);
 
   const allResMenuData = filterOption === "All" && resMenu?.itemCards;
 
@@ -27,8 +35,6 @@ const MenuItemCard = ({ resMenu, filterOption }) => {
     filterOption === "VEG" || filterOption === "NONVEG"
       ? resMenuWithFilterData
       : bestSeller || allResMenuData;
-
-  console.log(resMenuWithFilterData);
 
   const showAndHideMenu = () => {
     setShowMenu(!showMenu);

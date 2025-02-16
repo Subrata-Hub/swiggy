@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+
 import RestaurantCard from "../shared/RestaurantCard";
 
 const TagsDetails = ({ restaurantList }) => {
