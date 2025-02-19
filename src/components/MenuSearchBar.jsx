@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { HiArrowLeft } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
-import { addSearchQuery } from "../utils/searchSlice";
+import { addMenuSearchQuery } from "../utils/menuSearchSlice";
 import { Link } from "react-router-dom";
 const MenuSearchBar = ({
   restaurantName,
@@ -14,13 +14,13 @@ const MenuSearchBar = ({
   console.log(location, areaName, restaurantName, restaurantId);
   const [query, setQuery] = useState("");
 
-  const searchQuery = useSelector((store) => store.search.searchQuery);
+  const searchQuery = useSelector((store) => store.menuSearch.menuSearchQuery);
 
   const dispatch = useDispatch();
 
   const getQuery = (q) => {
     setQuery(q);
-    dispatch(addSearchQuery(q));
+    dispatch(addMenuSearchQuery(q));
   };
 
   console.log("Local State:", query);

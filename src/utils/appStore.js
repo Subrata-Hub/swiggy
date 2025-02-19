@@ -1,11 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import searchReducer from "./searchSlice";
+import menuSearchReducer from "./menuSearchSlice";
 import menuItemReducer from "./menuItemSlice";
+import searchReducer from "./searchSlice";
+import configReducer from "./configSlice";
 
 const appStore = configureStore({
   reducer: {
-    search: searchReducer,
+    menuSearch: menuSearchReducer,
     menuItem: menuItemReducer,
+    search: searchReducer,
+    config: configReducer,
   },
 });
 

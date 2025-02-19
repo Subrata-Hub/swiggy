@@ -14,7 +14,7 @@ const MenuSearchClick = ({
 
   return (
     <Link
-      to={`/city/${location}/${restaurantName}/${areaName}/${restaurantId}/search`}
+      to={`/city/${location}/${restaurantName}/${areaName}/${restaurantId}/menuSearch`}
     >
       <div className="mt-4 flex  items-center">
         <div className="flex justify-center items-center mt-2 w-full h-12 bg-slate-800">

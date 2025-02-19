@@ -15,10 +15,6 @@ const MenuItemCard = ({ resMenu, filterOption }) => {
   const searchFilter = resMenu?.itemCards;
   dispatch(addMenuItems(searchFilter));
 
-  // const query = "Chicken ";
-
-  // console.log(filterOption);
-
   const allResMenuData = filterOption === "All" && resMenu?.itemCards;
 
   const resMenuWithFilterData = resMenu?.itemCards?.filter(
@@ -34,7 +30,7 @@ const MenuItemCard = ({ resMenu, filterOption }) => {
   const resMenuData =
     filterOption === "VEG" || filterOption === "NONVEG"
       ? resMenuWithFilterData
-      : bestSeller || allResMenuData;
+      : allResMenuData || bestSeller;
 
   const showAndHideMenu = () => {
     setShowMenu(!showMenu);

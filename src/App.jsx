@@ -4,6 +4,7 @@ import HomePage from "./pages/Home";
 import TagsCollectionPage from "./pages/TagsCollectionPage";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import MenuItemSearchPage from "./pages/MenuItemSearchPage";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -21,8 +22,12 @@ function App() {
       element: <RestaurantDetailsPage />,
     },
     {
-      path: "/city/:location/:restaurantName/:areaName/:restaurantId/search",
+      path: "/city/:location/:restaurantName/:areaName/:restaurantId/menuSearch",
       element: <MenuItemSearchPage />,
+    },
+    {
+      path: "/search",
+      element: <SearchPage />,
     },
   ]);
   return (

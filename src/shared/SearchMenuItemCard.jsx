@@ -3,7 +3,6 @@ import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 /* eslint-disable react/prop-types */
 const SearchMenuItemCard = ({ menuItemsListFilter }) => {
-  console.log(menuItemsListFilter);
   return (
     <div className="h-auto mt-4 px-40">
       {menuItemsListFilter?.map((resMenuItem) => (

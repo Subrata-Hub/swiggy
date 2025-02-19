@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { LAT, LNG } from "../utils/constant";
 
 const useRestaurants = () => {
   const [resData, setResData] = useState([]);
@@ -6,7 +7,7 @@ const useRestaurants = () => {
   const getResData = async () => {
     try {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=22.5743545&lng=88.3628734&page_type=DESKTOP_WEB_LISTING`
+        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&page_type=DESKTOP_WEB_LISTING`
       );
       const data = await response.json();
 
