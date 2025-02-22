@@ -1,15 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import { useEffect, useState } from "react";
 import { LAT, LNG } from "../utils/constant";
 
-const useSelectedTabResult = (query, selectedTab) => {
+const useSelectedTabResult = (
+  suggestionText,
+  searchResultsType,
+  isSelected
+) => {
   const [searchData, setSearchData] = useState();
+  // const dispatch = useDispatch();
   const getSearchData = async () => {
-    if (selectedTab) {
+    if (isSelected && searchResultsType !== "CUISINE") {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=SUGGESTION&selectedPLTab=${
-          selectedTab && selectedTab
-        }`
+        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&selectedPLTab=${searchResultsType}`
       );
 
       const data = await response.json();
@@ -20,7 +24,7 @@ const useSelectedTabResult = (query, selectedTab) => {
 
   useEffect(() => {
     getSearchData();
-  }, [query, selectedTab]);
+  }, [isSelected, searchResultsType]);
 
   return searchData;
 };

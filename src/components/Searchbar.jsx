@@ -3,6 +3,7 @@
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 import { addSearchQuery } from "../utils/searchSlice";
+
 const Searchbar = ({
   setShowSuggestion,
   setSearchQueryInput,
@@ -10,7 +11,6 @@ const Searchbar = ({
 }) => {
   const dispatch = useDispatch();
   const getSearchQuery = (query) => {
-    // setSearchQuery(query);
     setSearchQueryInput(query);
     dispatch(addSearchQuery(query));
     setShowSuggestion(true);

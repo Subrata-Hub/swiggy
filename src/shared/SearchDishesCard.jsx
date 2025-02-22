@@ -3,6 +3,7 @@ import { HiArrowSmallRight } from "react-icons/hi2";
 import { IMG_SEARCH_DISH } from "../utils/constant";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
+import { Link } from "react-router-dom";
 const SearchDishesCard = ({ searchDishesData }) => {
   return (
     <div className="bg-slate-800 w-[423px] h-[275px] mb-2">
@@ -22,7 +23,11 @@ const SearchDishesCard = ({ searchDishesData }) => {
             </div>
 
             <div>
-              <HiArrowSmallRight className="text-2xl" />
+              <Link
+                to={`/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.areaName}/${searchDishesData?.restaurant?.info?.id}`}
+              >
+                <HiArrowSmallRight className="text-2xl" />
+              </Link>
             </div>
           </div>
           <div className="w-full h-0.5 bg-slate-700 mt-3"></div>

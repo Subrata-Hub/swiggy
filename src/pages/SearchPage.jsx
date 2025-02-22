@@ -3,18 +3,19 @@ import Navbar from "../components/Navbar";
 import Searchbar from "../components/Searchbar";
 import SuggestionList from "../components/SuggestionList";
 import usePreSearch from "../hooks/usePreSearch";
-import PopularCuisinesCard from "../shared/PopularCuisinesCard";
+
 import useSuggestions from "../hooks/useSuggestions";
 
 import SearchResults from "../components/SearchResults";
 import { useState } from "react";
 import useSearchResults from "../hooks/useSearchResults";
 import useSelectedTabResult from "../hooks/useSelectedTabResult";
+import PopularCuisinesList from "../components/PopularCuisinesList";
 
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
-
   const [searchQueryInput, setSearchQueryInput] = useState("");
+  const [isSelected, setIsSelected] = useState(false);
 
   const preSearchData = usePreSearch();
   const searchQuery = useSelector((state) => state.search.searchQuery);
@@ -22,7 +23,7 @@ const SearchPage = () => {
   const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
 
   const suggestionText = useSelector(
-    (store) => store.config.setting.suggestionText
+    (store) => store?.config?.setting?.suggestionText
   );
 
   const searchResultsType = useSelector(
@@ -31,16 +32,13 @@ const SearchPage = () => {
 
   console.log(searchResultsType);
 
-  const searchResultsData = useSearchResults(suggestionText);
-  const searchResults = searchResultsData?.data;
+  const searchResultsData = useSearchResults(searchQueryInput, suggestionText);
 
   const selectedTabSearchResults = useSelectedTabResult(
     suggestionText,
-    searchResultsType
+    searchResultsType,
+    isSelected
   );
-  console.log(selectedTabSearchResults);
-
-  console.log(searchResultsData);
 
   return (
     <div className="m-36 mt-0 mb-0">
@@ -51,12 +49,15 @@ const SearchPage = () => {
         searchQueryInput={searchQueryInput}
       />
 
-      <PopularCuisinesCard
+      <PopularCuisinesList
         popularCuisinesData={popularCuisinesData}
         searchQuery={searchQuery}
         suggestionText={suggestionText}
+        setSearchQueryInput={setSearchQueryInput}
+        searchQueryInput={searchQueryInput}
       />
       <SuggestionList
+        searchQuery={searchQuery}
         searchSuggestionsData={searchSuggestionsData}
         setShowSuggestion={setShowSuggestion}
         showSuggestion={showSuggestion}
@@ -65,10 +66,11 @@ const SearchPage = () => {
       <SearchResults
         searchQuery={searchQuery}
         showSuggestion={showSuggestion}
-        searchResults={searchResults}
+        searchResults={searchResultsData}
         searchResultsType={searchResultsType}
         suggestionText={suggestionText}
         selectedTabSearchResults={selectedTabSearchResults}
+        setIsSelected={setIsSelected}
       />
     </div>
   );

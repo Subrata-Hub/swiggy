@@ -9,7 +9,7 @@ const SuggestionList = ({
   searchSuggestionsData,
   setShowSuggestion,
   showSuggestion,
-
+  searchQuery,
   setSearchQueryInput,
 }) => {
   // const [showSuggestion, setShowSuggestion] = useState(true);
@@ -27,11 +27,9 @@ const SuggestionList = ({
     setShowSuggestion(false);
   };
 
-  console.log(searchSuggestions);
-
   return (
     <div className="px-44 mt-6">
-      {showSuggestion && (
+      {showSuggestion && searchQuery && (
         <div>
           {searchSuggestions?.map((sugest, index) => (
             <div
