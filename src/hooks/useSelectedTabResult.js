@@ -8,7 +8,7 @@ const useSelectedTabResult = (
   searchResultsType,
   isSelected
 ) => {
-  const [searchData, setSearchData] = useState();
+  const [searchData, setSearchData] = useState({});
   // const dispatch = useDispatch();
   const getSearchData = async () => {
     if (isSelected && searchResultsType !== "CUISINE") {
@@ -17,6 +17,8 @@ const useSelectedTabResult = (
       );
 
       const data = await response.json();
+
+      // if (!data) return {};
 
       setSearchData(data?.data);
     }

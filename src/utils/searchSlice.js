@@ -7,6 +7,7 @@ const searchSlice = createSlice({
     searchResults: {},
     isSearchResults: false,
     searchResultsForTab: {},
+    filterObj: {},
   },
 
   reducers: {
@@ -15,6 +16,10 @@ const searchSlice = createSlice({
     },
     addSearchResults: (state, action) => {
       state.searchResults = action.payload;
+    },
+
+    addFilterObject: (state, action) => {
+      state.filterObj = action.payload;
     },
 
     addIsSearchResults: (state, action) => {
@@ -30,6 +35,7 @@ const searchSlice = createSlice({
 export const {
   addSearchQuery,
   addSearchResults,
+  addFilterObject,
   addIsSearchResults,
   addSearchResultsForTab,
 } = searchSlice.actions;

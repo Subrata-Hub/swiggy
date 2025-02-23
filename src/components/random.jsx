@@ -3,53 +3,74 @@ import SearchRestaurantCard from "../shared/SearchRestaurantCard";
 
 import { useDispatch } from "react-redux";
 import { addSearchResultType } from "../utils/configSlice";
-import { addFilterObject, addIsSearchResults } from "../utils/searchSlice";
+import { addIsSearchResults } from "../utils/searchSlice";
 import { useState } from "react";
+import useSearchFilter from "../hooks/useSearchFilter";
 
 /* eslint-disable react/prop-types */
 const SearchResults = ({
   showSuggestion,
+  searchResults,
   searchResultsType,
+  selectedTabSearchResults,
   setIsSelected,
-
-  searchResultsRefineData,
-  searchResultsHeader,
+  suggestionText,
 }) => {
   const [fillterObj, setFilterObj] = useState({});
   const dispatch = useDispatch();
 
-  console.log(searchResultsRefineData);
+  const objectString = JSON.stringify(fillterObj);
+  const encodedString = encodeURIComponent(objectString);
 
-  const searchResultsForDishes = searchResultsRefineData?.DISH?.cards?.filter(
-    (dish) =>
-      dish?.card?.card?.["@type"] ===
-      "type.googleapis.com/swiggy.presentation.food.v2.Dish"
+  const filterSearchResults = useSearchFilter(
+    suggestionText,
+    searchResultsType,
+    encodedString
   );
-  console.log(searchResultsForDishes);
-  const searchResultsForRestaurant = searchResultsRefineData?.RESTAURANT?.cards;
-  const searchResultsForAllRestaurant =
-    searchResultsRefineData?.RESTAURANT?.cards?.filter(
-      (res) =>
-        res?.card?.card?.["@type"] ===
-        "type.googleapis.com/swiggy.presentation.food.v2.Restaurant"
-    );
-  console.log(searchResultsForAllRestaurant);
+  console.log(filterSearchResults);
+  console.log(searchResults);
 
-  const searchFilterData = searchResultsRefineData?.DISH?.cards?.filter(
-    (fill) =>
-      fill?.card?.card?.["@type"] ===
-      "type.googleapis.com/swiggy.gandalf.widgets.v2.SearchFilterSortWidget"
-  );
+  const searchResultsHeader = searchResults?.cards?.[0]?.card?.card?.tab;
 
+  let searchData;
+  if (searchResults) {
+    searchData = searchResults?.cards?.[1];
+  }
+  if (selectedTabSearchResults) {
+    searchData = selectedTabSearchResults?.cards?.[0];
+  }
+
+  if (filterSearchResults) {
+    searchData = filterSearchResults?.cards?.[0];
+  }
+
+  console.log(searchData);
+
+  // const searchFilterWithDishes =
+  //   searchResults?.cards?.[1]?.groupedCard?.cardGroupMap?.DISH?.cards?.[0]?.card
+  //     ?.card?.facetList;
+
+  const searchResultsForDishes =
+    searchData?.groupedCard?.cardGroupMap?.DISH?.cards?.slice(1);
+
+  const searchFilterData =
+    searchData?.groupedCard?.cardGroupMap?.DISH?.cards?.[0]?.card?.card
+      ?.facetList;
   console.log(searchFilterData);
 
+  const searchResultsByFilter =
+    searchData?.groupedCard?.cardGroupMap?.DISH?.cards?.slice(1);
+
+  const searchResultsForRestaurant =
+    searchData?.groupedCard?.cardGroupMap?.RESTAURANT?.cards?.[0];
+
   const searchResultForSimilarRestaurant =
-    searchResultsRefineData?.RESTAURANT?.cards?.filter(
-      (simRes) =>
-        simRes.card?.card?.["@type"] ===
-        "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection"
-    );
-  console.log(searchResultForSimilarRestaurant);
+    searchData?.groupedCard?.cardGroupMap?.RESTAURANT?.cards?.[1]?.card?.card;
+
+  const searchResultsForRestaurantForTab =
+    searchData?.groupedCard?.cardGroupMap?.RESTAURANT?.cards;
+
+  console.log(searchResultsForRestaurantForTab);
 
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
@@ -59,17 +80,16 @@ const SearchResults = ({
 
   const getFilterObj = (obj) => {
     setFilterObj((prevObj) => ({ ...prevObj, ...obj }));
-    dispatch(addFilterObject(fillterObj));
   };
 
-  // console.log(fillterObj);
+  console.log(fillterObj);
 
   return (
     <div className="mx-40">
       {!showSuggestion && (
         <div>
           <div className="flex gap-4">
-            {searchResultsHeader?.[0].card?.card?.tab?.map((btn) => (
+            {searchResultsHeader?.map((btn) => (
               <div key={btn?.id}>
                 <button
                   className={`px-4 py-2  rounded-2xl ${
@@ -88,8 +108,8 @@ const SearchResults = ({
           </div>
 
           <div className="flex gap-4 mt-6">
-            {searchFilterData?.[0]?.card?.card?.facetList?.map(
-              (fillter, index) => (
+            {searchFilterData &&
+              searchFilterData?.map((fillter, index) => (
                 <div key={index}>
                   <button
                     value={JSON.stringify({
@@ -105,8 +125,7 @@ const SearchResults = ({
                     {fillter?.facetInfo?.[0]?.label}
                   </button>
                 </div>
-              )
-            )}
+              ))}
           </div>
 
           <div className=" bg-slate-900  h-auto mt-4 px-6">
@@ -121,7 +140,7 @@ const SearchResults = ({
                   ))}
               </div>
             )}
-            {/* {searchResultsByFilter && (
+            {searchResultsByFilter && (
               <div className="flex flex-wrap  gap-4">
                 {searchResultsByFilter &&
                   searchResultsByFilter?.map((item) => (
@@ -131,39 +150,21 @@ const SearchResults = ({
                     />
                   ))}
               </div>
-            )} */}
-            {searchResultsForRestaurant && (
-              <>
-                <div className="flex flex-wrap  gap-4">
-                  {searchResultsForRestaurant && (
-                    <SearchRestaurantCard
-                      searchResData={
-                        searchResultsForRestaurant?.[0]?.card?.card?.info
-                      }
-                    />
-                  )}
-                </div>
-
-                <div>
-                  <h2>{searchResultsForRestaurant?.[1]?.card?.card?.title}</h2>
-                  <div className="flex flex-wrap  gap-4">
-                    {searchResultsForRestaurant?.[1]?.card?.card?.restaurants?.map(
-                      (item) => (
-                        <SearchRestaurantCard
-                          key={item?.id}
-                          searchResData={item?.info}
-                        />
-                      )
-                    )}
-                  </div>
-                </div>
-              </>
             )}
-            {/* {searchResultsForRestaurant && (
+            {searchResultsForRestaurant && (
+              <div className="flex flex-wrap  gap-4">
+                {searchResultsForRestaurant && (
+                  <SearchRestaurantCard
+                    searchResData={searchResultsForRestaurant?.card?.card?.info}
+                  />
+                )}
+              </div>
+            )}
+            {searchResultForSimilarRestaurant && (
               <>
-                <h2>{searchResultsForRestaurant?.[1]?.card?.card?.title}</h2>
+                <h2>{searchResultForSimilarRestaurant?.title}</h2>
                 <div className="flex flex-wrap  gap-4">
-                  {searchResultsForRestaurant?.[1]?.card?.card?.restaurants?.map(
+                  {searchResultForSimilarRestaurant?.restaurants?.map(
                     (item) => (
                       <SearchRestaurantCard
                         key={item?.id}
@@ -173,11 +174,11 @@ const SearchResults = ({
                   )}
                 </div>
               </>
-            )} */}
-            {searchResultsForAllRestaurant && (
+            )}
+            {searchResultsForRestaurantForTab && (
               <>
                 <div className="flex flex-wrap  gap-4">
-                  {searchResultsForAllRestaurant?.map((item) => (
+                  {searchResultsForRestaurantForTab?.map((item) => (
                     <SearchRestaurantCard
                       key={item?.card?.card?.id}
                       searchResData={item?.card?.card?.info}
