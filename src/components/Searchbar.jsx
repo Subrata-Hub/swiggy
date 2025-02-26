@@ -18,7 +18,7 @@ const Searchbar = ({
 
   // console.log(searchQuery);
   return (
-    <div className="mt-4 flex items-center px-40 relative">
+    <div className="mt-4 flex items-center px-36 relative">
       <input
         type="search"
         value={searchQueryInput}

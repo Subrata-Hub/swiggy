@@ -1,14 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  searchQuery: "",
+  searchResults: {},
+  isSearchResults: false,
+  searchResultsForTab: {},
+  filterObj: {},
+  isFillBtnSelected: false,
+  options: {
+    radioOptionValue: "NONE",
+    radioOptionLabel: "Relevance",
+  },
+};
+
 const searchSlice = createSlice({
   name: "search",
-  initialState: {
-    searchQuery: "",
-    searchResults: {},
-    isSearchResults: false,
-    searchResultsForTab: {},
-    filterObj: {},
-  },
+  initialState,
 
   reducers: {
     addSearchQuery: (state, action) => {
@@ -19,7 +26,22 @@ const searchSlice = createSlice({
     },
 
     addFilterObject: (state, action) => {
-      state.filterObj = action.payload;
+      state.filterObj = { ...state.filterObj, ...action.payload };
+    },
+
+    addIsFillBtnSelected: (state, action) => {
+      state.isFillBtnSelected = action.payload;
+    },
+
+    removeFilterObject: (state, action) => {
+      const updatedFilterObj = { ...state.filterObj };
+
+      // Loop through keys in action.payload and delete them
+      Object.keys(action.payload).forEach((key) => {
+        delete updatedFilterObj[key];
+      });
+
+      state.filterObj = updatedFilterObj;
     },
 
     addIsSearchResults: (state, action) => {
@@ -29,6 +51,14 @@ const searchSlice = createSlice({
     addSearchResultsForTab: (state, action) => {
       state.searchResultsForTab = action.payload;
     },
+    addRadioOptionValue: (state, action) => {
+      state.options.radioOptionValue = action.payload;
+    },
+
+    addRadioOptionTitle: (state, action) => {
+      state.options.radioOptionLabel = action.payload;
+    },
+    resetState: () => ({ ...initialState }), // Reset state
   },
 });
 
@@ -36,7 +66,12 @@ export const {
   addSearchQuery,
   addSearchResults,
   addFilterObject,
+  addIsFillBtnSelected,
+  removeFilterObject,
   addIsSearchResults,
   addSearchResultsForTab,
+  addRadioOptionValue,
+  addRadioOptionTitle,
+  resetState,
 } = searchSlice.actions;
 export default searchSlice.reducer;

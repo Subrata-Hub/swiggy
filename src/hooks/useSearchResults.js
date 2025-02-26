@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { LAT, LNG } from "../utils/constant";
+// import { useDispatch } from "react-redux";
+// import { addRadioOptionTitle, addRadioOptionValue } from "../utils/searchSlice";
 
 const useSearchResults = (query) => {
   const [searchData, setSearchData] = useState();
+  // const dispatch = useDispatch();
 
   // const dispatch = useDispatch();
   const getSearchData = async () => {
@@ -15,6 +18,8 @@ const useSearchResults = (query) => {
     // if (!data) return {};
 
     setSearchData(data?.data);
+    // dispatch(addRadioOptionValue("NONE"));
+    // dispatch(addRadioOptionTitle("Relevance"));
   };
 
   useEffect(() => {

@@ -12,12 +12,17 @@ import useSearchResults from "../hooks/useSearchResults";
 import useSelectedTabResult from "../hooks/useSelectedTabResult";
 import PopularCuisinesList from "../components/PopularCuisinesList";
 import useSearchFilter from "../hooks/useSearchFilter";
+import { useDispatch } from "react-redux";
+import { resetState } from "../utils/searchSlice";
+import { useLocation } from "react-router-dom";
 
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
   const [searchQueryInput, setSearchQueryInput] = useState("");
   const [isSelected, setIsSelected] = useState(false);
   const [searchResultsRefineData, setSearchResultsRefineData] = useState(null);
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   const preSearchData = usePreSearch();
   const searchQuery = useSelector((state) => state.search.searchQuery);
@@ -32,7 +37,16 @@ const SearchPage = () => {
     (store) => store.config.setting.searchResultType
   );
 
-  const fillObj = useSelector((store) => store.search.filterObj);
+  const selectedOption = useSelector(
+    (store) => store?.search?.options?.radioOptionValue
+  );
+
+  const selectedOptionTitle = useSelector(
+    (store) => store?.search?.options?.radioOptionLabel
+  );
+
+  const fillObj = useSelector((store) => store?.search?.filterObj);
+  console.log(fillObj);
 
   console.log(searchResultsType);
 
@@ -45,7 +59,7 @@ const SearchPage = () => {
         item?.card?.card?.["@type"] !==
         "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation"
     );
-    return refineSearchResultsData?.[0]?.groupedCard.cardGroupMap;
+    return refineSearchResultsData?.[0]?.groupedCard?.cardGroupMap;
   };
 
   const selectedTabSearchResults = useSelectedTabResult(
@@ -60,8 +74,12 @@ const SearchPage = () => {
   const filterSearchResults = useSearchFilter(
     suggestionText,
     searchResultsType,
-    encodedString
+    encodedString,
+    selectedOption,
+    selectedOptionTitle
   );
+
+  console.log(filterSearchResults);
 
   const searchResultsHeader = searchResultsData?.cards?.filter(
     (item) =>
@@ -74,8 +92,9 @@ const SearchPage = () => {
   useEffect(() => {
     if (searchResultsData) {
       setSearchResultsRefineData(getRefineData(searchResultsData));
+      dispatch(resetState());
     }
-  }, [searchResultsData]);
+  }, [searchResultsData, location.pathname, dispatch]);
 
   useEffect(() => {
     if (selectedTabSearchResults) {
@@ -118,6 +137,8 @@ const SearchPage = () => {
         searchResultsHeader={searchResultsHeader}
         searchResultsType={searchResultsType}
         setIsSelected={setIsSelected}
+        selectedOption={selectedOption}
+        fillObj={fillObj}
       />
     </div>
   );

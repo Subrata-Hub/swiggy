@@ -6,7 +6,7 @@ import nonVeg from "../assets/nonVeg.svg";
 import { Link } from "react-router-dom";
 const SearchDishesCard = ({ searchDishesData }) => {
   return (
-    <div className="bg-slate-800 w-[423px] h-[275px] mb-2">
+    <div className="bg-slate-800 w-[438px] h-[275px] mb-2">
       <div className="flex-col">
         <div className="">
           <div className="flex justify-between items-center px-4 py-3">

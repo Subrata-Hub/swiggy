@@ -1,9 +1,18 @@
 import SearchDishesCard from "../shared/SearchDishesCard";
 import SearchRestaurantCard from "../shared/SearchRestaurantCard";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addSearchResultType } from "../utils/configSlice";
-import { addFilterObject, addIsSearchResults } from "../utils/searchSlice";
+import {
+  addFilterObject,
+  addIsFillBtnSelected,
+  addIsSearchResults,
+  addRadioOptionTitle,
+  addRadioOptionValue,
+  removeFilterObject,
+} from "../utils/searchSlice";
+import { HiChevronDown } from "react-icons/hi2";
+import { HiMiniXMark } from "react-icons/hi2";
 import { useState } from "react";
 
 /* eslint-disable react/prop-types */
@@ -11,14 +20,23 @@ const SearchResults = ({
   showSuggestion,
   searchResultsType,
   setIsSelected,
-
+  selectedOption,
   searchResultsRefineData,
   searchResultsHeader,
+  fillObj,
 }) => {
-  const [fillterObj, setFilterObj] = useState({});
+  const [showOptions, setShowOptions] = useState(false);
+  const [activeSort, setActiveSort] = useState(false);
+
   const dispatch = useDispatch();
 
-  console.log(searchResultsRefineData);
+  const selectedOptionTitle = useSelector(
+    (store) => store?.search?.options?.radioOptionLabel
+  );
+
+  const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
+
+  console.log(selectedOption);
 
   const searchResultsForDishes = searchResultsRefineData?.DISH?.cards?.filter(
     (dish) =>
@@ -57,15 +75,32 @@ const SearchResults = ({
     dispatch(addIsSearchResults(true));
   };
 
+  console.log(fillObj);
+
   const getFilterObj = (obj) => {
-    setFilterObj((prevObj) => ({ ...prevObj, ...obj }));
-    dispatch(addFilterObject(fillterObj));
+    dispatch(addFilterObject(obj));
+    if (!isFillBtn) {
+      dispatch(addIsFillBtnSelected(true));
+    } else {
+      dispatch(removeFilterObject(obj));
+      dispatch(addIsFillBtnSelected(false));
+    }
   };
 
-  // console.log(fillterObj);
+  const handaleClick = () => {
+    setShowOptions(!showOptions);
+  };
+
+  const updateOptionValue = (value, title) => {
+    dispatch(addRadioOptionValue(value));
+    dispatch(addRadioOptionTitle(title));
+
+    setActiveSort(true);
+    setShowOptions(false);
+  };
 
   return (
-    <div className="mx-40">
+    <div className="mx-36">
       {!showSuggestion && (
         <div>
           <div className="flex gap-4">
@@ -87,23 +122,100 @@ const SearchResults = ({
             ))}
           </div>
 
-          <div className="flex gap-4 mt-6">
+          <div className="flex gap-3 mt-6 relative">
+            {searchFilterData &&
+              !searchResultsForAllRestaurant &&
+              !searchResultsForRestaurant && (
+                <div
+                  className={`px-4 py-2 w-auto  ${
+                    activeSort && selectedOptionTitle !== "Relevance"
+                      ? "bg-cyan-900"
+                      : "bg-slate-800"
+                  }  rounded-xl text-[13.5px] flex items-center gap-2`}
+                  onClick={handaleClick}
+                >
+                  {`Sort By ${
+                    selectedOptionTitle === "Relevance"
+                      ? ""
+                      : selectedOptionTitle
+                  }`}
+                  <span className="">
+                    <HiChevronDown />
+                  </span>
+                </div>
+              )}
+
+            {showOptions && (
+              <div className="px-4 py-2 bg-slate-700 absolute top-10">
+                {searchFilterData?.[0]?.card?.card?.sortConfigs?.map((sort) => (
+                  <>
+                    <div className="" key={sort.title}>
+                      <input
+                        className="px-4 py-2 bg-slate-800 rounded-xl text-sm"
+                        type="radio"
+                        value={sort?.key}
+                        name="sort"
+                        id={sort?.key}
+                        checked={selectedOption === sort?.key}
+                        onChange={(e) =>
+                          updateOptionValue(e.target.value, sort?.title)
+                        }
+                      />
+                      <label className="ml-2" htmlFor={sort?.key}>
+                        {sort?.title}
+                      </label>
+                    </div>
+                  </>
+                ))}
+              </div>
+            )}
+
             {searchFilterData?.[0]?.card?.card?.facetList?.map(
               (fillter, index) => (
-                <div key={index}>
-                  <button
-                    value={JSON.stringify({
-                      [fillter?.id]: fillter?.facetInfo?.map((item) => ({
-                        ["id"]: item?.id,
-                        ["label"]: item?.label,
-                        ["operator"]: item?.operator,
-                      })),
-                    })}
-                    onClick={(e) => getFilterObj(JSON.parse(e.target.value))}
-                    className="px-4 py-2 bg-slate-800 rounded-xl text-sm"
-                  >
-                    {fillter?.facetInfo?.[0]?.label}
-                  </button>
+                <div key={index} className="">
+                  <div className="flex justify-between items-center relative">
+                    <button
+                      value={JSON.stringify({
+                        [fillter?.id]: fillter?.facetInfo?.map((item) => ({
+                          ["id"]: item?.id,
+                          ["label"]: item?.label,
+                          ["operator"]: item?.operator,
+                        })),
+                      })}
+                      onClick={(e) => getFilterObj(JSON.parse(e.target.value))}
+                      className={`px-6 py-2  rounded-xl text-[13.5px] ${
+                        Object.values(fillObj)?.some(
+                          (item) =>
+                            item?.[0]?.id === fillter?.facetInfo?.[0]?.id
+                        )
+                          ? "bg-cyan-900"
+                          : "bg-slate-800"
+                      }  `}
+                    >
+                      {fillter?.facetInfo?.[0]?.label}
+                      {fillter?.facetInfo?.map(
+                        (item, index) =>
+                          Object.values(fillObj)?.some(
+                            (item) =>
+                              item?.[0]?.id === fillter?.facetInfo?.[0]?.id
+                          ) && (
+                            <div className="absolute right-2 top-3" key={index}>
+                              <HiMiniXMark className="text-sm" />
+                            </div>
+                          )
+                      )}
+                    </button>
+                    {/* {isFillBtn && (
+                      <div
+                        className="absolute right-2"
+                        onClick={(e) =>
+                          getRemoveItem(JSON.parse(e.target.value))
+                        }
+                      >
+                        <HiMiniXMark className="text-sm" />
+                      </div>
+                    )} */}
+                  </div>
                 </div>
               )
             )}
@@ -196,3 +308,5 @@ const SearchResults = ({
 export default SearchResults;
 
 //  btn?.selected
+
+// after:content-['×'] after:absolute after:right-2 after:top-1/2 after:-translate-y-1/2 after:text-white after:text-lg
