@@ -11,6 +11,7 @@ const initialState = {
     radioOptionValue: "NONE",
     radioOptionLabel: "Relevance",
   },
+  isResetStore: false,
 };
 
 const searchSlice = createSlice({
@@ -44,6 +45,10 @@ const searchSlice = createSlice({
       state.filterObj = updatedFilterObj;
     },
 
+    addIsResetStore: (state, action) => {
+      state.isResetStore = action.payload;
+    },
+
     addIsSearchResults: (state, action) => {
       state.isSearchResults = action.payload;
     },
@@ -73,5 +78,6 @@ export const {
   addRadioOptionValue,
   addRadioOptionTitle,
   resetState,
+  addIsResetStore,
 } = searchSlice.actions;
 export default searchSlice.reducer;

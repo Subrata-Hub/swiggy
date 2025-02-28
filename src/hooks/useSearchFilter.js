@@ -2,35 +2,39 @@
 
 import { useEffect, useState } from "react";
 import { LAT, LNG } from "../utils/constant";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const useSearchFilter = (
   suggestionText,
   searchResultsType,
   facets,
-  selectedOption
-  // selectedOptionTitle
+  selectedOption,
+  setLoading,
+  isReSetStore
 ) => {
   const [searchData, setSearchData] = useState({});
-  const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
 
-  // const dispatch = useDispatch();
+  // const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
+
   const getSearchData = async () => {
-    const response = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&facets=${facets}
-          &sortKey=${selectedOption}&selectedPLTab=${searchResultsType}`
-    );
+    if (!isReSetStore) {
+      setLoading(true);
 
-    const data = await response.json();
+      const response = await fetch(
+        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&facets=${facets}
+            &sortKey=${selectedOption}&selectedPLTab=${searchResultsType}`
+      );
 
-    setSearchData(data?.data);
+      const data = await response.json();
+
+      setSearchData(data?.data);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    // console.log("Updated Facets:", facets);
-    // console.log("Updated Sort Option:", selectedOption);
     getSearchData();
-  }, [facets, selectedOption, isFillBtn]);
+  }, [facets, selectedOption]);
 
   return searchData;
 };

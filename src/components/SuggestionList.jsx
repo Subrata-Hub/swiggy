@@ -11,6 +11,7 @@ const SuggestionList = ({
   showSuggestion,
   searchQuery,
   setSearchQueryInput,
+  // loading,
 }) => {
   // const [showSuggestion, setShowSuggestion] = useState(true);
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const SuggestionList = ({
     setSearchQueryInput(query);
     setShowSuggestion(false);
   };
+
+  // if (loading) return null;
 
   return (
     <div className="px-44 mt-6">

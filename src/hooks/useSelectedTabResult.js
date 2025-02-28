@@ -6,11 +6,13 @@ import { LAT, LNG } from "../utils/constant";
 const useSelectedTabResult = (
   suggestionText,
   searchResultsType,
-  isSelected
+  isSelected,
+  setLoading
 ) => {
   const [searchData, setSearchData] = useState({});
   // const dispatch = useDispatch();
   const getSearchData = async () => {
+    setLoading(true);
     if (isSelected && searchResultsType !== "CUISINE") {
       const response = await fetch(
         `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&selectedPLTab=${searchResultsType}`
@@ -21,6 +23,7 @@ const useSelectedTabResult = (
       // if (!data) return {};
 
       setSearchData(data?.data);
+      setLoading(false);
     }
   };
 

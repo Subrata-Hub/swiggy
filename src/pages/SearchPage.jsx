@@ -13,7 +13,7 @@ import useSelectedTabResult from "../hooks/useSelectedTabResult";
 import PopularCuisinesList from "../components/PopularCuisinesList";
 import useSearchFilter from "../hooks/useSearchFilter";
 import { useDispatch } from "react-redux";
-import { resetState } from "../utils/searchSlice";
+import { addIsResetStore, resetState } from "../utils/searchSlice";
 import { useLocation } from "react-router-dom";
 
 const SearchPage = () => {
@@ -21,6 +21,8 @@ const SearchPage = () => {
   const [searchQueryInput, setSearchQueryInput] = useState("");
   const [isSelected, setIsSelected] = useState(false);
   const [searchResultsRefineData, setSearchResultsRefineData] = useState(null);
+
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -41,31 +43,21 @@ const SearchPage = () => {
     (store) => store?.search?.options?.radioOptionValue
   );
 
-  const selectedOptionTitle = useSelector(
-    (store) => store?.search?.options?.radioOptionLabel
-  );
-
   const fillObj = useSelector((store) => store?.search?.filterObj);
   console.log(fillObj);
 
+  const isReSetStore = useSelector((store) => store?.search?.isResetStore);
+
   console.log(searchResultsType);
 
-  const searchResultsData = useSearchResults(suggestionText);
+  const searchResultsData = useSearchResults(suggestionText, setLoading);
   console.log(searchResultsData);
-
-  const getRefineData = (data) => {
-    const refineSearchResultsData = data?.cards?.filter(
-      (item) =>
-        item?.card?.card?.["@type"] !==
-        "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation"
-    );
-    return refineSearchResultsData?.[0]?.groupedCard?.cardGroupMap;
-  };
 
   const selectedTabSearchResults = useSelectedTabResult(
     suggestionText,
     searchResultsType,
-    isSelected
+    isSelected,
+    setLoading
   );
 
   const objectString = JSON.stringify(fillObj);
@@ -76,10 +68,20 @@ const SearchPage = () => {
     searchResultsType,
     encodedString,
     selectedOption,
-    selectedOptionTitle
+    setLoading,
+    isReSetStore
   );
 
   console.log(filterSearchResults);
+
+  const getRefineData = (data) => {
+    const refineSearchResultsData = data?.cards?.filter(
+      (item) =>
+        item?.card?.card?.["@type"] !==
+        "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation"
+    );
+    return refineSearchResultsData?.[0]?.groupedCard?.cardGroupMap;
+  };
 
   const searchResultsHeader = searchResultsData?.cards?.filter(
     (item) =>
@@ -93,6 +95,7 @@ const SearchPage = () => {
     if (searchResultsData) {
       setSearchResultsRefineData(getRefineData(searchResultsData));
       dispatch(resetState());
+      dispatch(addIsResetStore(true));
     }
   }, [searchResultsData, location.pathname, dispatch]);
 
@@ -130,6 +133,7 @@ const SearchPage = () => {
         setShowSuggestion={setShowSuggestion}
         showSuggestion={showSuggestion}
         setSearchQueryInput={setSearchQueryInput}
+        // loading={loading}
       />
       <SearchResults
         showSuggestion={showSuggestion}
@@ -139,6 +143,7 @@ const SearchPage = () => {
         setIsSelected={setIsSelected}
         selectedOption={selectedOption}
         fillObj={fillObj}
+        loading={loading}
       />
     </div>
   );
