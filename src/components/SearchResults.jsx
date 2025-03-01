@@ -1,5 +1,5 @@
 import SearchDishesCard from "../shared/SearchDishesCard";
-import SearchRestaurantCard from "../shared/SearchRestaurantCard";
+import { SearchRestaurantCardWithOffer } from "../shared/SearchRestaurantCard";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addSearchResultType } from "../utils/configSlice";
@@ -262,9 +262,17 @@ const SearchResults = ({
                   <>
                     <div className="flex flex-wrap  gap-4">
                       {searchResultsForRestaurant && (
-                        <SearchRestaurantCard
+                        <SearchRestaurantCardWithOffer
                           searchResData={
                             searchResultsForRestaurant?.[0]?.card?.card?.info
+                          }
+                          offer={
+                            searchResultsForRestaurant?.[0]?.card?.card?.info
+                              ?.aggregatedDiscountInfoV3
+                          }
+                          ad={
+                            searchResultsForRestaurant?.[0]?.card?.card?.info
+                              ?.adTrackingId
                           }
                         />
                       )}
@@ -277,9 +285,11 @@ const SearchResults = ({
                       <div className="flex flex-wrap  gap-4">
                         {searchResultsForRestaurant?.[1]?.card?.card?.restaurants?.map(
                           (item) => (
-                            <SearchRestaurantCard
-                              key={item?.id}
+                            <SearchRestaurantCardWithOffer
                               searchResData={item?.info}
+                              key={item?.id}
+                              offer={item?.info?.aggregatedDiscountInfoV3}
+                              ad={item?.info?.adTrackingId}
                             />
                           )
                         )}
@@ -292,9 +302,13 @@ const SearchResults = ({
                   <>
                     <div className="flex flex-wrap  gap-4">
                       {searchResultsForAllRestaurant?.map((item) => (
-                        <SearchRestaurantCard
-                          key={item?.card?.card?.id}
+                        <SearchRestaurantCardWithOffer
                           searchResData={item?.card?.card?.info}
+                          key={item?.card?.card?.id}
+                          offer={
+                            item?.card?.card?.info?.aggregatedDiscountInfoV3
+                          }
+                          ad={item?.card?.card?.info?.adTrackingId}
                         />
                       ))}
                     </div>

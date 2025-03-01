@@ -1,14 +1,17 @@
 /* eslint-disable react/prop-types */
 
-import RestaurantCard from "../shared/RestaurantCard";
+import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
+
+// import RestaurantCard from "../shared/RestaurantCard";
 
 const TagsDetails = ({ restaurantList }) => {
   return (
     <div className="flex flex-wrap gap-8 mt-8">
       {restaurantList?.map((restaurant) => (
-        <RestaurantCard
+        <EnhancedRestaurantCard
           topRes={restaurant?.card?.card?.info}
           key={restaurant?.card?.card?.info?.id}
+          offer={restaurant?.card?.card?.info?.aggregatedDiscountInfoV3}
         />
       ))}
     </div>

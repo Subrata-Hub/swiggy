@@ -1,4 +1,6 @@
-import RestaurantCard from "../shared/RestaurantCard";
+// import RestaurantCard from "../shared/RestaurantCard";
+
+import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 /* eslint-disable react/prop-types */
 const Restaurants = ({ allResData }) => {
@@ -10,7 +12,11 @@ const Restaurants = ({ allResData }) => {
       <h1 className="text-2xl">{title}</h1>
       <div className="w-full flex flex-wrap gap-8 mt-6">
         {allRestaurants?.map((restaurant) => (
-          <RestaurantCard topRes={restaurant.info} key={restaurant?.info?.id} />
+          <EnhancedRestaurantCard
+            topRes={restaurant?.info}
+            key={restaurant?.info?.id}
+            offer={restaurant?.info?.aggregatedDiscountInfoV3}
+          />
         ))}
       </div>
     </div>

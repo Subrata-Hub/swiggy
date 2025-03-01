@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { Link } from "react-router-dom";
 import { IMG_CARD_URL_2 } from "../utils/constant";
 
@@ -7,13 +8,14 @@ const RestaurantCard = ({ topRes }) => {
     <Link
       to={`/city/kolkata/${topRes?.name}/${topRes?.locality}/${topRes?.id}`}
     >
-      <div className="mb-4">
-        <div className="w-[283px] h-[182px] flex">
+      <div className="mb-4 relative">
+        <div className="w-[283px] h-[182px] relative">
           <img
             src={IMG_CARD_URL_2 + topRes?.cloudinaryImageId}
             alt={topRes?.name}
             className="w-[283px] h-[182px] object-cover rounded-xl"
           />
+          <div className="absolute w-full text-left px-[12px] pb-2 h-[81px] bg-gradient-to-t from-[rgb(27,30,36)] to-[rgba(27,30,36,0)] bottom-0"></div>
         </div>
         <h2 className="mt-3 ml-2 font-semibold text-xl truncate max-w-[275px]">
           {topRes?.name}
@@ -35,4 +37,21 @@ const RestaurantCard = ({ topRes }) => {
   );
 };
 
-export default RestaurantCard;
+// export default RestaurantCard;
+
+const RestaurantCardWithOffer = (RestaurantCard) => {
+  return ({ topRes, offer }) => (
+    <div className="flex flex-col relative">
+      <RestaurantCard topRes={topRes} />
+      <div className="absolute bottom-[140px] px-3 w-full">
+        {offer && (
+          <div className="flex font-bold text-[18px]">
+            <h1>{offer?.header}</h1> <p className="ml-2"> {offer?.subHeader}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const EnhancedRestaurantCard = RestaurantCardWithOffer(RestaurantCard);

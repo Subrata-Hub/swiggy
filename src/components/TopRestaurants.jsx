@@ -1,4 +1,4 @@
-import RestaurantCard from "../shared/RestaurantCard";
+import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 /* eslint-disable react/prop-types */
 const TopRestaurants = ({ topResData }) => {
@@ -11,7 +11,11 @@ const TopRestaurants = ({ topResData }) => {
         <div className="flex gap-8">
           {topRestaurants?.gridElements?.infoWithStyle?.restaurants?.map(
             (topRes) => (
-              <RestaurantCard topRes={topRes?.info} key={topRes?.info?.id} />
+              <EnhancedRestaurantCard
+                topRes={topRes?.info}
+                key={topRes?.info?.id}
+                offer={topRes?.info?.aggregatedDiscountInfoV3}
+              />
             )
           )}
         </div>
