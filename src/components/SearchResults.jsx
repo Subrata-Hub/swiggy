@@ -31,6 +31,12 @@ const SearchResults = ({
   const [activeSort, setActiveSort] = useState(false);
   const [isFillBtn, setIsFillBtn] = useState(false);
 
+  // const [showPopup, setShowPopup] = useState(false);
+
+  // const searchDishesCardRef = useRef(null);
+
+  // useOutSideClick(searchDishesCardRef, () => setShowPopup(false));
+
   const dispatch = useDispatch();
 
   const selectedOptionTitle = useSelector(
@@ -103,6 +109,10 @@ const SearchResults = ({
     setShowOptions(false);
   };
 
+  // const handleShowPopup = () => {
+  //   setShowPopup(!showPopup);
+  // };
+
   // const data =
   //   searchResultsForDishes ||
   //   searchResultsForRestaurant ||
@@ -121,10 +131,6 @@ const SearchResults = ({
 
   return (
     <div className="mx-36">
-      {/* {(!data || dataArray.length === 0) && !showSuggestion && (
-        <SearchResultShimmer />
-      )} */}
-      {/* {loading && !showSuggestion && <SearchResultShimmer />} */}
       {!showSuggestion && (
         <div>
           {loading ? (
@@ -132,22 +138,23 @@ const SearchResults = ({
           ) : (
             <>
               <div className="flex gap-4">
-                {searchResultsHeader?.[0].card?.card?.tab?.map((btn) => (
-                  <div key={btn?.id}>
-                    <button
-                      className={`px-4 py-2  rounded-2xl ${
-                        btn?.id === searchResultsType ||
-                        (searchResultsType === "CUISINE" && btn?.selected)
-                          ? `bg-red-500`
-                          : "bg-fuchsia-700"
-                      }`}
-                      value={btn?.id}
-                      onClick={(e) => getSelectedTab(e.target.value)}
-                    >
-                      {btn?.title}
-                    </button>
-                  </div>
-                ))}
+                {searchResultsRefineData &&
+                  searchResultsHeader?.[0].card?.card?.tab?.map((btn) => (
+                    <div key={btn?.id}>
+                      <button
+                        className={`px-4 py-2  rounded-2xl ${
+                          btn?.id === searchResultsType ||
+                          (searchResultsType === "CUISINE" && btn?.selected)
+                            ? `bg-red-500`
+                            : "bg-fuchsia-700"
+                        }`}
+                        value={btn?.id}
+                        onClick={(e) => getSelectedTab(e.target.value)}
+                      >
+                        {btn?.title}
+                      </button>
+                    </div>
+                  ))}
               </div>
 
               <div className="flex gap-3 mt-6 relative">
@@ -245,9 +252,9 @@ const SearchResults = ({
                 )}
               </div>
 
-              <div className=" bg-slate-900  h-auto mt-4 px-6">
+              <div className=" bg-slate-900  h-auto mt-5 px-6 py-6">
                 {searchResultsForDishes && (
-                  <div className="flex flex-wrap  gap-4">
+                  <div className="flex flex-wrap  gap-4 -z-50">
                     {searchResultsForDishes &&
                       searchResultsForDishes?.map((item) => (
                         <SearchDishesCard
@@ -278,11 +285,11 @@ const SearchResults = ({
                       )}
                     </div>
 
-                    <div>
+                    <div className="mt-6">
                       <h2>
                         {searchResultsForRestaurant?.[1]?.card?.card?.title}
                       </h2>
-                      <div className="flex flex-wrap  gap-4">
+                      <div className="flex flex-wrap  gap-4 mt-4">
                         {searchResultsForRestaurant?.[1]?.card?.card?.restaurants?.map(
                           (item) => (
                             <SearchRestaurantCardWithOffer

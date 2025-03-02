@@ -31,6 +31,8 @@ const SearchPage = () => {
   const searchSuggestionsData = useSuggestions(searchQuery);
   const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
 
+  const overlay = document.querySelector(".overlay");
+
   const suggestionText = useSelector(
     (store) => store?.config?.setting?.suggestionText
   );
@@ -113,6 +115,7 @@ const SearchPage = () => {
 
   return (
     <div className="m-36 mt-0 mb-0">
+      {/* <div className="overlay hidden"></div> */}
       <Navbar />
       <Searchbar
         setShowSuggestion={setShowSuggestion}
@@ -144,6 +147,7 @@ const SearchPage = () => {
         selectedOption={selectedOption}
         fillObj={fillObj}
         loading={loading}
+        overlay={overlay}
       />
     </div>
   );

@@ -7,7 +7,7 @@ const Body = () => {
   const resData = useRestaurants();
 
   return (
-    <div>
+    <div className="">
       <ImageInfoLayout resData={resData} />
       <TopRestaurants topResData={resData} />
       <Restaurants allResData={resData} />

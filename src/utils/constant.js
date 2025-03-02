@@ -5,6 +5,7 @@ export const IMG_MENU = `https://media-assets.swiggy.com/swiggy/image/upload/fl_
 export const IMG_POPULAR_CUSINESS = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/`;
 export const IMG_SUGGESTION = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_112,h_112,c_fill/`;
 export const IMG_SEARCH_DISH = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/`;
+export const IMG_SEARCH_DISH_BANNER = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/`;
 export const IMG_SEARCH_RES = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_264,h_288,c_fill/`;
 export const LAT = 22.5743545;
 export const LNG = 88.3628734;

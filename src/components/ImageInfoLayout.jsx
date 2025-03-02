@@ -7,7 +7,7 @@ const ImageInfoLayout = ({ resData }) => {
   if (!resData) return;
 
   return (
-    <>
+    <div className="">
       <h1 className="text-2xl font-bold">Subrata, what&apos;s on your mind?</h1>
 
       <div className="w-full  overflow-x-auto hide-scrollbar">
@@ -17,7 +17,7 @@ const ImageInfoLayout = ({ resData }) => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

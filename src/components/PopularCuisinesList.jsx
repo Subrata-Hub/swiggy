@@ -10,7 +10,7 @@ const PopularCuisinesList = ({
 }) => {
   console.log(popularCuisinesData);
   return (
-    <>
+    <div className="">
       {!searchQuery && !suggestionText && !searchQueryInput && (
         <div className="px-40 pt-8">
           <div>{popularCuisinesData?.header?.title}</div>
@@ -25,7 +25,7 @@ const PopularCuisinesList = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
