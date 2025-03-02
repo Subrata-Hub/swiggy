@@ -39,14 +39,29 @@ const PopupSearchDishesCard = ({ searchDishesData, handleShowPopup }) => {
               ₹
               {searchDishesData?.info?.price
                 ? searchDishesData?.info?.price / 100
-                : searchDishesData?.info?.efaultPrice / 100}
+                : searchDishesData?.info?.defaultPrice / 100}
+              <span className="text-sm">
+                {searchDishesData?.info?.offerTags?.[0].title ? " 🏷️" : ""}
+                {searchDishesData?.info?.offerTags?.[0].title}{" "}
+                {searchDishesData?.info?.offerTags?.[0].subTitle}
+              </span>
             </p>
+            {searchDishesData?.info?.ratings?.aggregatedRating?.rating ? (
+              <p className="text-[12px] py-3">
+                ❇️
+                {`${searchDishesData?.info?.ratings?.aggregatedRating?.rating}(
+                    ${searchDishesData?.info?.ratings?.aggregatedRating?.ratingCountV2}
+                )`}
+              </p>
+            ) : (
+              ""
+            )}
           </div>
           <button className="text-emerald-500 px-10 py-2 rounded-xl bg-slate-700 shadow-2xl">
             ADD
           </button>
         </div>
-        <div className="mt-5 mb-2 font-light">
+        <div className="mt-2 mb-2 font-light">
           {searchDishesData?.info?.description}
         </div>
       </div>

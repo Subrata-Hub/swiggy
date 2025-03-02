@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { LAT, LNG } from "../utils/constant";
 
-const useRestaurants = () => {
+const useRestaurants = (setLoading) => {
   const [resData, setResData] = useState([]);
 
   const getResData = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
         `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&page_type=DESKTOP_WEB_LISTING`
       );
@@ -13,6 +14,7 @@ const useRestaurants = () => {
 
       console.log(data?.data.cards);
       setResData(data?.data?.cards);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }

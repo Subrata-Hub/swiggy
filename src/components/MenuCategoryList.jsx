@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 
-import MenuItemCard from "../shared/MenuItemCard";
+import MenuItemList from "./MenuItemList";
 
 const MenuCategoryList = ({ resMenuData, filterOption }) => {
   return (
     <div className="mt-6">
       {resMenuData?.map((resMenu, index) => (
-        <MenuItemCard
+        <MenuItemList
           resMenu={resMenu?.card?.card}
           filterOption={filterOption}
           key={index}
