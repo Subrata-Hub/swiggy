@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 const RestaurantsInfo = ({ resDetailsData }) => {
   const resInfoData = resDetailsData?.[2]?.card?.card?.info;
+  console.log(resInfoData);
 
   return (
     <div className="px-48">

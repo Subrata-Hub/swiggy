@@ -14,6 +14,14 @@ const RestaurantDetailsPage = () => {
   const resDetailsData = useRestaurantsDetails(restaurantId, setLoading);
   // if (!resDetailsData && resDetailsData.length === 0 && loading)
   //   <RestaurantDetailShimmer />;
+
+  const resInformation = {
+    restaurantId: restaurantId,
+    restaurantName: restaurantName,
+    resAreaName: areaName,
+    resImg: resDetailsData?.[2]?.card?.card?.info?.cloudinaryImageId,
+    menuURL: `/city/kolkata/${restaurantName}/${areaName}/${restaurantId}`,
+  };
   return (
     <div className="m-36 mt-0 mb-0">
       <Navbar />
@@ -36,6 +44,7 @@ const RestaurantDetailsPage = () => {
             areaName={areaName}
             restaurantName={restaurantName}
             location={location}
+            resInformation={resInformation}
           />
         </>
       )}

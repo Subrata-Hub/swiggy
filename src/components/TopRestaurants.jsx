@@ -3,7 +3,7 @@ import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 /* eslint-disable react/prop-types */
 const TopRestaurants = ({ topResData }) => {
   const topRestaurants = topResData?.[1]?.card?.card;
-  console.log(topRestaurants?.gridElements?.infoWithStyle?.restaurants);
+
   return (
     <div className="mt-2">
       <h1 className="text-xl font-semibold">{topRestaurants?.header?.title}</h1>

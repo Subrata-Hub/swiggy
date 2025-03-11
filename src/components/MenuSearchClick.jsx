@@ -10,8 +10,6 @@ const MenuSearchClick = ({
   restaurantName,
   location,
 }) => {
-  // console.log(`in menu search click ${query}`);
-
   return (
     <Link
       to={`/city/${location}/${restaurantName}/${areaName}/${restaurantId}/menuSearch`}

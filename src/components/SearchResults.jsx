@@ -45,14 +45,12 @@ const SearchResults = ({
 
   // const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
 
-  console.log(selectedOption);
-
   const searchResultsForDishes = searchResultsRefineData?.DISH?.cards?.filter(
     (dish) =>
       dish?.card?.card?.["@type"] ===
       "type.googleapis.com/swiggy.presentation.food.v2.Dish"
   );
-  console.log(searchResultsForDishes);
+
   const searchResultsForRestaurant = searchResultsRefineData?.RESTAURANT?.cards;
   const searchResultsForAllRestaurant =
     searchResultsRefineData?.RESTAURANT?.cards?.filter(
@@ -60,7 +58,6 @@ const SearchResults = ({
         res?.card?.card?.["@type"] ===
         "type.googleapis.com/swiggy.presentation.food.v2.Restaurant"
     );
-  console.log(searchResultsForAllRestaurant);
 
   const searchFilterData = searchResultsRefineData?.DISH?.cards?.filter(
     (fill) =>
@@ -68,23 +65,18 @@ const SearchResults = ({
       "type.googleapis.com/swiggy.gandalf.widgets.v2.SearchFilterSortWidget"
   );
 
-  console.log(searchFilterData);
-
-  const searchResultForSimilarRestaurant =
-    searchResultsRefineData?.RESTAURANT?.cards?.filter(
-      (simRes) =>
-        simRes.card?.card?.["@type"] ===
-        "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection"
-    );
-  console.log(searchResultForSimilarRestaurant);
+  // const searchResultForSimilarRestaurant =
+  //   searchResultsRefineData?.RESTAURANT?.cards?.filter(
+  //     (simRes) =>
+  //       simRes.card?.card?.["@type"] ===
+  //       "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection"
+  //   );
 
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
     setIsSelected(true);
     dispatch(addIsSearchResults(true));
   };
-
-  console.log(fillObj);
 
   const getFilterObj = (obj) => {
     dispatch(addFilterObject(obj));
@@ -108,26 +100,6 @@ const SearchResults = ({
     setActiveSort(true);
     setShowOptions(false);
   };
-
-  // const handleShowPopup = () => {
-  //   setShowPopup(!showPopup);
-  // };
-
-  // const data =
-  //   searchResultsForDishes ||
-  //   searchResultsForRestaurant ||
-  //   searchResultsForAllRestaurant ||
-  //   searchResultForSimilarRestaurant ||
-  //   searchFilterData ||
-  //   searchResultsHeader;
-
-  // const dataArray =
-  //   searchResultsForDishes?.length === 0 ||
-  //   searchResultsForRestaurant?.length === 0 ||
-  //   searchResultsForAllRestaurant?.length === 0 ||
-  //   searchResultForSimilarRestaurant?.length === 0 ||
-  //   searchFilterData?.length === 0 ||
-  //   searchResultsHeader?.length === 0;
 
   return (
     <div className="mx-36">
@@ -257,10 +229,11 @@ const SearchResults = ({
                   <div className="flex flex-wrap  gap-4 -z-50">
                     {searchResultsForDishes &&
                       searchResultsForDishes?.map((item) => (
-                        <SearchDishesCard
-                          key={item?.card?.card?.info?.id}
-                          searchDishesData={item?.card?.card}
-                        />
+                        <div key={item?.card?.card?.info?.id}>
+                          <SearchDishesCard
+                            searchDishesData={item?.card?.card}
+                          />
+                        </div>
                       ))}
                   </div>
                 )}

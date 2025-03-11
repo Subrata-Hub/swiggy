@@ -8,7 +8,6 @@ const PopularCuisinesList = ({
   setSearchQueryInput,
   searchQueryInput,
 }) => {
-  console.log(popularCuisinesData);
   return (
     <div className="">
       {!searchQuery && !suggestionText && !searchQueryInput && (

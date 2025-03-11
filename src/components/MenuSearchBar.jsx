@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { HiArrowLeft } from "react-icons/hi2";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addMenuSearchQuery } from "../utils/menuSearchSlice";
 import { Link } from "react-router-dom";
 const MenuSearchBar = ({
@@ -11,10 +11,8 @@ const MenuSearchBar = ({
   location,
   areaName,
 }) => {
-  console.log(location, areaName, restaurantName, restaurantId);
+  // console.log(location, areaName, restaurantName, restaurantId);
   const [query, setQuery] = useState("");
-
-  const searchQuery = useSelector((store) => store.menuSearch.menuSearchQuery);
 
   const dispatch = useDispatch();
 
@@ -23,8 +21,6 @@ const MenuSearchBar = ({
     dispatch(addMenuSearchQuery(q));
   };
 
-  console.log("Local State:", query);
-  console.log("Redux Store:", searchQuery); // Check if Redux is updating
   return (
     <div className="mt-4 flex items-center px-40 relative">
       <Link

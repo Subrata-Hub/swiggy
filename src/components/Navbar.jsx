@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/download.png";
-import Cart from "./Cart";
+
 import Locationbar from "./Locationbar";
 
 import { HiOutlineSearch, HiOutlineUserCircle } from "react-icons/hi";
+import Cart from "../shared/Cart";
 
 const Navbar = () => {
   return (
@@ -13,7 +14,7 @@ const Navbar = () => {
         <Locationbar />
         <div className="flex gap-20">
           <Link to={`/search`}>
-            <div className="flex justify-center items-center gap-2">
+            <div className="flex justify-center items-center gap-2 mt-4">
               <HiOutlineSearch className="text-2xl" />
               <span className="text-[18px]">Search</span>
             </div>

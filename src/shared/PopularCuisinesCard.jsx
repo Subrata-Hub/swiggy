@@ -12,7 +12,6 @@ const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
   const link = popularCuisines?.action?.link;
   const match = link.match(/query=([^&]*)/);
   const query = match ? decodeURIComponent(match[1]) : null;
-  console.log(query);
 
   const updateUrl = () => {
     navigate(`?query=${query}`);

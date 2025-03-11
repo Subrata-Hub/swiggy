@@ -8,7 +8,7 @@ import { addMenuItems } from "../utils/menuItemSlice";
 import MenuItemCard from "../shared/MenuItemCard";
 import { useState } from "react";
 
-const MenuItemList = ({ resMenu, filterOption }) => {
+const MenuItemList = ({ resMenu, filterOption, resInformation }) => {
   const [showMenu, setShowMenu] = useState(true);
 
   const dispatch = useDispatch();
@@ -65,7 +65,10 @@ const MenuItemList = ({ resMenu, filterOption }) => {
           <div className="h-auto mt-4">
             {resMenuData?.map((resMenuItem) => (
               <div key={resMenuItem?.card?.info?.id}>
-                <MenuItemCard resMenuItem={resMenuItem} />
+                <MenuItemCard
+                  resMenuItem={resMenuItem}
+                  resInformation={resInformation}
+                />
 
                 <div className="w-full h-[1px] bg-slate-500"></div>
               </div>

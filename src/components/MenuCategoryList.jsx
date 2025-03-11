@@ -2,7 +2,7 @@
 
 import MenuItemList from "./MenuItemList";
 
-const MenuCategoryList = ({ resMenuData, filterOption }) => {
+const MenuCategoryList = ({ resMenuData, filterOption, resInformation }) => {
   return (
     <div className="mt-6">
       {resMenuData?.map((resMenu, index) => (
@@ -10,6 +10,7 @@ const MenuCategoryList = ({ resMenuData, filterOption }) => {
           resMenu={resMenu?.card?.card}
           filterOption={filterOption}
           key={index}
+          resInformation={resInformation}
         />
       ))}
     </div>

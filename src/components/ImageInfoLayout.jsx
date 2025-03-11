@@ -2,8 +2,6 @@ import ImageInfoLayoutCard from "./ImageInfoLayoutCard";
 
 /* eslint-disable react/prop-types */
 const ImageInfoLayout = ({ resData }) => {
-  console.log(resData);
-
   if (!resData) return;
 
   return (

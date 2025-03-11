@@ -10,10 +10,10 @@ const TagsCollectionPage = () => {
   const [loading, setLoading] = useState();
   const { collection_id, tags } = useParams();
   const tagsDetailData = useTagsDetails(collection_id, tags, setLoading);
-  console.log(tagsDetailData);
+
   const preview = tagsDetailData?.[0]?.card?.card;
   const restaurantList = tagsDetailData?.slice(2);
-  console.log(restaurantList);
+
   return (
     <div className="m-36 mt-0 mb-0">
       <Navbar />

@@ -31,7 +31,7 @@ const SearchPage = () => {
   const searchSuggestionsData = useSuggestions(searchQuery);
   const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
 
-  const overlay = document.querySelector(".overlay");
+  // const overlay = document.querySelector(".overlay");
 
   const suggestionText = useSelector(
     (store) => store?.config?.setting?.suggestionText
@@ -46,14 +46,10 @@ const SearchPage = () => {
   );
 
   const fillObj = useSelector((store) => store?.search?.filterObj);
-  console.log(fillObj);
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
 
-  console.log(searchResultsType);
-
   const searchResultsData = useSearchResults(suggestionText, setLoading);
-  console.log(searchResultsData);
 
   const selectedTabSearchResults = useSelectedTabResult(
     suggestionText,
@@ -74,8 +70,6 @@ const SearchPage = () => {
     isReSetStore
   );
 
-  console.log(filterSearchResults);
-
   const getRefineData = (data) => {
     const refineSearchResultsData = data?.cards?.filter(
       (item) =>
@@ -90,8 +84,6 @@ const SearchPage = () => {
       item?.card?.card?.["@type"] ===
       "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation"
   );
-
-  console.log(searchResultsRefineData);
 
   useEffect(() => {
     if (searchResultsData) {
@@ -147,7 +139,6 @@ const SearchPage = () => {
         selectedOption={selectedOption}
         fillObj={fillObj}
         loading={loading}
-        overlay={overlay}
       />
     </div>
   );

@@ -5,23 +5,161 @@ import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
+import { IoAdd } from "react-icons/io5";
+import { IoRemove } from "react-icons/io5";
 
 import useOutSideClick from "../hooks/useOutsideClick";
 import PopupSearchDishesCard from "./PopupSearchDishesCard";
+import PopupCardMenu from "./PopupCardMenu";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCartItems,
+  addResInfo,
+  removeCardItems,
+  reSetStore,
+  updateCardItems,
+} from "../utils/cartSlice";
+import PopupResetCard from "./PopupResetCard";
 const SearchDishesCard = ({ searchDishesData }) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [showResetCardPopup, setShowResetCardPopup] = useState(false);
+  const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
+  const [disableOutsideClick, setDisableOutsideClick] = useState(false);
+  // const [counter, setCounter] = useState(0);
 
   const searchDishesCardRef = useRef(null);
+  const menuItemCardRef = useRef(null);
+  const addonButtonRef = useRef(null);
+  const detailMenuButtonRef = useRef(null);
+  const addResetRef = useRef(null);
+  const resetPopupCardRef = useRef(null);
+  const dispatch = useDispatch();
 
-  useOutSideClick(searchDishesCardRef, () => setShowPopup(false));
+  const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const menuItem = cartItems.find(
+    (item) => item.menuId === searchDishesData?.info?.id
+  );
+  let counter = menuItem?.totalMenuItems || 0;
+
+  useOutSideClick(
+    searchDishesCardRef,
+    () => setShowPopup(false),
+
+    detailMenuButtonRef
+  );
+  useOutSideClick(
+    menuItemCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowMenuCardPopup(false);
+        // setShowResetCardPopup(false);
+      }
+    },
+    addonButtonRef
+  );
+
+  // useOutSideClick(
+  //   resetPopupCardRef,
+  //   () => {
+  //     if (!disableOutsideClick) {
+  //       setShowResetCardPopup(false);
+  //       // setShowResetCardPopup(false);
+  //     }
+  //   },
+  //   addResetRef
+  // );
+
+  const handleContinueClick = () => {
+    setDisableOutsideClick(true);
+    setTimeout(() => setDisableOutsideClick(false), 100);
+  };
 
   const handleShowPopup = () => {
     setShowPopup(!showPopup);
   };
 
+  const resInformation = {
+    restaurantId: searchDishesData?.restaurant?.info?.id,
+    restaurantName: searchDishesData?.restaurant?.info?.name,
+    resAreaName: searchDishesData?.restaurant?.info?.locality,
+    resImg: searchDishesData?.restaurant?.info?.cloudinaryImageId,
+    menuURL: `/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.locality}/${searchDishesData?.restaurant?.info?.id}`,
+  };
+
+  const menuInfo = {
+    menuId: searchDishesData?.info?.id,
+    resId: resInformation?.restaurantId,
+    menuName: searchDishesData?.info?.name,
+    vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
+    menuPrice: searchDishesData?.info?.price
+      ? searchDishesData?.info?.price / 100
+      : searchDishesData?.info?.defaultPrice / 100,
+  };
+
+  const handleShowMenuCardPopup = (currentResId) => {
+    setShowMenuCardPopup(!showMenuCardPopup);
+    if (searchDishesData?.info.addons) {
+      // setCounter((prev) => prev); // No immediate dispatch
+
+      counter = 0;
+      dispatch(addResInfo(resInformation));
+    } else {
+      if (
+        restaurantInfoFromCard &&
+        cartItems.length >= 1 &&
+        restaurantInfoFromCard?.restaurantId !== currentResId
+      ) {
+        setShowResetCardPopup(true);
+        dispatch(reSetStore());
+        dispatch(addResInfo(resInformation));
+        const newCounter = counter + 1;
+        // setCounter(newCounter);
+
+        const updatedCardInfo = {
+          ...menuInfo,
+          totalMenuItems: newCounter,
+        };
+        dispatch(addCartItems(updatedCardInfo));
+      } else {
+        const newCounter = counter + 1;
+        // setCounter(newCounter);
+
+        const updatedCardInfo = {
+          ...menuInfo,
+          totalMenuItems: newCounter,
+        };
+
+        dispatch(addResInfo(resInformation));
+        dispatch(addCartItems(updatedCardInfo));
+      }
+    }
+  };
+
+  const updatingCardItem = (item, action) => {
+    // setCounter(item);
+
+    const updatedCardInfo = {
+      ...menuInfo,
+      totalMenuItems: item, // Use the latest item count directly
+      action: action,
+    };
+
+    dispatch(updateCardItems(updatedCardInfo));
+
+    if (item === 0) {
+      dispatch(removeCardItems(updatedCardInfo));
+    }
+  };
+
+  // const handleAddCounter = () => {};
+
+  // console.log(searchDishesData?.restaurant?.info?.id);
+  // console.log(restaurantInfoFromCard?.restaurantId);
+
   return (
     <>
-      <div className="bg-slate-800 w-[438px] h-[275px] mb-2 rounded-2xl">
+      <div className="bg-slate-800 w-[438px] h-[287px] mb-2 rounded-2xl">
         <div className="flex-col">
           <div className="">
             <div className="flex justify-between items-center px-4 py-3">
@@ -47,7 +185,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
             </div>
             <div className="w-full h-0.5 bg-slate-700 mt-3"></div>
           </div>
-          <div className="flex justify-between  items-center py-4 px-3">
+          <div className="flex justify-between items-center py-4 px-3">
             <div className="flex-col w-1/2">
               {searchDishesData?.info?.isVeg === 1 ? (
                 <img src={veg} />
@@ -61,12 +199,12 @@ const SearchDishesCard = ({ searchDishesData }) => {
                 ₹
                 {searchDishesData?.info?.price
                   ? searchDishesData?.info?.price / 100
-                  : searchDishesData?.info?.efaultPrice / 100}
+                  : searchDishesData?.info?.defaultPrice / 100}
               </p>
               <button
                 className="px-4 py-2 rounded-2xl text-xs bg-slate-700 mt-4 flex items-center gap-2"
                 onClick={handleShowPopup}
-                ref={searchDishesCardRef}
+                ref={detailMenuButtonRef}
               >
                 More Details{" "}
                 <span>
@@ -75,11 +213,61 @@ const SearchDishesCard = ({ searchDishesData }) => {
                 </span>
               </button>
             </div>
-            <div className="w-[156px] h-[144px]">
+            <div className="w-[156px] h-[144px] relative">
               <img
                 src={IMG_SEARCH_DISH + searchDishesData?.info?.imageId}
                 className="w-[156px] h-[144px] object-cover rounded-2xl"
               />
+              <div className="absolute top-[124px] left-5">
+                {!counter && (
+                  <div ref={addonButtonRef}>
+                    <button
+                      className="px-10 py-2 bg-slate-900 text-emerald-500 rounded-xl"
+                      // onClick={handleShowMenuCardPopup}; () => setCounter(1)}
+                      onClick={() =>
+                        handleShowMenuCardPopup(
+                          searchDishesData?.restaurant?.info?.id
+                        )
+                      }
+                      ref={addResetRef}
+                    >
+                      ADD
+                    </button>
+                  </div>
+                )}
+
+                {(counter || counter > 0) && (
+                  <div
+                    className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center"
+                    // onClick={handleShowMenuCardPopup}
+                    // ref={addonButtonRef}
+                  >
+                    <div className="flex justify-center items-center gap-7">
+                      <div
+                        onClick={() => updatingCardItem(counter - 1, "Remove")}
+                      >
+                        {" "}
+                        <IoRemove />
+                      </div>
+
+                      <p className=""> {counter}</p>
+
+                      <div
+                        className=""
+                        onClick={() => updatingCardItem(counter + 1, "Add")}
+                      >
+                        {" "}
+                        <IoAdd />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="pt-5 pl-7 text-[13.5px]">
+                {searchDishesData?.info.addons && (
+                  <p className="">Customisable</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -88,10 +276,32 @@ const SearchDishesCard = ({ searchDishesData }) => {
       {showPopup && (
         <>
           <div className="overlay"></div>
-          {/* <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10"></div> */}
-          {/* <div className="fixed inset-0 bg-slate-950/70  backdrop-blur-md z-10"></div> */}
-
-          <PopupSearchDishesCard searchDishesData={searchDishesData} />
+          <div ref={searchDishesCardRef}>
+            <PopupSearchDishesCard searchDishesData={searchDishesData} />
+          </div>
+        </>
+      )}
+      {showMenuCardPopup && searchDishesData?.info.addons && (
+        <>
+          <div className="overlay"></div>
+          <div ref={menuItemCardRef}>
+            <PopupCardMenu
+              searchDishesData={searchDishesData}
+              handleShowMenuCardPopup={handleShowMenuCardPopup}
+              onContinue={handleContinueClick}
+              // setCounter={setCounter}
+              counter={counter}
+              resId={resInformation?.restaurantId}
+            />
+          </div>
+        </>
+      )}
+      {showResetCardPopup && (
+        <>
+          <div className="overlay"></div>
+          <div ref={resetPopupCardRef}>
+            <PopupResetCard setShowResetCardPopup={setShowResetCardPopup} />
+          </div>
         </>
       )}
     </>

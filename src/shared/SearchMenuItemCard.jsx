@@ -43,14 +43,22 @@ const SearchMenuItemCard = ({ menuItemsListFilter }) => {
 
               <p>{resMenuItem?.card?.info?.description}</p>
             </div>
-            {resMenuItem?.card?.info?.imageId && (
-              <div className="w-[156px] h-[144px]">
-                <img
-                  src={IMG_MENU + resMenuItem?.card?.info?.imageId}
-                  className="object-cover w-[156px] h-[144px] rounded-2xl"
-                />
-              </div>
-            )}
+            <div className="relative">
+              {resMenuItem?.card?.info?.imageId && (
+                <div className="w-[156px] h-[144px]">
+                  <img
+                    src={IMG_MENU + resMenuItem?.card?.info?.imageId}
+                    className="object-cover w-[156px] h-[144px] rounded-2xl"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* <div className="absolute bottom-0 left-5">
+              <button className="px-10 py-2 bg-slate-900 text-emerald-500">
+                ADD
+              </button>
+            </div> */}
           </div>
 
           <div className="w-full h-[1px] bg-slate-500"></div>

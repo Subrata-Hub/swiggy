@@ -15,6 +15,7 @@ const Menu = ({
   areaName,
   restaurantName,
   location,
+  resInformation,
 }) => {
   const [filterOption, setFilterOption] = useState("All");
   const [activeOption, setActiveOption] = useState("All");
@@ -45,7 +46,11 @@ const Menu = ({
         location={location}
       />
       <MenuItemFilter setOption={setOption} activeOption={activeOption} />
-      <MenuCategoryList resMenuData={resMenuData} filterOption={filterOption} />
+      <MenuCategoryList
+        resMenuData={resMenuData}
+        filterOption={filterOption}
+        resInformation={resInformation}
+      />
     </div>
   );
 };

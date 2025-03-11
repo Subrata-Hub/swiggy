@@ -7,17 +7,132 @@ import nonVeg from "../assets/nonVeg.svg";
 
 import useOutSideClick from "../hooks/useOutsideClick";
 import PopupSearchDishesCard from "./PopupSearchDishesCard";
+import PopupCardMenu from "./PopupCardMenu";
+import { IoAdd, IoRemove } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCartItems,
+  addResInfo,
+  removeCardItems,
+  reSetStore,
+  updateCardItems,
+} from "../utils/cartSlice";
+import PopupResetCard from "./PopupResetCard";
 
-const MenuItemCard = ({ resMenuItem }) => {
+const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
+  const [showResetCardPopup, setShowResetCardPopup] = useState(false);
+  const [disableOutsideClick, setDisableOutsideClick] = useState(false);
+  // const [counter, setCounter] = useState(0);
 
   const menuDishesCardRef = useRef(null);
+  const menuItemCardRef = useRef(null);
+  const addonButtonRef = useRef(null);
+  const detailMenuButtonRef = useRef(null);
+  const addResetRef = useRef(null);
+  const resetPopupCardRef = useRef(null);
+  const disPatch = useDispatch();
 
-  useOutSideClick(menuDishesCardRef, () => setShowPopup(false));
+  const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
+
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const menuItem = cartItems.find(
+    (item) => item.menuId === resMenuItem?.card?.info?.id
+  );
+  let counter = menuItem?.totalMenuItems || 0;
+
+  useOutSideClick(
+    menuDishesCardRef,
+    () => setShowPopup(false),
+    detailMenuButtonRef
+  );
+  useOutSideClick(
+    menuItemCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowMenuCardPopup(false);
+      }
+    },
+    addonButtonRef
+  );
+
+  const handleContinueClick = () => {
+    setDisableOutsideClick(true);
+    setTimeout(() => setDisableOutsideClick(false), 100);
+  };
 
   const handleShowPopup = () => {
     setShowPopup(!showPopup);
   };
+
+  const menuInfo = {
+    menuId: resMenuItem?.card?.info?.id,
+    resId: resInformation?.restaurantId,
+    menuName: resMenuItem?.card?.info?.name,
+    vegClassifier: resMenuItem?.card?.info?.itemAttribute?.vegClassifier,
+    menuPrice: resMenuItem?.card?.info?.price
+      ? resMenuItem?.card?.info?.price / 100
+      : resMenuItem?.card?.info?.defaultPrice / 100,
+  };
+
+  const handleShowMenuCardPopup = (currentResId) => {
+    setShowMenuCardPopup(!showMenuCardPopup);
+
+    if (resMenuItem?.card?.info.addons) {
+      // setCounter((prev) => prev); // No immediate dispatch
+      counter = 0;
+      disPatch(addResInfo(resInformation));
+    } else {
+      if (
+        restaurantInfoFromCard &&
+        cartItems.length >= 1 &&
+        restaurantInfoFromCard?.restaurantId !== currentResId
+      ) {
+        setShowResetCardPopup(true);
+        disPatch(reSetStore());
+        disPatch(addResInfo(resInformation));
+        const newCounter = counter + 1;
+        // setCounter(newCounter);
+
+        const updatedCardInfo = {
+          ...menuInfo,
+          totalMenuItems: newCounter,
+        };
+        disPatch(addCartItems(updatedCardInfo));
+      } else {
+        const newCounter = counter + 1;
+        // setCounter(newCounter);
+
+        const updatedCardInfo = {
+          ...menuInfo,
+          totalMenuItems: newCounter,
+        };
+
+        disPatch(addResInfo(resInformation));
+
+        disPatch(addCartItems(updatedCardInfo));
+      }
+    }
+  };
+
+  const updatingCardItem = (item, action) => {
+    // setCounter(item);
+
+    const updatedCardInfo = {
+      ...menuInfo,
+      totalMenuItems: item, // Use the latest item count directly
+      action: action,
+    };
+
+    disPatch(updateCardItems(updatedCardInfo));
+
+    if (item === 0) {
+      disPatch(removeCardItems(updatedCardInfo));
+    }
+  };
+
+  console.log(counter);
 
   return (
     <>
@@ -34,7 +149,7 @@ const MenuItemCard = ({ resMenuItem }) => {
             {" "}
             {resMenuItem?.card?.info?.name}
           </h2>
-          <p>
+          <p className="mt-2">
             ₹
             {resMenuItem?.card?.info?.price
               ? resMenuItem?.card?.info?.price / 100
@@ -56,31 +171,115 @@ const MenuItemCard = ({ resMenuItem }) => {
             ""
           )}
 
-          <p>{resMenuItem?.card?.info?.description}</p>
+          <p className="mt-2">{resMenuItem?.card?.info?.description}</p>
         </div>
-        <div ref={menuDishesCardRef} onClick={handleShowPopup}>
-          {resMenuItem?.card?.info?.imageId && (
+        <div className="relative">
+          {resMenuItem?.card?.info?.imageId ? (
             <div
               className="w-[156px] h-[144px]"
-              // onClick={handleShowPopup}
-              // ref={menuDishesCardRef}
+              onClick={handleShowPopup}
+              ref={detailMenuButtonRef}
             >
               <img
                 src={IMG_MENU + resMenuItem?.card?.info?.imageId}
                 className="object-cover w-[156px] h-[144px] rounded-2xl"
               />
             </div>
+          ) : (
+            // <div className="w-[156px]"></div>
+            ""
           )}
+          <div
+            className={
+              resMenuItem?.card?.info?.imageId
+                ? `absolute top-[124px] left-5`
+                : `absolute top-[30px] right-5`
+            }
+          >
+            {counter === 0 && (
+              <div ref={addonButtonRef}>
+                <button
+                  className="px-10 py-2 bg-slate-900 text-emerald-500 shadow-lg"
+                  onClick={() =>
+                    handleShowMenuCardPopup(resInformation?.restaurantId)
+                  }
+                  ref={addResetRef}
+                >
+                  ADD
+                </button>
+              </div>
+            )}
+
+            {counter >= 1 && (
+              <div
+                className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center"
+                // onClick={handleShowMenuCardPopup}
+                // ref={addonButtonRef}
+              >
+                <div className="flex justify-center items-center gap-7">
+                  <div onClick={() => updatingCardItem(counter - 1, "Remove")}>
+                    {" "}
+                    <IoRemove />
+                  </div>
+
+                  <p className=""> {counter}</p>
+
+                  <div
+                    className=""
+                    onClick={() => updatingCardItem(counter + 1, "Add")}
+                  >
+                    {" "}
+                    <IoAdd />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="pt-6 pl-6">
+            {resMenuItem?.card?.info.addons && <p className="">Customisable</p>}
+          </div>
         </div>
       </div>
 
       {showPopup && (
         <>
           <div className="overlay"></div>
-          <PopupSearchDishesCard
-            searchDishesData={resMenuItem?.card}
-            handleShowPopup={handleShowPopup}
-          />
+          <div ref={menuDishesCardRef}>
+            <PopupSearchDishesCard
+              searchDishesData={resMenuItem?.card}
+              handleShowPopup={handleShowPopup}
+            />
+          </div>
+        </>
+      )}
+
+      {showMenuCardPopup && resMenuItem?.card?.info.addons && (
+        <>
+          <div className="overlay"></div>
+          <div ref={menuItemCardRef}>
+            <PopupCardMenu
+              searchDishesData={resMenuItem?.card}
+              handleShowMenuCardPopup={handleShowMenuCardPopup}
+              onContinue={handleContinueClick}
+              // setCounter={setCounter}
+              counter={counter}
+              resId={resInformation?.restaurantId}
+            />
+          </div>
+        </>
+      )}
+
+      {showResetCardPopup && (
+        <>
+          <div className="overlay"></div>
+          <div ref={resetPopupCardRef}>
+            <PopupResetCard
+              setShowResetCardPopup={setShowResetCardPopup}
+              // setShowMenuCardPopup={setShowMenuCardPopup}
+              // setCounter={setCounter}
+              // counter={counter}
+            />
+          </div>
         </>
       )}
 
