@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { HiArrowSmallRight } from "react-icons/hi2";
 import { IMG_SEARCH_DISH } from "../utils/constant";
@@ -16,7 +17,6 @@ import {
   addCartItems,
   addResInfo,
   removeCardItems,
-  reSetStore,
   updateCardItems,
 } from "../utils/cartSlice";
 import PopupResetCard from "./PopupResetCard";
@@ -25,6 +25,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
+  const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
   // const [counter, setCounter] = useState(0);
 
   const searchDishesCardRef = useRef(null);
@@ -59,21 +60,21 @@ const SearchDishesCard = ({ searchDishesData }) => {
     addonButtonRef
   );
 
-  // useOutSideClick(
-  //   resetPopupCardRef,
-  //   () => {
-  //     if (!disableOutsideClick) {
-  //       setShowResetCardPopup(false);
-  //       // setShowResetCardPopup(false);
-  //     }
-  //   },
-  //   addResetRef
-  // );
+  useOutSideClick(
+    resetPopupCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowResetCardPopup(false);
+        // setShowResetCardPopup(false);
+      }
+    },
+    addResetRef
+  );
 
-  const handleContinueClick = () => {
-    setDisableOutsideClick(true);
-    setTimeout(() => setDisableOutsideClick(false), 100);
-  };
+  // const handleContinueClick = () => {
+  //   setDisableOutsideClick(true);
+  //   setTimeout(() => setDisableOutsideClick(false), 100);
+  // };
 
   const handleShowPopup = () => {
     setShowPopup(!showPopup);
@@ -97,30 +98,28 @@ const SearchDishesCard = ({ searchDishesData }) => {
       : searchDishesData?.info?.defaultPrice / 100,
   };
 
-  const handleShowMenuCardPopup = (currentResId) => {
-    setShowMenuCardPopup(!showMenuCardPopup);
+  const handleShowMenuCardPopup = () => {
     if (searchDishesData?.info.addons) {
-      // setCounter((prev) => prev); // No immediate dispatch
+      if (
+        cartItems.length >= 1 &&
+        restaurantInfoFromCard?.restaurantId !==
+          searchDishesData?.restaurant?.info?.id
+      ) {
+        setShowResetCardPopup(true);
+      } else {
+        setShowMenuCardPopup(!showMenuCardPopup);
+        counter = 0;
+      }
 
-      counter = 0;
-      dispatch(addResInfo(resInformation));
+      // dispatch(addResInfo(resInformation));
     } else {
       if (
         restaurantInfoFromCard &&
         cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !== currentResId
+        restaurantInfoFromCard?.restaurantId !==
+          searchDishesData?.restaurant?.info?.id
       ) {
         setShowResetCardPopup(true);
-        dispatch(reSetStore());
-        dispatch(addResInfo(resInformation));
-        const newCounter = counter + 1;
-        // setCounter(newCounter);
-
-        const updatedCardInfo = {
-          ...menuInfo,
-          totalMenuItems: newCounter,
-        };
-        dispatch(addCartItems(updatedCardInfo));
       } else {
         const newCounter = counter + 1;
         // setCounter(newCounter);
@@ -151,11 +150,6 @@ const SearchDishesCard = ({ searchDishesData }) => {
       dispatch(removeCardItems(updatedCardInfo));
     }
   };
-
-  // const handleAddCounter = () => {};
-
-  // console.log(searchDishesData?.restaurant?.info?.id);
-  // console.log(restaurantInfoFromCard?.restaurantId);
 
   return (
     <>
@@ -223,12 +217,12 @@ const SearchDishesCard = ({ searchDishesData }) => {
                   <div ref={addonButtonRef}>
                     <button
                       className="px-10 py-2 bg-slate-900 text-emerald-500 rounded-xl"
-                      // onClick={handleShowMenuCardPopup}; () => setCounter(1)}
-                      onClick={() =>
-                        handleShowMenuCardPopup(
-                          searchDishesData?.restaurant?.info?.id
-                        )
-                      }
+                      onClick={handleShowMenuCardPopup}
+                      // onClick={() =>
+                      //   handleShowMenuCardPopup(
+                      //     searchDishesData?.restaurant?.info?.id
+                      //   )
+                      // }
                       ref={addResetRef}
                     >
                       ADD
@@ -281,17 +275,20 @@ const SearchDishesCard = ({ searchDishesData }) => {
           </div>
         </>
       )}
-      {showMenuCardPopup && searchDishesData?.info.addons && (
+      {((showMenuCardPopup && searchDishesData?.info.addons) ||
+        showPopupBeforeReset) && (
         <>
           <div className="overlay"></div>
           <div ref={menuItemCardRef}>
             <PopupCardMenu
               searchDishesData={searchDishesData}
-              handleShowMenuCardPopup={handleShowMenuCardPopup}
-              onContinue={handleContinueClick}
+              setShowMenuCardPopup={setShowMenuCardPopup}
+              // handleShowMenuCardPopup={handleShowMenuCardPopup}
+              // onContinue={handleContinueClick}
               // setCounter={setCounter}
               counter={counter}
               resId={resInformation?.restaurantId}
+              setShowPopupBeforeReset={setShowPopupBeforeReset}
             />
           </div>
         </>
@@ -300,7 +297,14 @@ const SearchDishesCard = ({ searchDishesData }) => {
         <>
           <div className="overlay"></div>
           <div ref={resetPopupCardRef}>
-            <PopupResetCard setShowResetCardPopup={setShowResetCardPopup} />
+            <PopupResetCard
+              setShowResetCardPopup={setShowResetCardPopup}
+              resInformation={resInformation}
+              menuInfo={menuInfo}
+              counter={counter}
+              searchDishesData={searchDishesData}
+              setShowPopupBeforeReset={setShowPopupBeforeReset}
+            />
           </div>
         </>
       )}

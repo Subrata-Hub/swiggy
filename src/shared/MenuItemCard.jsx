@@ -14,7 +14,6 @@ import {
   addCartItems,
   addResInfo,
   removeCardItems,
-  reSetStore,
   updateCardItems,
 } from "../utils/cartSlice";
 import PopupResetCard from "./PopupResetCard";
@@ -90,16 +89,16 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
         restaurantInfoFromCard?.restaurantId !== currentResId
       ) {
         setShowResetCardPopup(true);
-        disPatch(reSetStore());
-        disPatch(addResInfo(resInformation));
-        const newCounter = counter + 1;
-        // setCounter(newCounter);
+        // disPatch(reSetStore());
+        // disPatch(addResInfo(resInformation));
+        // const newCounter = counter + 1;
+        // // setCounter(newCounter);
 
-        const updatedCardInfo = {
-          ...menuInfo,
-          totalMenuItems: newCounter,
-        };
-        disPatch(addCartItems(updatedCardInfo));
+        // const updatedCardInfo = {
+        //   ...menuInfo,
+        //   totalMenuItems: newCounter,
+        // };
+        // disPatch(addCartItems(updatedCardInfo));
       } else {
         const newCounter = counter + 1;
         // setCounter(newCounter);
@@ -275,9 +274,9 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
           <div ref={resetPopupCardRef}>
             <PopupResetCard
               setShowResetCardPopup={setShowResetCardPopup}
-              // setShowMenuCardPopup={setShowMenuCardPopup}
-              // setCounter={setCounter}
-              // counter={counter}
+              resInformation={resInformation}
+              menuInfo={menuInfo}
+              counter={counter}
             />
           </div>
         </>

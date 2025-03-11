@@ -1,8 +1,38 @@
 /* eslint-disable react/prop-types */
 
-const PopupResetCard = ({ setShowResetCardPopup }) => {
+import { useDispatch } from "react-redux";
+import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
+
+const PopupResetCard = ({
+  setShowResetCardPopup,
+  resInformation,
+  menuInfo,
+  counter,
+  searchDishesData,
+  setShowPopupBeforeReset,
+}) => {
+  const dispatch = useDispatch();
   // const cart = useSelector((state) => state.cart);
+
   const handleResetCart = () => {
+    dispatch(reSetStore());
+
+    dispatch(addResInfo(resInformation));
+    const newCounter = counter + 1;
+    // setCounter(newCounter);
+
+    const updatedCardInfo = {
+      ...menuInfo,
+      totalMenuItems: newCounter,
+    };
+    dispatch(addCartItems(updatedCardInfo));
+
+    if (searchDishesData?.info.addons) {
+      // setShowMenuCardPopup(!showMenuCardPopup);
+
+      setShowPopupBeforeReset(true);
+      dispatch(reSetStore());
+    }
     setShowResetCardPopup(false);
   };
   return (
@@ -18,7 +48,7 @@ const PopupResetCard = ({ setShowResetCardPopup }) => {
         <div className="flex justify-between items-center mt-2">
           <button
             className="w-[220px] h-[50px] bg-slate-600"
-            onClick={() => handleResetCart}
+            onClick={() => setShowResetCardPopup(false)}
           >
             NO
           </button>

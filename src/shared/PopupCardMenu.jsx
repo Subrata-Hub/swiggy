@@ -4,13 +4,15 @@ import nonVeg from "../assets/nonVeg.svg";
 import { HiMiniXMark } from "react-icons/hi2";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addCartItems } from "../utils/cartSlice";
+import { addCartItems, addResInfo } from "../utils/cartSlice";
 const PopupCardMenu = ({
   searchDishesData,
-  handleShowMenuCardPopup,
+  setShowMenuCardPopup,
+  // handleShowMenuCardPopup,
   // setCounter,
   counter,
   resId,
+  setShowPopupBeforeReset,
   // onContinue,
 }) => {
   const [totalPrice, setTotalPrice] = useState(
@@ -58,6 +60,14 @@ const PopupCardMenu = ({
     }
   };
 
+  const resInformation = {
+    restaurantId: searchDishesData?.restaurant?.info?.id,
+    restaurantName: searchDishesData?.restaurant?.info?.name,
+    resAreaName: searchDishesData?.restaurant?.info?.locality,
+    resImg: searchDishesData?.restaurant?.info?.cloudinaryImageId,
+    menuURL: `/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.locality}/${searchDishesData?.restaurant?.info?.id}`,
+  };
+
   const menuInfo = {
     menuId: searchDishesData?.info?.id,
     resId: resId,
@@ -68,13 +78,16 @@ const PopupCardMenu = ({
   };
 
   const handleAddItemToCart = (item) => {
-    handleShowMenuCardPopup();
+    // handleShowMenuCardPopup();
     // setCounter(item);
     const updatedCardInfo = {
       ...menuInfo,
       totalMenuItems: item,
     };
+    dispatch(addResInfo(resInformation));
     dispatch(addCartItems(updatedCardInfo));
+    setShowPopupBeforeReset(false);
+    setShowMenuCardPopup(false);
   };
   return (
     <div className="w-[600px] h-auto bg-slate-800 fixed z-[11999] top-15 right-[30%] rounded-3xl p-4 ">
@@ -90,7 +103,7 @@ const PopupCardMenu = ({
       <div className="absolute top-0 right-0">
         <div
           className="w-6 h-6 rounded-full bg-amber-500 flex justify-center items-center"
-          onClick={handleShowMenuCardPopup}
+          onClick={() => setShowMenuCardPopup(false)}
         >
           <HiMiniXMark />
         </div>
