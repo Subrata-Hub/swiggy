@@ -8,32 +8,44 @@ const PopupResetCard = ({
   resInformation,
   menuInfo,
   counter,
-  searchDishesData,
+
   setShowPopupBeforeReset,
+  searchDishesData,
 }) => {
   const dispatch = useDispatch();
   // const cart = useSelector((state) => state.cart);
 
   const handleResetCart = () => {
-    dispatch(reSetStore());
-
-    dispatch(addResInfo(resInformation));
-    const newCounter = counter + 1;
-    // setCounter(newCounter);
-
-    const updatedCardInfo = {
-      ...menuInfo,
-      totalMenuItems: newCounter,
-    };
-    dispatch(addCartItems(updatedCardInfo));
-
     if (searchDishesData?.info.addons) {
-      // setShowMenuCardPopup(!showMenuCardPopup);
-
       setShowPopupBeforeReset(true);
+
+      // dispatch(reSetStore());
+      // counter = 0;
+      setShowResetCardPopup(false);
+      // dispatch(addResInfo(resInformation));
+      // const newCounter = counter + 1;
+      // // setCounter(newCounter);
+
+      // const updatedCardInfo = {
+      //   ...menuInfo,
+      //   totalMenuItems: newCounter,
+      // };
+      // dispatch(addCartItems(updatedCardInfo));
+    } else {
       dispatch(reSetStore());
+
+      dispatch(addResInfo(resInformation));
+      const newCounter = counter + 1;
+      // setCounter(newCounter);
+
+      const updatedCardInfo = {
+        ...menuInfo,
+        totalMenuItems: newCounter,
+      };
+      dispatch(addCartItems(updatedCardInfo));
+
+      setShowResetCardPopup(false);
     }
-    setShowResetCardPopup(false);
   };
   return (
     <div className="w-[520px] h-[220px] p-[30px] bg-slate-800 fixed z-[11999] bottom-15 right-[30%] rounded-3xl">

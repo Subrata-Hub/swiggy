@@ -4,15 +4,18 @@ import nonVeg from "../assets/nonVeg.svg";
 import { HiMiniXMark } from "react-icons/hi2";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addCartItems, addResInfo } from "../utils/cartSlice";
+import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
 const PopupCardMenu = ({
   searchDishesData,
   setShowMenuCardPopup,
   // handleShowMenuCardPopup,
   // setCounter,
+  resInformation,
   counter,
   resId,
   setShowPopupBeforeReset,
+  showPopupBeforeReset,
+  // showMenuCardPopup,
   // onContinue,
 }) => {
   const [totalPrice, setTotalPrice] = useState(
@@ -60,14 +63,6 @@ const PopupCardMenu = ({
     }
   };
 
-  const resInformation = {
-    restaurantId: searchDishesData?.restaurant?.info?.id,
-    restaurantName: searchDishesData?.restaurant?.info?.name,
-    resAreaName: searchDishesData?.restaurant?.info?.locality,
-    resImg: searchDishesData?.restaurant?.info?.cloudinaryImageId,
-    menuURL: `/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.locality}/${searchDishesData?.restaurant?.info?.id}`,
-  };
-
   const menuInfo = {
     menuId: searchDishesData?.info?.id,
     resId: resId,
@@ -78,16 +73,27 @@ const PopupCardMenu = ({
   };
 
   const handleAddItemToCart = (item) => {
-    // handleShowMenuCardPopup();
-    // setCounter(item);
-    const updatedCardInfo = {
-      ...menuInfo,
-      totalMenuItems: item,
-    };
-    dispatch(addResInfo(resInformation));
-    dispatch(addCartItems(updatedCardInfo));
-    setShowPopupBeforeReset(false);
-    setShowMenuCardPopup(false);
+    if (showPopupBeforeReset) {
+      counter = 0;
+      dispatch(reSetStore());
+      const updatedCardInfo = {
+        ...menuInfo,
+        totalMenuItems: item,
+      };
+      dispatch(addResInfo(resInformation));
+      dispatch(addCartItems(updatedCardInfo));
+      setShowPopupBeforeReset(false);
+      setShowMenuCardPopup(false);
+    } else {
+      const updatedCardInfo = {
+        ...menuInfo,
+        totalMenuItems: item,
+      };
+      dispatch(addResInfo(resInformation));
+      dispatch(addCartItems(updatedCardInfo));
+      setShowPopupBeforeReset(false);
+      setShowMenuCardPopup(false);
+    }
   };
   return (
     <div className="w-[600px] h-auto bg-slate-800 fixed z-[11999] top-15 right-[30%] rounded-3xl p-4 ">
@@ -103,7 +109,9 @@ const PopupCardMenu = ({
       <div className="absolute top-0 right-0">
         <div
           className="w-6 h-6 rounded-full bg-amber-500 flex justify-center items-center"
-          onClick={() => setShowMenuCardPopup(false)}
+          onClick={() => (
+            setShowMenuCardPopup(false), setShowPopupBeforeReset(false)
+          )}
         >
           <HiMiniXMark />
         </div>
@@ -115,7 +123,11 @@ const PopupCardMenu = ({
         {searchDishesData?.info?.addons?.map((group) => (
           <>
             <h2 className="py-4" key={group?.id}>
-              {group?.groupName}(0/{group?.choices?.length})
+              {/* {group?.groupName}(0/
+              {group?.maxAddons === -1 ? "Optional" : group?.maxAddons}) */}
+              {group?.groupName} (
+              {group?.maxAddons === -1 ? "Optional" : `0 / ${group?.maxAddons}`}
+              )
             </h2>
             <div className="p-2 bg-slate-900">
               {group?.choices?.map((item) => (

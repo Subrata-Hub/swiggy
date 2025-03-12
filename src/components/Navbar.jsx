@@ -14,7 +14,7 @@ const Navbar = () => {
         <Locationbar />
         <div className="flex gap-20">
           <Link to={`/search`}>
-            <div className="flex justify-center items-center gap-2 mt-4">
+            <div className="flex justify-center items-center gap-2 mt-2">
               <HiOutlineSearch className="text-2xl" />
               <span className="text-[18px]">Search</span>
             </div>

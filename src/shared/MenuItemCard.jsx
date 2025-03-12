@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import { IMG_MENU } from "../utils/constant";
@@ -23,6 +24,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
+  const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
   // const [counter, setCounter] = useState(0);
 
   const menuDishesCardRef = useRef(null);
@@ -56,6 +58,17 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     addonButtonRef
   );
 
+  useOutSideClick(
+    resetPopupCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowResetCardPopup(false);
+        // setShowResetCardPopup(false);
+      }
+    },
+    addResetRef
+  );
+
   const handleContinueClick = () => {
     setDisableOutsideClick(true);
     setTimeout(() => setDisableOutsideClick(false), 100);
@@ -75,30 +88,24 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
       : resMenuItem?.card?.info?.defaultPrice / 100,
   };
 
-  const handleShowMenuCardPopup = (currentResId) => {
-    setShowMenuCardPopup(!showMenuCardPopup);
-
+  const handleShowMenuCardPopup = () => {
     if (resMenuItem?.card?.info.addons) {
-      // setCounter((prev) => prev); // No immediate dispatch
-      counter = 0;
-      disPatch(addResInfo(resInformation));
+      if (
+        cartItems.length >= 1 &&
+        restaurantInfoFromCard?.restaurantId !== resInformation?.restaurantId
+      ) {
+        setShowResetCardPopup(true);
+      } else {
+        setShowMenuCardPopup(!showMenuCardPopup);
+        counter = 0;
+      }
     } else {
       if (
         restaurantInfoFromCard &&
         cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !== currentResId
+        restaurantInfoFromCard?.restaurantId !== resInformation?.restaurantId
       ) {
         setShowResetCardPopup(true);
-        // disPatch(reSetStore());
-        // disPatch(addResInfo(resInformation));
-        // const newCounter = counter + 1;
-        // // setCounter(newCounter);
-
-        // const updatedCardInfo = {
-        //   ...menuInfo,
-        //   totalMenuItems: newCounter,
-        // };
-        // disPatch(addCartItems(updatedCardInfo));
       } else {
         const newCounter = counter + 1;
         // setCounter(newCounter);
@@ -199,9 +206,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               <div ref={addonButtonRef}>
                 <button
                   className="px-10 py-2 bg-slate-900 text-emerald-500 shadow-lg"
-                  onClick={() =>
-                    handleShowMenuCardPopup(resInformation?.restaurantId)
-                  }
+                  onClick={handleShowMenuCardPopup}
                   ref={addResetRef}
                 >
                   ADD
@@ -210,11 +215,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             )}
 
             {counter >= 1 && (
-              <div
-                className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center"
-                // onClick={handleShowMenuCardPopup}
-                // ref={addonButtonRef}
-              >
+              <div className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
                 <div className="flex justify-center items-center gap-7">
                   <div onClick={() => updatingCardItem(counter - 1, "Remove")}>
                     {" "}
@@ -252,17 +253,20 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
         </>
       )}
 
-      {showMenuCardPopup && resMenuItem?.card?.info.addons && (
+      {((showMenuCardPopup && resMenuItem?.card?.info.addons) ||
+        showPopupBeforeReset) && (
         <>
           <div className="overlay"></div>
           <div ref={menuItemCardRef}>
             <PopupCardMenu
               searchDishesData={resMenuItem?.card}
-              handleShowMenuCardPopup={handleShowMenuCardPopup}
-              onContinue={handleContinueClick}
-              // setCounter={setCounter}
+              setShowMenuCardPopup={setShowMenuCardPopup}
+              resInformation={resInformation}
               counter={counter}
               resId={resInformation?.restaurantId}
+              setShowPopupBeforeReset={setShowPopupBeforeReset}
+              showPopupBeforeReset={showPopupBeforeReset}
+              // showMenuCardPopup={showMenuCardPopup}
             />
           </div>
         </>
@@ -277,6 +281,9 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               resInformation={resInformation}
               menuInfo={menuInfo}
               counter={counter}
+              setShowPopupBeforeReset={setShowPopupBeforeReset}
+              searchDishesData={resMenuItem?.card}
+              // setShowMenuCardPopup={setShowMenuCardPopup}
             />
           </div>
         </>

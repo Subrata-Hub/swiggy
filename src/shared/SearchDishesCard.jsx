@@ -26,7 +26,6 @@ const SearchDishesCard = ({ searchDishesData }) => {
   const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
   const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
-  // const [counter, setCounter] = useState(0);
 
   const searchDishesCardRef = useRef(null);
   const menuItemCardRef = useRef(null);
@@ -54,7 +53,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
     () => {
       if (!disableOutsideClick) {
         setShowMenuCardPopup(false);
-        // setShowResetCardPopup(false);
+        // setShowPopupBeforeReset(false);
       }
     },
     addonButtonRef
@@ -65,7 +64,6 @@ const SearchDishesCard = ({ searchDishesData }) => {
     () => {
       if (!disableOutsideClick) {
         setShowResetCardPopup(false);
-        // setShowResetCardPopup(false);
       }
     },
     addResetRef
@@ -106,12 +104,11 @@ const SearchDishesCard = ({ searchDishesData }) => {
           searchDishesData?.restaurant?.info?.id
       ) {
         setShowResetCardPopup(true);
+        // setShowMenuCardPopup(false);
       } else {
         setShowMenuCardPopup(!showMenuCardPopup);
         counter = 0;
       }
-
-      // dispatch(addResInfo(resInformation));
     } else {
       if (
         restaurantInfoFromCard &&
@@ -218,11 +215,6 @@ const SearchDishesCard = ({ searchDishesData }) => {
                     <button
                       className="px-10 py-2 bg-slate-900 text-emerald-500 rounded-xl"
                       onClick={handleShowMenuCardPopup}
-                      // onClick={() =>
-                      //   handleShowMenuCardPopup(
-                      //     searchDishesData?.restaurant?.info?.id
-                      //   )
-                      // }
                       ref={addResetRef}
                     >
                       ADD
@@ -231,11 +223,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
                 )}
 
                 {(counter || counter > 0) && (
-                  <div
-                    className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center"
-                    // onClick={handleShowMenuCardPopup}
-                    // ref={addonButtonRef}
-                  >
+                  <div className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
                     <div className="flex justify-center items-center gap-7">
                       <div
                         onClick={() => updatingCardItem(counter - 1, "Remove")}
@@ -283,12 +271,12 @@ const SearchDishesCard = ({ searchDishesData }) => {
             <PopupCardMenu
               searchDishesData={searchDishesData}
               setShowMenuCardPopup={setShowMenuCardPopup}
-              // handleShowMenuCardPopup={handleShowMenuCardPopup}
-              // onContinue={handleContinueClick}
-              // setCounter={setCounter}
+              resInformation={resInformation}
               counter={counter}
               resId={resInformation?.restaurantId}
               setShowPopupBeforeReset={setShowPopupBeforeReset}
+              showPopupBeforeReset={showPopupBeforeReset}
+              // showMenuCardPopup={showMenuCardPopup}
             />
           </div>
         </>
@@ -302,8 +290,8 @@ const SearchDishesCard = ({ searchDishesData }) => {
               resInformation={resInformation}
               menuInfo={menuInfo}
               counter={counter}
-              searchDishesData={searchDishesData}
               setShowPopupBeforeReset={setShowPopupBeforeReset}
+              searchDishesData={searchDishesData}
             />
           </div>
         </>
