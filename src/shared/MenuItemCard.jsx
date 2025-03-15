@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import { IMG_MENU } from "../utils/constant";
@@ -138,7 +137,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     }
   };
 
-  console.log(counter);
+  // console.log(counter);
 
   return (
     <>
@@ -267,6 +266,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
               // showMenuCardPopup={showMenuCardPopup}
+              onContinue={handleContinueClick}
             />
           </div>
         </>

@@ -8,8 +8,13 @@ export const IMG_SEARCH_DISH = `https://media-assets.swiggy.com/swiggy/image/upl
 export const IMG_SEARCH_DISH_BANNER = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/`;
 export const IMG_SEARCH_RES = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_264,h_288,c_fill/`;
 export const CART_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_132,h_132,c_fill/`;
-export const LAT = 22.5743545;
-export const LNG = 88.3628734;
+export const LAT = 22.723616;
+export const LNG = 88.350805;
+
+export const getFormatedPrice = (price) => {
+  const formatedPrice = Math.floor(price * 100) / 100;
+  return formatedPrice;
+};
 
 // for prefetch => https://www.swiggy.com/dapi/landing/PRE_SEARCH?lat=22.723616&lng=88.350805
 

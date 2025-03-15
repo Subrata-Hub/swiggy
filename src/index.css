@@ -17,6 +17,15 @@ body {
   color: white;
 }
 
+.custom-toast-container {
+  position: absolute !important;
+  bottom: 6rem !important;
+  /* Equivalent to bottom-24 */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+}
+
 .overlay {
   position: fixed;
   top: 0;

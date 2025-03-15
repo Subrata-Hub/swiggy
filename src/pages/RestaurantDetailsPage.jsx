@@ -6,6 +6,7 @@ import OfferCard from "../shared/OfferCard";
 import Menu from "../components/Menu";
 import { useState } from "react";
 import RestaurantDetailShimmer from "../shared/shimmer/RestaurantDetailShimmer";
+import PopupCardView from "../shared/PopupCardView";
 
 const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,7 @@ const RestaurantDetailsPage = () => {
             location={location}
             resInformation={resInformation}
           />
+          <PopupCardView />
         </>
       )}
     </div>

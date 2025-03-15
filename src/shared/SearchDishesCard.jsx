@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { HiArrowSmallRight } from "react-icons/hi2";
 import { IMG_SEARCH_DISH } from "../utils/constant";
@@ -69,10 +68,10 @@ const SearchDishesCard = ({ searchDishesData }) => {
     addResetRef
   );
 
-  // const handleContinueClick = () => {
-  //   setDisableOutsideClick(true);
-  //   setTimeout(() => setDisableOutsideClick(false), 100);
-  // };
+  const handleContinueClick = () => {
+    setDisableOutsideClick(true);
+    setTimeout(() => setDisableOutsideClick(false), 100);
+  };
 
   const handleShowPopup = () => {
     setShowPopup(!showPopup);
@@ -277,6 +276,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
               // showMenuCardPopup={showMenuCardPopup}
+              onContinue={handleContinueClick}
             />
           </div>
         </>

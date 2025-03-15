@@ -117,8 +117,8 @@ const SearchResults = ({
                         className={`px-4 py-2  rounded-2xl ${
                           btn?.id === searchResultsType ||
                           (searchResultsType === "CUISINE" && btn?.selected)
-                            ? `bg-red-500`
-                            : "bg-fuchsia-700"
+                            ? `bg-cyan-900`
+                            : "bg-slate-800"
                         }`}
                         value={btn?.id}
                         onClick={(e) => getSelectedTab(e.target.value)}
@@ -193,7 +193,7 @@ const SearchResults = ({
                           onClick={(e) =>
                             getFilterObj(JSON.parse(e.target.value))
                           }
-                          className={`px-6 py-2  rounded-xl text-[13.5px] ${
+                          className={`px-5 py-2  rounded-xl text-[13.5px] ${
                             Object.values(fillObj)?.some(
                               (item) =>
                                 item?.[0]?.id === fillter?.facetInfo?.[0]?.id
@@ -210,7 +210,7 @@ const SearchResults = ({
                                   item?.[0]?.id === fillter?.facetInfo?.[0]?.id
                               ) && (
                                 <div
-                                  className="absolute right-2 top-3"
+                                  className="absolute right-1 top-3"
                                   key={index}
                                 >
                                   <HiMiniXMark className="text-sm" />

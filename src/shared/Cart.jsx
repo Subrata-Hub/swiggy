@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { CART_IMG } from "../utils/constant";
+import { CART_IMG, getFormatedPrice } from "../utils/constant";
 import { useState } from "react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
@@ -119,7 +119,8 @@ const Cart = () => {
                       </p>
                     </div>
                     <div className="font-light">
-                      ₹{cart?.menuPrice * cart?.totalMenuItems}
+                      ₹
+                      {getFormatedPrice(cart?.menuPrice * cart?.totalMenuItems)}
                     </div>
                   </div>
                 ))}
@@ -131,7 +132,7 @@ const Cart = () => {
                     <h2 className="font-semibold">Sub Total</h2>
                     <p className="font-light">Extra charges may apply</p>
                   </div>
-                  <div>₹{subTotal}</div>
+                  <div>₹{getFormatedPrice(subTotal)}</div>
                 </div>
                 <div className="w-full h-10 bg-amber-600 flex justify-center items-center mt-6">
                   CHECKOUT

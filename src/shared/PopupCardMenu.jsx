@@ -5,6 +5,9 @@ import { HiMiniXMark } from "react-icons/hi2";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
+import { getFormatedPrice } from "../utils/constant";
+
+import { toast, ToastContainer, Bounce } from "react-toastify";
 const PopupCardMenu = ({
   searchDishesData,
   setShowMenuCardPopup,
@@ -16,7 +19,7 @@ const PopupCardMenu = ({
   setShowPopupBeforeReset,
   showPopupBeforeReset,
   // showMenuCardPopup,
-  // onContinue,
+  onContinue,
 }) => {
   const [totalPrice, setTotalPrice] = useState(
     +searchDishesData?.info?.price / 100 ||
@@ -29,8 +32,10 @@ const PopupCardMenu = ({
 
   // const [selectedRadioOption, setSelectedRadioOption] = useState({});
   const [selectedAddons, setSelectedAddons] = useState({});
-  // const [addonsList, setAddonsList] = useState([]);
-  // console.log(addonsList);
+
+  const [addonsList, setAddonsList] = useState([]);
+  const [showCustomizedItems, setShowCustomizedItems] = useState(false);
+  const [showAddons, setShowAddons] = useState(true);
 
   // const addons = searchDishesData?.info?.addons?.[0]?.choices;
 
@@ -52,14 +57,43 @@ const PopupCardMenu = ({
 
   // console.log(selectedRadioOption);
 
-  const updateTotalPrice = (id, value, isChecked) => {
-    setSelectedAddons((prevState) => ({ ...prevState, [id]: isChecked }));
+  const updateTotalPrice = (
+    groupId,
+    groupName,
+    maxAddons,
+    id,
+    name,
+    value,
+    isChecked
+  ) => {
+    const selectedCount = getSelectedItemCount(groupId);
 
     if (isChecked) {
-      setTotalPrice((preValue) => preValue + value);
-      // setAddonsList(addonsList.push(name));
+      // Prevent adding if maxAddons is reached
+      if (selectedCount >= maxAddons) {
+        toast(`You can select a maximum of ${maxAddons} for ${groupName}`);
+        return;
+      }
+
+      setSelectedAddons((prevState) => ({
+        ...prevState,
+        [id]: true,
+      }));
+
+      setTotalPrice((prevValue) => prevValue + value);
+      setAddonsList((preArry) => [
+        ...preArry,
+        { name: name, groupId: groupId },
+      ]);
     } else {
-      setTotalPrice((preValue) => preValue + -value);
+      // Allow removing the item
+      setSelectedAddons((prevState) => ({
+        ...prevState,
+        [id]: false,
+      }));
+
+      setTotalPrice((preValue) => preValue - value);
+      setAddonsList((preArry) => preArry.filter((ele) => ele.name !== name));
     }
   };
 
@@ -71,6 +105,8 @@ const PopupCardMenu = ({
 
     menuPrice: totalPrice,
   };
+
+  // console.log(searchDishesData?.info?.addons);
 
   const handleAddItemToCart = (item) => {
     if (showPopupBeforeReset) {
@@ -95,6 +131,20 @@ const PopupCardMenu = ({
       setShowMenuCardPopup(false);
     }
   };
+
+  const coustomizedItems = addonsList.reduce(
+    (accu, item) => [...accu, item.name],
+    []
+  );
+
+  const getSelectedItemCount = (groupId) => {
+    const selectedItemCount = addonsList
+      .map((item) => item.groupId)
+      .filter((item) => item === groupId).length;
+
+    return selectedItemCount;
+  };
+
   return (
     <div className="w-[600px] h-auto bg-slate-800 fixed z-[11999] top-15 right-[30%] rounded-3xl p-4 ">
       <h2 className="mt-2">
@@ -120,54 +170,128 @@ const PopupCardMenu = ({
       <div className="w-full h-[1px] bg-slate-600 mt-4"></div>
 
       <div className="overflow-y-auto hide-scrollbar max-h-[400px]">
-        {searchDishesData?.info?.addons?.map((group) => (
+        {searchDishesData?.info?.addons?.map((group, index) => (
           <>
-            <h2 className="py-4" key={group?.id}>
+            <h2 className="py-4" key={index}>
               {/* {group?.groupName}(0/
               {group?.maxAddons === -1 ? "Optional" : group?.maxAddons}) */}
               {group?.groupName} (
-              {group?.maxAddons === -1 ? "Optional" : `0 / ${group?.maxAddons}`}
+              {group?.maxAddons === -1
+                ? "Optional"
+                : `${getSelectedItemCount(group.groupId)} / ${
+                    group?.maxAddons
+                  }`}
               )
             </h2>
             <div className="p-2 bg-slate-900">
-              {group?.choices?.map((item) => (
-                <div key={item?.id}>
-                  <div className="flex justify-between px-1 py-2">
-                    <div className="flex gap-3">
-                      <div>
-                        {item?.isVeg === 1 ? (
-                          <img src={veg} />
-                        ) : (
-                          <img src={nonVeg} />
-                        )}
+              {(showAddons ? group?.choices?.slice(0, 5) : group?.choices)?.map(
+                (item) => (
+                  <div key={item?.id}>
+                    <div
+                      className={`flex justify-between px-1 py-2 ${
+                        item?.inStock !== 1 ? "opacity-60" : ""
+                      }`}
+                    >
+                      <div className="flex gap-3">
+                        <div>
+                          {item?.isVeg === 1 ? (
+                            <img src={veg} />
+                          ) : (
+                            <img src={nonVeg} />
+                          )}
+                        </div>
+                        <div>{item?.name}</div>
                       </div>
-                      <div>{item?.name}</div>
-                    </div>
-                    <div className="flex gap-3">
-                      {item?.price && <p>+ ₹ {item?.price / 100}</p>}
-                      <input
-                        type="checkbox"
-                        checked={!!selectedAddons[item.id]}
-                        onChange={(e) => {
-                          updateTotalPrice(
-                            item?.id,
-                            // item?.name,
-                            item?.price / 100,
-                            e.target.checked
-                          );
-                          // setAddonsList(addonsList.push(item?.name));
-                        }}
-                      />
+                      <div className="flex gap-3">
+                        {item?.price && <p>+ ₹ {item?.price / 100}</p>}
+
+                        <input
+                          type="checkbox"
+                          checked={!!selectedAddons[item.id]}
+                          // disabled={
+                          //   (group?.maxAddons === 1 &&
+                          //     getSelectedItemCount(group?.groupId) >= 1 &&
+                          //     !selectedAddons[item.id]) ||
+                          //   item.inStock !== 1
+                          // }
+
+                          disabled={item.inStock !== 1}
+                          onChange={
+                            (e) =>
+                              updateTotalPrice(
+                                group?.groupId,
+                                group?.groupName,
+                                group?.maxAddons,
+                                item?.id,
+                                item?.name,
+                                item?.price / 100,
+
+                                e.target.checked
+                                // e.target.disabled
+                              )
+                            // setAddonsList(addonsList?.push(item?.name))
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
+              {showAddons && (
+                <button
+                  className="pl-10 pt-2 opacity-80"
+                  onClick={() => {
+                    setShowAddons(false);
+                    onContinue();
+                  }}
+                >
+                  {group?.choices.length > 5 && <span>+ </span>}
+                  {group?.choices.length > 5
+                    ? group?.choices.length - 5
+                    : ""}{" "}
+                  {group?.choices.length > 5 && <span>more</span>}
+                </button>
+              )}
             </div>
           </>
         ))}
       </div>
-      <div className="mt-6 flex justify-between items-center">
-        <div>{<span>₹{totalPrice}</span>}</div>
+
+      <ToastContainer
+        // position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        // newestOnTop={false}
+        pauseOnFocusLoss={false}
+        // rtl={false}
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Bounce}
+        containerClassName="custom-toast-container"
+      />
+
+      {showCustomizedItems && (
+        <>
+          <div className="w-[570px] min-h-16 bg-slate-800 absolute bottom-24 flex items-center px-4 py-4 text-[14px]">
+            {coustomizedItems.slice().join(" . ")}
+          </div>
+          <div className="w-[570px] h-[1px] bottom-24 absolute bg-slate-700"></div>
+        </>
+      )}
+
+      <div className="mt-7 flex justify-between items-center relative">
+        <div className="flex flex-col">
+          {<span>₹{getFormatedPrice(totalPrice)}</span>}
+          <button
+            onClick={() => setShowCustomizedItems(!showCustomizedItems)}
+            className="text-[14.5px] text-orange-500 font-bold"
+          >
+            {showCustomizedItems
+              ? "Hide Coutomized Item"
+              : "Show Coutomized Item"}
+          </button>
+        </div>
         <div>
           <button
             className="px-15 py-3 bg-emerald-600 rounded-2xl"
