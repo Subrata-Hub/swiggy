@@ -3,6 +3,8 @@
 import { useState } from "react";
 import MenuItemFilter from "./filter/MenuItemFilter";
 import MenuCategoryList from "./MenuCategoryList";
+import menuLeft from "../assets/menuLeft.svg";
+import menuRight from "../assets/menuRight.svg";
 
 // import { HiMagnifyingGlass } from "react-icons/hi2";
 // import { Link } from "react-router-dom";
@@ -37,7 +39,13 @@ const Menu = ({
 
   return (
     <div className="mt-15 mx-48">
-      <h2 className="text-center">Menu</h2>
+      <div className="flex justify-center items-center">
+        <div className="flex text-center">
+          <img src={menuLeft} />
+          <h2>Menu</h2>
+          <img src={menuRight} />
+        </div>
+      </div>
 
       <MenuSearchClick
         restaurantId={restaurantId}
