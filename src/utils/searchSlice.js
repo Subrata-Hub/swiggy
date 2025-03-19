@@ -12,6 +12,7 @@ const initialState = {
     radioOptionLabel: "Relevance",
   },
   isResetStore: false,
+  resParams: {},
 };
 
 const searchSlice = createSlice({
@@ -63,6 +64,10 @@ const searchSlice = createSlice({
     addRadioOptionTitle: (state, action) => {
       state.options.radioOptionLabel = action.payload;
     },
+
+    addResParams: (state, action) => {
+      state.resParams = action.payload;
+    },
     resetState: () => ({ ...initialState }), // Reset state
   },
 });
@@ -79,5 +84,6 @@ export const {
   addRadioOptionTitle,
   resetState,
   addIsResetStore,
+  addResParams,
 } = searchSlice.actions;
 export default searchSlice.reducer;

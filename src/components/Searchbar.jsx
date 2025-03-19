@@ -10,6 +10,7 @@ const Searchbar = ({
   searchQueryInput,
 }) => {
   const dispatch = useDispatch();
+
   const getSearchQuery = (query) => {
     setSearchQueryInput(query);
     dispatch(addSearchQuery(query));
@@ -21,6 +22,7 @@ const Searchbar = ({
       <input
         type="search"
         value={searchQueryInput}
+        // value={suggestionText}
         placeholder={`Search for restaurant and food`}
         className="pl-6 w-full h-12 bg-slate-800 outline-none"
         onChange={(e) => getSearchQuery(e.target.value)}

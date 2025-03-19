@@ -3,11 +3,14 @@ import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 import { HiMiniXMark } from "react-icons/hi2";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
 import { getFormatedPrice } from "../utils/constant";
 
-import { toast, ToastContainer, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
+
+import { addResParams } from "../utils/searchSlice";
+
 const PopupCardMenu = ({
   searchDishesData,
   setShowMenuCardPopup,
@@ -36,6 +39,8 @@ const PopupCardMenu = ({
   const [addonsList, setAddonsList] = useState([]);
   const [showCustomizedItems, setShowCustomizedItems] = useState(false);
   const [showAddons, setShowAddons] = useState(true);
+
+  const resParamsObj = useSelector((store) => store?.search?.resParams);
 
   // const addons = searchDishesData?.info?.addons?.[0]?.choices;
 
@@ -70,7 +75,7 @@ const PopupCardMenu = ({
 
     if (isChecked) {
       // Prevent adding if maxAddons is reached
-      if (selectedCount >= maxAddons) {
+      if (selectedCount >= maxAddons && maxAddons !== -1) {
         toast(`You can select a maximum of ${maxAddons} for ${groupName}`);
         return;
       }
@@ -143,6 +148,18 @@ const PopupCardMenu = ({
       .filter((item) => item === groupId).length;
 
     return selectedItemCount;
+  };
+
+  const goToSearchResultsPage = (resId, menuId) => {
+    if (!resParamsObj.resId && !resParamsObj.menuId) {
+      dispatch(
+        addResParams({
+          resId: resId,
+          menuId: menuId,
+        })
+      );
+      toast(`Add item to the card from ${resInformation.restaurantName}`);
+    }
   };
 
   return (
@@ -257,20 +274,6 @@ const PopupCardMenu = ({
         ))}
       </div>
 
-      <ToastContainer
-        // position="bottom-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        // newestOnTop={false}
-        pauseOnFocusLoss={false}
-        // rtl={false}
-        draggable
-        pauseOnHover={false}
-        theme="light"
-        transition={Bounce}
-        containerClassName="custom-toast-container"
-      />
-
       {showCustomizedItems && (
         <>
           <div className="w-[570px] min-h-16 bg-slate-800 absolute bottom-24 flex items-center px-4 py-4 text-[14px]">
@@ -295,7 +298,10 @@ const PopupCardMenu = ({
         <div>
           <button
             className="px-15 py-3 bg-emerald-600 rounded-2xl"
-            onClick={() => handleAddItemToCart(counter + 1)}
+            onClick={() => {
+              handleAddItemToCart(counter + 1);
+              goToSearchResultsPage(resId, searchDishesData?.info?.id);
+            }}
           >
             Add Item to Cart
           </button>

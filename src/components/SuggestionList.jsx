@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { IMG_SUGGESTION } from "../utils/constant";
 import { useDispatch } from "react-redux";
 import { addSearchResultType, addSuggestionText } from "../utils/configSlice";
+// import { addIsResetStore, addSearchQuery } from "../utils/searchSlice";
 
 const SuggestionList = ({
   searchSuggestionsData,
@@ -22,6 +23,7 @@ const SuggestionList = ({
   const goToQueryPage = (query, type) => {
     navigate(`/search?query=${query}`);
     dispatch(addSuggestionText(query));
+    // dispatch(addIsResetStore(false));
     dispatch(addSearchResultType(type));
     // dispatch(addSearchQuery(suggestionText));
     setSearchQueryInput(query);

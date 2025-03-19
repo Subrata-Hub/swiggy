@@ -19,7 +19,13 @@ import {
   updateCardItems,
 } from "../utils/cartSlice";
 import PopupResetCard from "./PopupResetCard";
-const SearchDishesCard = ({ searchDishesData }) => {
+import { addResParams } from "../utils/searchSlice";
+import { toast } from "react-toastify";
+const SearchDishesCard = ({
+  searchDishesData,
+  resInformationForMoreDishes,
+  hideHeader = false,
+}) => {
   const [showPopup, setShowPopup] = useState(false);
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
@@ -87,7 +93,8 @@ const SearchDishesCard = ({ searchDishesData }) => {
 
   const menuInfo = {
     menuId: searchDishesData?.info?.id,
-    resId: resInformation?.restaurantId,
+    resId:
+      resInformationForMoreDishes?.restaurantId || resInformation?.restaurantId,
     menuName: searchDishesData?.info?.name,
     vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
     menuPrice: searchDishesData?.info?.price
@@ -98,9 +105,15 @@ const SearchDishesCard = ({ searchDishesData }) => {
   const handleShowMenuCardPopup = () => {
     if (searchDishesData?.info.addons) {
       if (
+        restaurantInfoFromCard &&
         cartItems.length >= 1 &&
         restaurantInfoFromCard?.restaurantId !==
-          searchDishesData?.restaurant?.info?.id
+          // searchDishesData?.restaurant?.info?.id
+          // (resInformation
+          //   ? resInformation?.restaurantId
+          //   : resInformationForMoreDishes?.restaurantId)
+          (resInformationForMoreDishes?.restaurantId ||
+            resInformation?.restaurantId)
       ) {
         setShowResetCardPopup(true);
         // setShowMenuCardPopup(false);
@@ -110,10 +123,10 @@ const SearchDishesCard = ({ searchDishesData }) => {
       }
     } else {
       if (
-        restaurantInfoFromCard &&
         cartItems.length >= 1 &&
         restaurantInfoFromCard?.restaurantId !==
-          searchDishesData?.restaurant?.info?.id
+          (resInformationForMoreDishes?.restaurantId ||
+            resInformation?.restaurantId)
       ) {
         setShowResetCardPopup(true);
       } else {
@@ -125,7 +138,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
           totalMenuItems: newCounter,
         };
 
-        dispatch(addResInfo(resInformation));
+        dispatch(addResInfo(resInformationForMoreDishes || resInformation));
         dispatch(addCartItems(updatedCardInfo));
       }
     }
@@ -147,34 +160,54 @@ const SearchDishesCard = ({ searchDishesData }) => {
     }
   };
 
+  const goToSearchResultsPage = (resId, menuId) => {
+    if (!searchDishesData?.info?.addons && resId && menuId) {
+      dispatch(
+        addResParams({
+          resId: resId,
+          menuId: menuId,
+        })
+      );
+      toast(`Add item to the card from ${resInformation.restaurantName}`);
+    }
+  };
+
   return (
     <>
-      <div className="bg-slate-800 w-[438px] h-[287px] mb-2 rounded-2xl">
+      <div
+        className={`bg-slate-800 w-[438px] ${
+          !hideHeader ? "h-[287px]" : "h-[200px]"
+        } mb-2 rounded-2xl`}
+      >
         <div className="flex-col">
-          <div className="">
-            <div className="flex justify-between items-center px-4 py-3">
-              <div className="flex-col">
-                <p className="text-[15px] font-semibold">
-                  {searchDishesData?.restaurant?.info?.name}
-                </p>
-                <div className="text-[12px] mt-2 font-extralight">
-                  <span>
-                    ❇️{searchDishesData?.restaurant?.info?.avgRatingString} .{" "}
-                    {searchDishesData?.restaurant?.info?.sla?.slaString}
-                  </span>
+          {!hideHeader ? (
+            <div className="">
+              <div className="flex justify-between items-center px-4 py-3">
+                <div className="flex-col">
+                  <p className="text-[15px] font-semibold">
+                    {searchDishesData?.restaurant?.info?.name}
+                  </p>
+                  <div className="text-[12px] mt-2 font-extralight">
+                    <span>
+                      ❇️{searchDishesData?.restaurant?.info?.avgRatingString} .{" "}
+                      {searchDishesData?.restaurant?.info?.sla?.slaString}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <Link
+                    to={`/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.areaName}/${searchDishesData?.restaurant?.info?.id}`}
+                  >
+                    <HiArrowSmallRight className="text-2xl" />
+                  </Link>
                 </div>
               </div>
-
-              <div>
-                <Link
-                  to={`/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.areaName}/${searchDishesData?.restaurant?.info?.id}`}
-                >
-                  <HiArrowSmallRight className="text-2xl" />
-                </Link>
-              </div>
+              <div className="w-full h-0.5 bg-slate-700 mt-3"></div>
             </div>
-            <div className="w-full h-0.5 bg-slate-700 mt-3"></div>
-          </div>
+          ) : (
+            ""
+          )}
           <div className="flex justify-between items-center py-4 px-3">
             <div className="flex-col w-1/2">
               {searchDishesData?.info?.isVeg === 1 ? (
@@ -213,7 +246,15 @@ const SearchDishesCard = ({ searchDishesData }) => {
                   <div ref={addonButtonRef}>
                     <button
                       className="px-10 py-2 bg-slate-900 text-emerald-500 rounded-xl"
-                      onClick={handleShowMenuCardPopup}
+                      onClick={() => {
+                        handleShowMenuCardPopup(); // Execute first function
+                        setTimeout(() => {
+                          goToSearchResultsPage(
+                            resInformation?.restaurantId,
+                            menuInfo?.menuId
+                          );
+                        }, 1000); // Ensures this runs after state updates in handleShowMenuCardPopup
+                      }}
                       ref={addResetRef}
                     >
                       ADD
@@ -245,7 +286,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
                 )}
               </div>
               <div className="pt-5 pl-7 text-[13.5px]">
-                {searchDishesData?.info.addons && (
+                {searchDishesData?.info?.addons && (
                   <p className="">Customisable</p>
                 )}
               </div>
@@ -270,9 +311,12 @@ const SearchDishesCard = ({ searchDishesData }) => {
             <PopupCardMenu
               searchDishesData={searchDishesData}
               setShowMenuCardPopup={setShowMenuCardPopup}
-              resInformation={resInformation}
+              resInformation={resInformationForMoreDishes || resInformation}
               counter={counter}
-              resId={resInformation?.restaurantId}
+              resId={
+                resInformationForMoreDishes?.restaurantId ||
+                resInformation?.restaurantId
+              }
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
               // showMenuCardPopup={showMenuCardPopup}
@@ -287,7 +331,7 @@ const SearchDishesCard = ({ searchDishesData }) => {
           <div ref={resetPopupCardRef}>
             <PopupResetCard
               setShowResetCardPopup={setShowResetCardPopup}
-              resInformation={resInformation}
+              resInformation={resInformationForMoreDishes || resInformation}
               menuInfo={menuInfo}
               counter={counter}
               setShowPopupBeforeReset={setShowPopupBeforeReset}

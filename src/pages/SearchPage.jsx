@@ -15,6 +15,9 @@ import useSearchFilter from "../hooks/useSearchFilter";
 import { useDispatch } from "react-redux";
 import { addIsResetStore, resetState } from "../utils/searchSlice";
 import { useLocation } from "react-router-dom";
+import useAddToCardSearchResults from "../hooks/useAddToCardSearchResults";
+import AddToCartSearchResults from "../components/AddToCartSearchResults";
+// import AddToCartSearchResults from "../components/AddToCartSearchResults";
 
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
@@ -48,8 +51,10 @@ const SearchPage = () => {
   const fillObj = useSelector((store) => store?.search?.filterObj);
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
+  const resParamsObj = useSelector((store) => store?.search?.resParams);
 
   const searchResultsData = useSearchResults(suggestionText, setLoading);
+  console.log(searchResultsData);
 
   const selectedTabSearchResults = useSelectedTabResult(
     suggestionText,
@@ -69,6 +74,14 @@ const SearchPage = () => {
     setLoading,
     isReSetStore
   );
+
+  const addToCardSearchResults = useAddToCardSearchResults(
+    suggestionText,
+    setLoading,
+    resParamsObj.resId,
+    resParamsObj.menuId
+  );
+  console.log(addToCardSearchResults);
 
   const getRefineData = (data) => {
     const refineSearchResultsData = data?.cards?.filter(
@@ -130,7 +143,27 @@ const SearchPage = () => {
         setSearchQueryInput={setSearchQueryInput}
         // loading={loading}
       />
-      <SearchResults
+      {addToCardSearchResults ? (
+        <AddToCartSearchResults
+          showSuggestion={showSuggestion}
+          loading={loading}
+          addToCardSearchResults={addToCardSearchResults}
+        />
+      ) : (
+        <SearchResults
+          showSuggestion={showSuggestion}
+          searchResultsRefineData={searchResultsRefineData}
+          searchResultsHeader={searchResultsHeader}
+          searchResultsType={searchResultsType}
+          setIsSelected={setIsSelected}
+          selectedOption={selectedOption}
+          fillObj={fillObj}
+          loading={loading}
+          addToCardSearchResults={addToCardSearchResults}
+        />
+      )}
+
+      {/* <SearchResults
         showSuggestion={showSuggestion}
         searchResultsRefineData={searchResultsRefineData}
         searchResultsHeader={searchResultsHeader}
@@ -139,7 +172,15 @@ const SearchPage = () => {
         selectedOption={selectedOption}
         fillObj={fillObj}
         loading={loading}
-      />
+      /> */}
+
+      {/* {addToCardSearchResults && (
+        <AddToCartSearchResults
+          showSuggestion={showSuggestion}
+          loading={loading}
+          addToCardSearchResults={addToCardSearchResults}
+        />
+      )} */}
     </div>
   );
 };
