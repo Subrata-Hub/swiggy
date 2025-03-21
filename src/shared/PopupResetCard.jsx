@@ -2,6 +2,7 @@
 
 import { useDispatch } from "react-redux";
 import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
+import { addResParams } from "../utils/searchSlice";
 
 const PopupResetCard = ({
   setShowResetCardPopup,
@@ -11,18 +12,23 @@ const PopupResetCard = ({
 
   setShowPopupBeforeReset,
   searchDishesData,
+  setShowAddToCardSearchResultsData,
 }) => {
   const dispatch = useDispatch();
   // const cart = useSelector((state) => state.cart);
 
   const handleResetCart = () => {
+    // setShowAddToCardSearchResultsData();
     if (searchDishesData?.info.addons) {
       setShowPopupBeforeReset(true);
 
       // dispatch(reSetStore());
       // counter = 0;
+
       setShowResetCardPopup(false);
-      // dispatch(addResInfo(resInformation));
+      // dispatch(addResParams({}));
+      // setShowAddToCardSearchResultsData(true);
+
       // const newCounter = counter + 1;
       // // setCounter(newCounter);
 
@@ -66,7 +72,10 @@ const PopupResetCard = ({
           </button>
           <button
             className="w-[220px] h-[50px] bg-green-500"
-            onClick={handleResetCart}
+            onClick={() => {
+              // setShowAddToCardSearchResultsData(false);
+              handleResetCart();
+            }}
           >
             YES START AFRESH
           </button>

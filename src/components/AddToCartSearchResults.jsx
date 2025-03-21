@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link } from "react-router-dom";
 import SearchDishesCard from "../shared/SearchDishesCard";
 import SearchResultShimmer from "../shared/shimmer/SearchResultShimmer";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
@@ -8,10 +11,9 @@ const AddToCartSearchResults = ({
   loading,
   showSuggestion,
   addToCardSearchResults,
+  setShowAddToCardSearchResultsData,
 }) => {
-  // const suggestionText = useSelector(
-  //   (store) => store?.config?.setting?.suggestionText
-  // );
+  const cartNumber = useSelector((state) => state.cart.totalCardItems);
   const searchResultLabel = addToCardSearchResults?.cards?.filter(
     (item) =>
       item?.card?.card?.["@type"] ===
@@ -41,6 +43,16 @@ const AddToCartSearchResults = ({
     resImg: moreDishesDataWithResInfo?.info?.cloudinaryImageId,
     menuURL: `/city/kolkata/${moreDishesDataWithResInfo?.info?.name}/${moreDishesDataWithResInfo?.info?.locality}/${moreDishesDataWithResInfo?.info?.id}`,
   };
+
+  const backToSearchResultsPage = () => {
+    setShowAddToCardSearchResultsData(false);
+  };
+
+  useEffect(() => {
+    if (cartNumber === 0) {
+      setShowAddToCardSearchResultsData(false);
+    }
+  }, [cartNumber]);
 
   return (
     <div className="mx-36">
@@ -90,11 +102,11 @@ const AddToCartSearchResults = ({
               </Link>
               <div
                 className="w-full h-[250px] bg-slate-800 mt-4 flex justify-center"
-                // onClick={}
+                onClick={backToSearchResultsPage}
               >
-                <h2 className="mt-10">
+                <button className="mt-10">
                   {searchResultLabel?.[2]?.card?.card?.text}
-                </h2>
+                </button>
               </div>
             </div>
           )}

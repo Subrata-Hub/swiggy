@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { IMG_POPULAR_CUSINESS } from "../utils/constant";
 import { useDispatch } from "react-redux";
 
-import { addSearchQuery } from "../utils/searchSlice";
+import { addSuggestionText } from "../utils/configSlice";
 
 /* eslint-disable react/prop-types */
 const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
@@ -17,7 +17,7 @@ const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
     navigate(`?query=${query}`);
     setSearchQueryInput(query);
 
-    dispatch(addSearchQuery(query));
+    dispatch(addSuggestionText(query));
   };
 
   return (

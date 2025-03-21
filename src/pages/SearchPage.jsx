@@ -17,31 +17,30 @@ import { addIsResetStore, resetState } from "../utils/searchSlice";
 import { useLocation } from "react-router-dom";
 import useAddToCardSearchResults from "../hooks/useAddToCardSearchResults";
 import AddToCartSearchResults from "../components/AddToCartSearchResults";
-// import AddToCartSearchResults from "../components/AddToCartSearchResults";
 
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
-  const [searchQueryInput, setSearchQueryInput] = useState("");
+
   const [isSelected, setIsSelected] = useState(false);
   const [searchResultsRefineData, setSearchResultsRefineData] = useState(null);
+  const [showAddToCardSearchResultsData, setShowAddToCardSearchResultsData] =
+    useState(false);
+  const [searchQueryInput, setSearchQueryInput] = useState("");
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
 
   const preSearchData = usePreSearch();
-  const searchQuery = useSelector((state) => state.search.searchQuery);
-  const searchSuggestionsData = useSuggestions(searchQuery);
-  const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
 
-  // const overlay = document.querySelector(".overlay");
+  const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
 
   const suggestionText = useSelector(
     (store) => store?.config?.setting?.suggestionText
   );
 
   const searchResultsType = useSelector(
-    (store) => store.config.setting.searchResultType
+    (store) => store?.config?.setting?.searchResultType
   );
 
   const selectedOption = useSelector(
@@ -52,6 +51,7 @@ const SearchPage = () => {
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
   const resParamsObj = useSelector((store) => store?.search?.resParams);
+  const searchSuggestionsData = useSuggestions(searchQueryInput);
 
   const searchResultsData = useSearchResults(suggestionText, setLoading);
   console.log(searchResultsData);
@@ -120,7 +120,6 @@ const SearchPage = () => {
 
   return (
     <div className="m-36 mt-0 mb-0">
-      {/* <div className="overlay hidden"></div> */}
       <Navbar />
       <Searchbar
         setShowSuggestion={setShowSuggestion}
@@ -130,57 +129,39 @@ const SearchPage = () => {
 
       <PopularCuisinesList
         popularCuisinesData={popularCuisinesData}
-        searchQuery={searchQuery}
         suggestionText={suggestionText}
         setSearchQueryInput={setSearchQueryInput}
         searchQueryInput={searchQueryInput}
       />
       <SuggestionList
-        searchQuery={searchQuery}
         searchSuggestionsData={searchSuggestionsData}
         setShowSuggestion={setShowSuggestion}
         showSuggestion={showSuggestion}
+        setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
         setSearchQueryInput={setSearchQueryInput}
-        // loading={loading}
       />
-      {addToCardSearchResults ? (
+      {addToCardSearchResults && showAddToCardSearchResultsData ? (
         <AddToCartSearchResults
           showSuggestion={showSuggestion}
           loading={loading}
           addToCardSearchResults={addToCardSearchResults}
+          setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
         />
       ) : (
         <SearchResults
+          loading={loading}
           showSuggestion={showSuggestion}
-          searchResultsRefineData={searchResultsRefineData}
-          searchResultsHeader={searchResultsHeader}
           searchResultsType={searchResultsType}
           setIsSelected={setIsSelected}
           selectedOption={selectedOption}
+          searchResultsRefineData={searchResultsRefineData}
+          searchResultsHeader={searchResultsHeader}
           fillObj={fillObj}
-          loading={loading}
-          addToCardSearchResults={addToCardSearchResults}
+          // addToCardSearchResults={addToCardSearchResults}
+          setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
+          showAddToCardSearchResultsData={showAddToCardSearchResultsData}
         />
       )}
-
-      {/* <SearchResults
-        showSuggestion={showSuggestion}
-        searchResultsRefineData={searchResultsRefineData}
-        searchResultsHeader={searchResultsHeader}
-        searchResultsType={searchResultsType}
-        setIsSelected={setIsSelected}
-        selectedOption={selectedOption}
-        fillObj={fillObj}
-        loading={loading}
-      /> */}
-
-      {/* {addToCardSearchResults && (
-        <AddToCartSearchResults
-          showSuggestion={showSuggestion}
-          loading={loading}
-          addToCardSearchResults={addToCardSearchResults}
-        />
-      )} */}
     </div>
   );
 };

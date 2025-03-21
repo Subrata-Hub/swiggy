@@ -8,13 +8,15 @@ const useSearchResults = (query, setLoading) => {
 
   const getSearchData = async () => {
     setLoading(true);
-    const response = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=SUGGESTION`
-    );
-    const data = await response.json();
+    if (query && query !== "") {
+      const response = await fetch(
+        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=SUGGESTION`
+      );
+      const data = await response.json();
 
-    setSearchData(data?.data);
-    setLoading(false);
+      setSearchData(data?.data);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

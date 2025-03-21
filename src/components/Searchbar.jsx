@@ -2,7 +2,8 @@
 
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { useDispatch } from "react-redux";
-import { addSearchQuery } from "../utils/searchSlice";
+
+import { addSuggestionText } from "../utils/configSlice";
 
 const Searchbar = ({
   setShowSuggestion,
@@ -13,7 +14,9 @@ const Searchbar = ({
 
   const getSearchQuery = (query) => {
     setSearchQueryInput(query);
-    dispatch(addSearchQuery(query));
+
+    dispatch(addSuggestionText(searchQueryInput));
+
     setShowSuggestion(true);
   };
 
@@ -22,7 +25,6 @@ const Searchbar = ({
       <input
         type="search"
         value={searchQueryInput}
-        // value={suggestionText}
         placeholder={`Search for restaurant and food`}
         className="pl-6 w-full h-12 bg-slate-800 outline-none"
         onChange={(e) => getSearchQuery(e.target.value)}

@@ -23,6 +23,8 @@ const PopupCardMenu = ({
   showPopupBeforeReset,
   // showMenuCardPopup,
   onContinue,
+  setShowAddToCardSearchResultsData,
+  showAddToCardSearchResultsData,
 }) => {
   const [totalPrice, setTotalPrice] = useState(
     +searchDishesData?.info?.price / 100 ||
@@ -125,6 +127,7 @@ const PopupCardMenu = ({
       dispatch(addCartItems(updatedCardInfo));
       setShowPopupBeforeReset(false);
       setShowMenuCardPopup(false);
+      // setShowAddToCardSearchResultsData(true);
     } else {
       const updatedCardInfo = {
         ...menuInfo,
@@ -134,6 +137,7 @@ const PopupCardMenu = ({
       dispatch(addCartItems(updatedCardInfo));
       setShowPopupBeforeReset(false);
       setShowMenuCardPopup(false);
+      setShowAddToCardSearchResultsData(true);
     }
   };
 
@@ -151,7 +155,7 @@ const PopupCardMenu = ({
   };
 
   const goToSearchResultsPage = (resId, menuId) => {
-    if (!resParamsObj.resId && !resParamsObj.menuId) {
+    if (!resParamsObj?.resId && !resParamsObj?.menuId) {
       dispatch(
         addResParams({
           resId: resId,
@@ -159,6 +163,26 @@ const PopupCardMenu = ({
         })
       );
       toast(`Add item to the card from ${resInformation.restaurantName}`);
+      setShowAddToCardSearchResultsData(true);
+    } else if (
+      !showAddToCardSearchResultsData &&
+      resParamsObj?.resId &&
+      resParamsObj?.menuId
+    ) {
+      dispatch(
+        addResParams({
+          resId: resId,
+          menuId: menuId,
+        })
+      );
+      toast(`Add item to the card from ${resInformation.restaurantName}`);
+      setShowAddToCardSearchResultsData(true);
+    } else if (
+      showAddToCardSearchResultsData &&
+      resParamsObj?.resId &&
+      resParamsObj?.menuId
+    ) {
+      return;
     }
   };
 

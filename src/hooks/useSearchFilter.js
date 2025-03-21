@@ -17,7 +17,7 @@ const useSearchFilter = (
   // const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
 
   const getSearchData = async () => {
-    if (!isReSetStore) {
+    if (!isReSetStore || selectedOption) {
       setLoading(true);
 
       const response = await fetch(

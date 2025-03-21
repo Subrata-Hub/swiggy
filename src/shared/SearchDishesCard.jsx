@@ -25,6 +25,8 @@ const SearchDishesCard = ({
   searchDishesData,
   resInformationForMoreDishes,
   hideHeader = false,
+  setShowAddToCardSearchResultsData,
+  showAddToCardSearchResultsData,
 }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
@@ -116,6 +118,7 @@ const SearchDishesCard = ({
             resInformation?.restaurantId)
       ) {
         setShowResetCardPopup(true);
+
         // setShowMenuCardPopup(false);
       } else {
         setShowMenuCardPopup(!showMenuCardPopup);
@@ -123,6 +126,7 @@ const SearchDishesCard = ({
       }
     } else {
       if (
+        restaurantInfoFromCard &&
         cartItems.length >= 1 &&
         restaurantInfoFromCard?.restaurantId !==
           (resInformationForMoreDishes?.restaurantId ||
@@ -161,6 +165,7 @@ const SearchDishesCard = ({
   };
 
   const goToSearchResultsPage = (resId, menuId) => {
+    // if (showResetCardPopup) return;
     if (!searchDishesData?.info?.addons && resId && menuId) {
       dispatch(
         addResParams({
@@ -168,6 +173,8 @@ const SearchDishesCard = ({
           menuId: menuId,
         })
       );
+
+      setShowAddToCardSearchResultsData(!showAddToCardSearchResultsData);
       toast(`Add item to the card from ${resInformation.restaurantName}`);
     }
   };
@@ -253,7 +260,7 @@ const SearchDishesCard = ({
                             resInformation?.restaurantId,
                             menuInfo?.menuId
                           );
-                        }, 1000); // Ensures this runs after state updates in handleShowMenuCardPopup
+                        }, 2000); // Ensures this runs after state updates in handleShowMenuCardPopup
                       }}
                       ref={addResetRef}
                     >
@@ -321,6 +328,10 @@ const SearchDishesCard = ({
               showPopupBeforeReset={showPopupBeforeReset}
               // showMenuCardPopup={showMenuCardPopup}
               onContinue={handleContinueClick}
+              setShowAddToCardSearchResultsData={
+                setShowAddToCardSearchResultsData
+              }
+              showAddToCardSearchResultsData={showAddToCardSearchResultsData}
             />
           </div>
         </>
@@ -336,6 +347,9 @@ const SearchDishesCard = ({
               counter={counter}
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               searchDishesData={searchDishesData}
+              setShowAddToCardSearchResultsData={
+                setShowAddToCardSearchResultsData
+              }
             />
           </div>
         </>

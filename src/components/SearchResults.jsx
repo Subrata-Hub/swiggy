@@ -26,24 +26,18 @@ const SearchResults = ({
   searchResultsRefineData,
   searchResultsHeader,
   fillObj,
+  setShowAddToCardSearchResultsData,
+  showAddToCardSearchResultsData,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [activeSort, setActiveSort] = useState(false);
   const [isFillBtn, setIsFillBtn] = useState(false);
-
-  // const [showPopup, setShowPopup] = useState(false);
-
-  // const searchDishesCardRef = useRef(null);
-
-  // useOutSideClick(searchDishesCardRef, () => setShowPopup(false));
 
   const dispatch = useDispatch();
 
   const selectedOptionTitle = useSelector(
     (store) => store?.search?.options?.radioOptionLabel
   );
-
-  // const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
 
   const searchResultsForDishes = searchResultsRefineData?.DISH?.cards?.filter(
     (dish) =>
@@ -64,13 +58,6 @@ const SearchResults = ({
       fill?.card?.card?.["@type"] ===
       "type.googleapis.com/swiggy.gandalf.widgets.v2.SearchFilterSortWidget"
   );
-
-  // const searchResultForSimilarRestaurant =
-  //   searchResultsRefineData?.RESTAURANT?.cards?.filter(
-  //     (simRes) =>
-  //       simRes.card?.card?.["@type"] ===
-  //       "type.googleapis.com/swiggy.presentation.food.v2.RestaurantCollection"
-  //   );
 
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
@@ -225,75 +212,83 @@ const SearchResults = ({
               </div>
 
               <div className=" bg-slate-900  h-auto mt-5 px-6 py-6">
-                {searchResultsForDishes && (
+                {searchResultsForDishes && searchResultsType === "DISH" && (
                   <div className="flex flex-wrap  gap-4 -z-50">
                     {searchResultsForDishes &&
                       searchResultsForDishes?.map((item) => (
                         <div key={item?.card?.card?.info?.id}>
                           <SearchDishesCard
                             searchDishesData={item?.card?.card}
+                            setShowAddToCardSearchResultsData={
+                              setShowAddToCardSearchResultsData
+                            }
+                            showAddToCardSearchResultsData={
+                              showAddToCardSearchResultsData
+                            }
                           />
                         </div>
                       ))}
                   </div>
                 )}
 
-                {searchResultsForRestaurant && (
-                  <>
-                    <div className="flex flex-wrap  gap-4">
-                      {searchResultsForRestaurant && (
-                        <SearchRestaurantCardWithOffer
-                          searchResData={
-                            searchResultsForRestaurant?.[0]?.card?.card?.info
-                          }
-                          offer={
-                            searchResultsForRestaurant?.[0]?.card?.card?.info
-                              ?.aggregatedDiscountInfoV3
-                          }
-                          ad={
-                            searchResultsForRestaurant?.[0]?.card?.card?.info
-                              ?.adTrackingId
-                          }
-                        />
-                      )}
-                    </div>
-
-                    <div className="mt-6">
-                      <h2>
-                        {searchResultsForRestaurant?.[1]?.card?.card?.title}
-                      </h2>
-                      <div className="flex flex-wrap  gap-4 mt-4">
-                        {searchResultsForRestaurant?.[1]?.card?.card?.restaurants?.map(
-                          (item) => (
-                            <SearchRestaurantCardWithOffer
-                              searchResData={item?.info}
-                              key={item?.id}
-                              offer={item?.info?.aggregatedDiscountInfoV3}
-                              ad={item?.info?.adTrackingId}
-                            />
-                          )
+                {searchResultsForRestaurant &&
+                  searchResultsType === "RESTAURANT" && (
+                    <>
+                      <div className="flex flex-wrap  gap-4">
+                        {searchResultsForRestaurant && (
+                          <SearchRestaurantCardWithOffer
+                            searchResData={
+                              searchResultsForRestaurant?.[0]?.card?.card?.info
+                            }
+                            offer={
+                              searchResultsForRestaurant?.[0]?.card?.card?.info
+                                ?.aggregatedDiscountInfoV3
+                            }
+                            ad={
+                              searchResultsForRestaurant?.[0]?.card?.card?.info
+                                ?.adTrackingId
+                            }
+                          />
                         )}
                       </div>
-                    </div>
-                  </>
-                )}
 
-                {searchResultsForAllRestaurant && (
-                  <>
-                    <div className="flex flex-wrap  gap-4">
-                      {searchResultsForAllRestaurant?.map((item) => (
-                        <SearchRestaurantCardWithOffer
-                          searchResData={item?.card?.card?.info}
-                          key={item?.card?.card?.id}
-                          offer={
-                            item?.card?.card?.info?.aggregatedDiscountInfoV3
-                          }
-                          ad={item?.card?.card?.info?.adTrackingId}
-                        />
-                      ))}
-                    </div>
-                  </>
-                )}
+                      <div className="mt-6">
+                        <h2>
+                          {searchResultsForRestaurant?.[1]?.card?.card?.title}
+                        </h2>
+                        <div className="flex flex-wrap  gap-4 mt-4">
+                          {searchResultsForRestaurant?.[1]?.card?.card?.restaurants?.map(
+                            (item) => (
+                              <SearchRestaurantCardWithOffer
+                                searchResData={item?.info}
+                                key={item?.id}
+                                offer={item?.info?.aggregatedDiscountInfoV3}
+                                ad={item?.info?.adTrackingId}
+                              />
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                {searchResultsForAllRestaurant &&
+                  searchResultsType === "RESTAURANT" && (
+                    <>
+                      <div className="flex flex-wrap  gap-4">
+                        {searchResultsForAllRestaurant?.map((item) => (
+                          <SearchRestaurantCardWithOffer
+                            searchResData={item?.card?.card?.info}
+                            key={item?.card?.card?.id}
+                            offer={
+                              item?.card?.card?.info?.aggregatedDiscountInfoV3
+                            }
+                            ad={item?.card?.card?.info?.adTrackingId}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
               </div>
             </>
           )}
