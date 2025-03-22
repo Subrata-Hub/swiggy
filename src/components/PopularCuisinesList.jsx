@@ -10,7 +10,7 @@ const PopularCuisinesList = ({
 }) => {
   return (
     <div className="">
-      {!suggestionText && !searchQueryInput && (
+      {((!suggestionText && !searchQueryInput) || searchQueryInput === "") && (
         <div className="px-40 pt-8">
           <div>{popularCuisinesData?.header?.title}</div>
           <div className="flex w-full gap-2 overflow-x-auto hide-scrollbar mt-4">

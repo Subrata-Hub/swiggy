@@ -22,6 +22,7 @@ const SearchResults = ({
   showSuggestion,
   searchResultsType,
   setIsSelected,
+
   selectedOption,
   searchResultsRefineData,
   searchResultsHeader,
@@ -62,6 +63,7 @@ const SearchResults = ({
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
     setIsSelected(true);
+
     dispatch(addIsSearchResults(true));
   };
 
@@ -273,7 +275,8 @@ const SearchResults = ({
                   )}
 
                 {searchResultsForAllRestaurant &&
-                  searchResultsType === "RESTAURANT" && (
+                  (searchResultsType === "RESTAURANT" ||
+                    searchResultsType === "CUISINE") && (
                     <>
                       <div className="flex flex-wrap  gap-4">
                         {searchResultsForAllRestaurant?.map((item) => (

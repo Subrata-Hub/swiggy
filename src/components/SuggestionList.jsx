@@ -12,6 +12,7 @@ const SuggestionList = ({
 
   setShowAddToCardSearchResultsData,
   setSearchQueryInput,
+  searchQueryInput,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const SuggestionList = ({
 
   return (
     <div className="px-40 mt-6">
-      {showSuggestion && (
+      {showSuggestion && searchQueryInput !== "" && (
         <div className="">
           {searchSuggestions?.map((sugest, index) => (
             <>

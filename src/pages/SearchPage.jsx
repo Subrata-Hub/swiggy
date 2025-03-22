@@ -139,6 +139,7 @@ const SearchPage = () => {
         showSuggestion={showSuggestion}
         setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
         setSearchQueryInput={setSearchQueryInput}
+        searchQueryInput={searchQueryInput}
       />
       {addToCardSearchResults && showAddToCardSearchResultsData ? (
         <AddToCartSearchResults

@@ -49,12 +49,14 @@ const SearchDishesCard = ({
   );
   let counter = menuItem?.totalMenuItems || 0;
 
-  useOutSideClick(
-    searchDishesCardRef,
-    () => setShowPopup(false),
+  useOutSideClick(searchDishesCardRef, () => {
+    if (!disableOutsideClick) {
+      setShowPopup(false);
+      // setShowPopupBeforeReset(false);
+    }
 
-    detailMenuButtonRef
-  );
+    detailMenuButtonRef;
+  });
   useOutSideClick(
     menuItemCardRef,
     () => {
@@ -306,7 +308,18 @@ const SearchDishesCard = ({
         <>
           <div className="overlay"></div>
           <div ref={searchDishesCardRef}>
-            <PopupSearchDishesCard searchDishesData={searchDishesData} />
+            <PopupSearchDishesCard
+              searchDishesData={searchDishesData}
+              handleShowPopup={handleShowPopup}
+              counter={counter}
+              handleShowMenuCardPopup={handleShowMenuCardPopup}
+              goToSearchResultsPage={goToSearchResultsPage}
+              updatingCardItem={updatingCardItem}
+              addResetRef={addResetRef}
+              addonButtonRef={addonButtonRef}
+              menuInfo={menuInfo}
+              resInformation={resInformation}
+            />
           </div>
         </>
       )}
