@@ -1,23 +1,64 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import Body from "../components/Body";
 import Navbar from "../components/Navbar";
+import {
+  addAddress,
+  addLatlng,
+  reSetLocationStore,
+} from "../utils/locationSlice";
+import { useEffect } from "react";
 
 const HomePage = () => {
+  const dispatch = useDispatch();
+
   // const getMenuSearchResultData = async () => {
   //   const responce = await fetch(
-  //     `https://www.swiggy.com/dapi/restaurants/search/v3?lat=22.723616
-  //     &lng=88.350805&str=Biryani&submitAction=SUGGESTION
-  //     &selectedPLTab=dish-add&restaurantIdOfAddedItem=245188&itemAdded=61074760`
+  //     `https://www.swiggy.com/dapi/misc/address-recommend?place_id=ChIJbU60yXAWrjsR4E9-UejD3_g`
   //   );
   //   const data = await responce.json();
   //   console.log(data);
   // };
 
   // getMenuSearchResultData();
+
+  const getPosition = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function success(position) {
+          dispatch(
+            addAddress([position.coords.latitude, position.coords.longitude])
+          );
+          console.log(position);
+          dispatch(
+            addLatlng({
+              LAT: position?.coords?.latitude,
+              LNG: position?.coords?.longitude,
+            })
+          );
+        },
+        function () {
+          alert("Could not get your position");
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    dispatch(reSetLocationStore());
+    getPosition();
+  }, [location.pathname, dispatch]);
+
+  getPosition();
+
   return (
-    <div className="m-36 mt-0 mb-0">
-      <Navbar />
-      <Body />
-    </div>
+    <>
+      <div className="m-36 mt-0 mb-0">
+        <Navbar />
+        <Body />
+      </div>
+    </>
   );
 };
 

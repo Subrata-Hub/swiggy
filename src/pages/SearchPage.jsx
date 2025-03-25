@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import Searchbar from "../components/Searchbar";
@@ -14,7 +15,7 @@ import PopularCuisinesList from "../components/PopularCuisinesList";
 import useSearchFilter from "../hooks/useSearchFilter";
 import { useDispatch } from "react-redux";
 import { addIsResetStore, resetState } from "../utils/searchSlice";
-import { useLocation } from "react-router-dom";
+
 import useAddToCardSearchResults from "../hooks/useAddToCardSearchResults";
 import AddToCartSearchResults from "../components/AddToCartSearchResults";
 
@@ -29,9 +30,13 @@ const SearchPage = () => {
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const location = useLocation();
+  // const location = useLocation();
+  const latlang = useSelector((store) => store?.location?.latlng);
 
-  const preSearchData = usePreSearch();
+  const LAT = latlang?.LAT;
+  const LNG = latlang?.LNG;
+
+  const preSearchData = usePreSearch(LAT, LNG);
 
   const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
 
@@ -51,16 +56,23 @@ const SearchPage = () => {
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
   const resParamsObj = useSelector((store) => store?.search?.resParams);
-  const searchSuggestionsData = useSuggestions(searchQueryInput);
+  const searchSuggestionsData = useSuggestions(searchQueryInput, LAT, LNG);
 
-  const searchResultsData = useSearchResults(suggestionText, setLoading);
+  const searchResultsData = useSearchResults(
+    suggestionText,
+    setLoading,
+    LAT,
+    LNG
+  );
   console.log(searchResultsData);
 
   const selectedTabSearchResults = useSelectedTabResult(
     suggestionText,
     searchResultsType,
     isSelected,
-    setLoading
+    setLoading,
+    LAT,
+    LNG
   );
 
   const objectString = JSON.stringify(fillObj);
@@ -72,14 +84,18 @@ const SearchPage = () => {
     encodedString,
     selectedOption,
     setLoading,
-    isReSetStore
+    isReSetStore,
+    LAT,
+    LNG
   );
 
   const addToCardSearchResults = useAddToCardSearchResults(
     suggestionText,
     setLoading,
     resParamsObj.resId,
-    resParamsObj.menuId
+    resParamsObj.menuId,
+    LAT,
+    LNG
   );
   console.log(addToCardSearchResults);
 
@@ -141,7 +157,9 @@ const SearchPage = () => {
         setSearchQueryInput={setSearchQueryInput}
         searchQueryInput={searchQueryInput}
       />
-      {addToCardSearchResults && showAddToCardSearchResultsData ? (
+      {addToCardSearchResults &&
+      showAddToCardSearchResultsData &&
+      !searchResultsRefineData ? (
         <AddToCartSearchResults
           showSuggestion={showSuggestion}
           loading={loading}

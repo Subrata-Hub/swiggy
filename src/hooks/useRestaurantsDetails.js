@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
 
-const useRestaurantsDetails = (restaurantId, setLoading) => {
+const useRestaurantsDetails = (restaurantId, setLoading, LAT, LNG) => {
   const [resDetailsData, setResDetailsData] = useState([]);
 
   const getResDetailsData = async () => {

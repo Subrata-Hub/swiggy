@@ -1,11 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
 
 const useAddToCardSearchResults = (
   suggestionText,
   setLoading,
   resId,
-  menuId
+  menuId,
+  LAT,
+  LNG
 ) => {
   const [cartSearchResultsData, setCartSearchResultsData] = useState();
   const getCardSearchResultsData = async () => {

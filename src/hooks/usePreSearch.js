@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
 
-const usePreSearch = () => {
+const usePreSearch = (LAT, LNG) => {
   const [preSearchData, setPreSearchData] = useState([]);
 
   const getPreSearchData = async () => {

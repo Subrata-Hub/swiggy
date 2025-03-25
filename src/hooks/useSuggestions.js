@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
-const useSuggestions = (query) => {
+
+const useSuggestions = (query, LAT, LNG) => {
   const [suggestionData, setSuggestionData] = useState();
 
   const getSuggestionData = async () => {

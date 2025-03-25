@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 
-const useMenuCategoryClick = (ref) => {
+const useMenuCategoryClick = (ref, callback) => {
   useEffect(() => {
     const category_list_ele = ref.current;
     if (category_list_ele) {
@@ -16,6 +17,7 @@ const useMenuCategoryClick = (ref) => {
             .querySelector(`.category--${id}`)
             .scrollIntoView({ behavior: "smooth" });
         }
+        callback();
       };
       category_list_ele.addEventListener("click", handleClick);
 

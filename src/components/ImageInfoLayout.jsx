@@ -3,17 +3,29 @@ import ImageInfoLayoutCard from "./ImageInfoLayoutCard";
 /* eslint-disable react/prop-types */
 const ImageInfoLayout = ({ resData }) => {
   if (!resData) return;
+  const resDataForImageInfoLayoutHeader = resData?.filter(
+    (item) => item?.card?.card?.id === "whats_on_your_mind"
+  );
+
+  const resDataForImageInfoLayout = resData?.filter(
+    (item) => item?.card?.card?.id === "whats_on_your_mind"
+  );
+  const topRestaurantsHeader =
+    resDataForImageInfoLayoutHeader?.[0]?.card?.card?.header?.title;
+  const topRestaurants =
+    resDataForImageInfoLayout?.[0]?.card?.card?.imageGridCards?.info;
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold">Subrata, what&apos;s on your mind?</h1>
+      <h1 className="text-2xl font-bold">{topRestaurantsHeader}</h1>
 
       <div className="w-full  overflow-x-auto hide-scrollbar">
         <div className="flex">
-          {resData?.[0]?.card?.card?.imageGridCards?.info?.map((resInfo) => (
+          {topRestaurants?.map((resInfo) => (
             <ImageInfoLayoutCard resInfo={resInfo} key={resInfo.id} />
           ))}
         </div>
+        <div className="w-full h-[1px] bg-slate-700 mt-10"></div>
       </div>
     </div>
   );

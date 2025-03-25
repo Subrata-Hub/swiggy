@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
 
-const useSearchResults = (query, setLoading) => {
+const useSearchResults = (query, setLoading, LAT, LNG) => {
   const [searchData, setSearchData] = useState();
 
   const getSearchData = async () => {

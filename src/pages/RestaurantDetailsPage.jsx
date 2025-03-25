@@ -7,12 +7,22 @@ import Menu from "../components/Menu";
 import { useState } from "react";
 import RestaurantDetailShimmer from "../shared/shimmer/RestaurantDetailShimmer";
 import PopupCardView from "../shared/PopupCardView";
+import { useSelector } from "react-redux";
 
 const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const { restaurantId, areaName, restaurantName, location } = useParams();
+  const latlang = useSelector((store) => store?.location?.latlng);
 
-  const resDetailsData = useRestaurantsDetails(restaurantId, setLoading);
+  const LAT = latlang?.LAT;
+  const LNG = latlang?.LNG;
+
+  const resDetailsData = useRestaurantsDetails(
+    restaurantId,
+    setLoading,
+    LAT,
+    LNG
+  );
   // if (!resDetailsData && resDetailsData.length === 0 && loading)
   //   <RestaurantDetailShimmer />;
 

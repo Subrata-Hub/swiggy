@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <div className="bg-slate-950 h-20 flex items-center justify-between ">
       <img src={Logo} alt="logo" className="w-12" />
-      <div className="flex justify-between items-center gap-40">
+      <div className="flex justify-between items-center gap-32">
         <Locationbar />
         <div className="flex gap-20">
           <Link to={`/search`}>

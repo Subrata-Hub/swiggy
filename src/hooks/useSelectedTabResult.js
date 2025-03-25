@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
 
 const useSelectedTabResult = (
   suggestionText,
   searchResultsType,
   isSelected,
-  setLoading
+  setLoading,
+  LAT,
+  LNG
 ) => {
   const [searchData, setSearchData] = useState({});
   // const dispatch = useDispatch();

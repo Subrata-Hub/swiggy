@@ -4,6 +4,7 @@ import menuItemReducer from "./menuItemSlice";
 import searchReducer from "./searchSlice";
 import configReducer from "./configSlice";
 import cartReducer from "./cartSlice";
+import locationReducer from "./locationSlice";
 
 const appStore = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const appStore = configureStore({
     search: searchReducer,
     config: configReducer,
     cart: cartReducer,
+    location: locationReducer,
   },
 });
 

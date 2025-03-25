@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-import { LAT, LNG } from "../utils/constant";
-// import { useSelector } from "react-redux";
 
 const useSearchFilter = (
   suggestionText,
@@ -10,7 +8,9 @@ const useSearchFilter = (
   facets,
   selectedOption,
   setLoading,
-  isReSetStore
+  isReSetStore,
+  LAT,
+  LNG
 ) => {
   const [searchData, setSearchData] = useState({});
 

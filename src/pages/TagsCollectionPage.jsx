@@ -5,11 +5,22 @@ import Navbar from "../components/Navbar";
 import TagsDetails from "../components/TagsDetails";
 import { useState } from "react";
 import TagDetailShimmer from "../shared/shimmer/TagDetailShimmer";
+import { useSelector } from "react-redux";
 
 const TagsCollectionPage = () => {
   const [loading, setLoading] = useState();
   const { collection_id, tags } = useParams();
-  const tagsDetailData = useTagsDetails(collection_id, tags, setLoading);
+  const latlang = useSelector((store) => store?.location?.latlng);
+
+  const LAT = latlang?.LAT;
+  const LNG = latlang?.LNG;
+  const tagsDetailData = useTagsDetails(
+    collection_id,
+    tags,
+    setLoading,
+    LAT,
+    LNG
+  );
 
   const preview = tagsDetailData?.[0]?.card?.card;
   const restaurantList = tagsDetailData?.slice(2);
