@@ -137,8 +137,6 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     }
   };
 
-  // console.log(counter);
-
   return (
     <>
       <div className="w-full h-[1px] bg-slate-500"></div>

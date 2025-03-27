@@ -64,7 +64,6 @@ const SearchPage = () => {
     LAT,
     LNG
   );
-  console.log(searchResultsData);
 
   const selectedTabSearchResults = useSelectedTabResult(
     suggestionText,
@@ -97,7 +96,6 @@ const SearchPage = () => {
     LAT,
     LNG
   );
-  console.log(addToCardSearchResults);
 
   const getRefineData = (data) => {
     const refineSearchResultsData = data?.cards?.filter(

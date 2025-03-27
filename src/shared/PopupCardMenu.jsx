@@ -62,8 +62,6 @@ const PopupCardMenu = ({
   //   setSelectedRadioOption(value);
   // };
 
-  // console.log(selectedRadioOption);
-
   const updateTotalPrice = (
     groupId,
     groupName,
@@ -112,8 +110,6 @@ const PopupCardMenu = ({
 
     menuPrice: totalPrice,
   };
-
-  // console.log(searchDishesData?.info?.addons);
 
   const handleAddItemToCart = (item) => {
     if (showPopupBeforeReset) {

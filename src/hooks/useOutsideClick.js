@@ -3,7 +3,6 @@ import { useEffect } from "react";
 const useOutSideClick = (ref, callback, tiggerRef) => {
   useEffect(() => {
     const handleClick = (event) => {
-      console.log(event);
       if (
         ref.current &&
         !ref.current.contains(event.target) &&

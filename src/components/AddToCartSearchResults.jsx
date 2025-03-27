@@ -30,8 +30,6 @@ const AddToCartSearchResults = ({
       item?.card?.card?.["@type"] ===
       "type.googleapis.com/swiggy.gandalf.widgets.v2.Collection"
   );
-  console.log(searchResultLabel);
-  console.log(moreDishesData);
 
   const moreDishesDataWithResInfo =
     moreDishesData?.[0]?.card?.card?.groupBy?.card?.card;

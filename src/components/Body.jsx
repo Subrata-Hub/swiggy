@@ -24,7 +24,6 @@ const Body = () => {
   const swiggyNotPresent = resData?.filter(
     (item) => item?.card?.card?.id === "swiggy_not_present"
   );
-  console.log(swiggyNotPresent);
 
   return (
     <div className="">

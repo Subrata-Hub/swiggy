@@ -19,7 +19,7 @@ const useAddToCardSearchResults = (
                       &selectedPLTab=dish-add&restaurantIdOfAddedItem=${resId}&itemAdded=${menuId}`
       );
       const data = await responce.json();
-      // console.log(data);
+
       setLoading(false);
 
       setCartSearchResultsData(data?.data);

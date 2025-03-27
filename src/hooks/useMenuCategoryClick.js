@@ -11,7 +11,6 @@ const useMenuCategoryClick = (ref, callback) => {
         const categoryDiv = e.target.closest(".category"); // Get the closest element with class "category"
 
         if (categoryDiv) {
-          console.log(categoryDiv);
           const id = categoryDiv.dataset.categoryid;
           document
             .querySelector(`.category--${id}`)

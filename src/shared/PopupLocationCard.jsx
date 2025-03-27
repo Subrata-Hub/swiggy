@@ -4,7 +4,6 @@ import { HiMapPin } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { addAddress, addLatlng, addPlace } from "../utils/locationSlice";
 import useCurrentAdress from "../hooks/useCurrentAdress";
-// import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 const PopupLocationCard = ({
@@ -15,15 +14,12 @@ const PopupLocationCard = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+
   const latlng = useSelector((store) => store?.location?.address);
 
   const latlngStr = encodeURIComponent(latlng);
-  console.log(latlngStr);
 
   const currentAddressData = useCurrentAdress(latlngStr, setLoading);
-  console.log(currentAddressData);
-  console.log(input);
 
   const suggestion = useLocationSuggestion(input);
 
@@ -35,22 +31,20 @@ const PopupLocationCard = ({
       })
     );
 
-    // navigate("/");
-
     setInput("");
 
     setLocationPopup(false);
+    // navigate("/");
   };
 
   const getPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         function success(position) {
-          // console.log(position.coords.latitude, position.coords.longitude);
           dispatch(
             addAddress([position.coords.latitude, position.coords.longitude])
           );
-          console.log(position);
+
           dispatch(
             addLatlng({
               LAT: position?.coords?.latitude,

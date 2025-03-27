@@ -2,8 +2,6 @@ import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 /* eslint-disable react/prop-types */
 const TopRestaurants = ({ topResData }) => {
-  console.log(topResData);
-
   const topRestaurantsHeader = topResData?.[0]?.card?.card?.header?.title;
   const topRestaurants =
     topResData?.[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants;

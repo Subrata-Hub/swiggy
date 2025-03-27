@@ -11,7 +11,6 @@ const MenuSearchBar = ({
   location,
   areaName,
 }) => {
-  // console.log(location, areaName, restaurantName, restaurantId);
   const [query, setQuery] = useState("");
 
   const dispatch = useDispatch();

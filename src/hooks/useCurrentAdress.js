@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 
 const useCurrentAdress = (latLng, setLoading) => {
@@ -5,7 +6,7 @@ const useCurrentAdress = (latLng, setLoading) => {
 
   const getCurrentAddress = async () => {
     setLoading(true);
-    console.log(latLng);
+
     if (latLng) {
       const response = await fetch(
         `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latLng}`
@@ -14,6 +15,7 @@ const useCurrentAdress = (latLng, setLoading) => {
       if (!suggestionData) return;
 
       setCurrentAdress(suggestionData?.data);
+
       setLoading(false);
     }
   };

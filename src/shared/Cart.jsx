@@ -18,7 +18,7 @@ const Cart = () => {
     ?.reduce((acc, item) => acc + item, 0);
 
   const cartRef = useRef(null);
-  // console.log(cartItems);
+
   return (
     <>
       <div

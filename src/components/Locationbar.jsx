@@ -17,19 +17,18 @@ const Locationbar = () => {
   useOutSideClick(locationRef, () => setLocationPopup(false), buttonRef);
   const place = useSelector((store) => store?.location?.place);
 
-  console.log(place);
-
   const latlangData = useLatLng(place?.place_id);
-  console.log(latlangData);
 
   const latlang = latlangData?.[0]?.geometry?.location;
-  console.log(latlang);
 
   useEffect(() => {
     dispatch(
       addLatlng({
-        LAT: `${latlang && latlang?.lat}`,
-        LNG: `${latlang && latlang?.lng}`,
+        // LAT: `${latlang && latlang?.lat}`,
+        // LNG: `${latlang && latlang?.lng}`,
+
+        LAT: latlang && latlang?.lat,
+        LNG: latlang && latlang?.lng,
       })
     );
   }, [latlang]);

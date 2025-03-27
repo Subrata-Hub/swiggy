@@ -5,7 +5,6 @@ import PopupCategoryList from "../shared/PopupCategoryList";
 import { useRef, useState } from "react";
 
 const MenuCategoryList = ({ resMenuData, filterOption, resInformation }) => {
-  console.log(resMenuData);
   const [showCategoryListPopup, setShowCategoryListPopup] = useState(false);
   const menuRef = useRef(null);
 

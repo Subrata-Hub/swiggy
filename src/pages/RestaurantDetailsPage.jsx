@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const { restaurantId, areaName, restaurantName, location } = useParams();
+
   const latlang = useSelector((store) => store?.location?.latlng);
 
   const LAT = latlang?.LAT;
@@ -23,8 +24,6 @@ const RestaurantDetailsPage = () => {
     LAT,
     LNG
   );
-  // if (!resDetailsData && resDetailsData.length === 0 && loading)
-  //   <RestaurantDetailShimmer />;
 
   const resInformation = {
     restaurantId: restaurantId,

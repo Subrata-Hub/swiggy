@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 // import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Body from "../components/Body";
@@ -6,9 +5,9 @@ import Navbar from "../components/Navbar";
 import {
   addAddress,
   addLatlng,
-  reSetLocationStore,
+  // reSetLocationStore,
 } from "../utils/locationSlice";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -30,7 +29,7 @@ const HomePage = () => {
           dispatch(
             addAddress([position.coords.latitude, position.coords.longitude])
           );
-          console.log(position);
+
           dispatch(
             addLatlng({
               LAT: position?.coords?.latitude,
@@ -45,10 +44,10 @@ const HomePage = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(reSetLocationStore());
-    getPosition();
-  }, [location.pathname, dispatch]);
+  // useEffect(() => {
+  //   // dispatch(reSetLocationStore());
+  //   getPosition();
+  // }, [location]);
 
   getPosition();
 

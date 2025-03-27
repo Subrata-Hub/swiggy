@@ -16,7 +16,6 @@ const Restaurants = ({ allResData }) => {
     resDataForRestaurants?.[0]?.card?.card?.gridElements?.infoWithStyle
       ?.restaurants;
 
-  console.log(allResData);
   return (
     <div className="mt-6">
       <h1 className="text-[25px] font-bold">{title}</h1>
