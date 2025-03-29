@@ -8,7 +8,7 @@ const TopRestaurants = ({ topResData }) => {
 
   return (
     <>
-      <div className="mt-10">
+      <div className={`${topRestaurantsHeader ? "mt-10" : "mt-0"}`}>
         <h1 className="text-[22px] font-semibold">{topRestaurantsHeader}</h1>
         <div className="flex w-full overflow-x-auto hide-scrollbar mt-4">
           <div className="flex gap-8">
@@ -22,7 +22,9 @@ const TopRestaurants = ({ topResData }) => {
           </div>
         </div>
       </div>
-      <div className="w-full h-[1px] bg-slate-700 mt-13"></div>
+      {topRestaurants && (
+        <div className="w-full h-[1px] bg-slate-700 mt-13"></div>
+      )}
     </>
   );
 };

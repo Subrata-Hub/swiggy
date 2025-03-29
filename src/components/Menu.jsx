@@ -31,9 +31,15 @@ const Menu = ({
 
   const resMenuData = resDetailsData?.filter(
     (item) =>
-      item?.card?.card?.["@type"] ===
-      "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+      item?.card?.card?.["@type"] !==
+      "type.googleapis.com/swiggy.presentation.food.v2.MenuVegFilterAndBadge"
   );
+
+  // const resMenuDataWithNestedItem = resDetailsData?.filter(
+  //   (item) =>
+  //     item?.card?.card?.["@type"] ===
+  //     "type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory"
+  // );
 
   // const searchFill = searchData?.filter((itemFill) => itemFill?.)
 

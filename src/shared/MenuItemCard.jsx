@@ -139,7 +139,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
   return (
     <>
-      <div className="w-full h-[1px] bg-slate-500"></div>
+      {/* <div className="w-full h-[0.3px] bg-slate-700"></div> */}
       <div className="flex justify-between py-6">
         <div className="w-3/4">
           {resMenuItem?.card?.info?.itemAttribute?.vegClassifier ===
@@ -237,6 +237,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
           </div>
         </div>
       </div>
+      <div className="w-full h-[0.1px] bg-slate-800"></div>
 
       {showPopup && (
         <>
@@ -287,7 +288,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
         </>
       )}
 
-      <div className="w-full h-[1px] bg-slate-500"></div>
+      {/* <div className="w-full h-[0.3px] bg-slate-700"></div> */}
     </>
   );
 };

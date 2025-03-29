@@ -21,7 +21,7 @@ const MenuCategoryList = ({ resMenuData, filterOption, resInformation }) => {
         ))}
       </div>
       <div
-        className="w-24 h-24 rounded-full bg-slate-700 fixed bottom-20 right-[22%] flex justify-center items-center"
+        className="w-20 h-20 rounded-full bg-slate-700 fixed bottom-20 right-[22%] flex justify-center items-center"
         onClick={() => setShowCategoryListPopup(!showCategoryListPopup)}
         ref={menuRef}
       >

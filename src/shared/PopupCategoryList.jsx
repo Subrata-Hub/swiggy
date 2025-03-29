@@ -9,6 +9,7 @@ const PopupCategoryList = ({
   setShowCategoryListPopup,
   menuRef,
 }) => {
+  console.log(resMenuData);
   const category_list_ref = useRef(null);
 
   useMenuCategoryClick(category_list_ref, () =>
@@ -23,6 +24,15 @@ const PopupCategoryList = ({
     menuRef
   );
 
+  const getNestedMenuLength = (categories) => {
+    const nestedMenuLength = categories
+      ?.map((subMenu) => subMenu?.itemCards)
+      .map((item) => item?.length)
+      .reduce((acc, item) => (acc += item), 0);
+
+    return nestedMenuLength;
+  };
+
   return (
     <div className="w-[520px] h-auto p-[30px] bg-slate-700 fixed z-[11999] bottom-15 right-[30%] rounded-3xl ">
       <div
@@ -31,7 +41,7 @@ const PopupCategoryList = ({
       >
         {resMenuData?.map((item, index) => (
           <div
-            className="flex justify-between pb-4 category"
+            className="flex justify-between pb-4 category cursor-pointer"
             aria-label={`Category-${item?.card?.card?.title}`}
             key={index}
             data-categoryid={`${item?.card?.card?.categoryId}`}
@@ -41,6 +51,9 @@ const PopupCategoryList = ({
               {item?.card?.card?.itemCards?.length > 0 &&
                 item?.card?.card?.itemCards?.length}
             </div>
+            {item?.card?.card?.categories && (
+              <div>{getNestedMenuLength(item?.card?.card?.categories)}</div>
+            )}
           </div>
         ))}
       </div>

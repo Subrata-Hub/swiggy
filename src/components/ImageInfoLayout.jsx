@@ -1,4 +1,5 @@
 import ImageInfoLayoutCard from "./ImageInfoLayoutCard";
+// import TopRestaurants from "./TopRestaurants";
 
 /* eslint-disable react/prop-types */
 const ImageInfoLayout = ({ resData }) => {
@@ -25,7 +26,9 @@ const ImageInfoLayout = ({ resData }) => {
             <ImageInfoLayoutCard resInfo={resInfo} key={resInfo.id} />
           ))}
         </div>
-        <div className="w-full h-[1px] bg-slate-700 mt-10"></div>
+        {topRestaurants && (
+          <div className="w-full h-[1px] bg-slate-700 mt-10"></div>
+        )}
       </div>
     </div>
   );
