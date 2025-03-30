@@ -9,6 +9,7 @@ export const IMG_SEARCH_DISH_BANNER = `https://media-assets.swiggy.com/swiggy/im
 export const IMG_SEARCH_RES = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_264,h_288,c_fill/`;
 export const CART_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_132,h_132,c_fill/`;
 export const UNSERVICEABLE_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_476,h_476/portal/m/location_unserviceable.png`;
+export const LOGIN_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r`;
 export const LAT = 22.5743545;
 export const LNG = 88.3628734;
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useLocationSuggestion from "../hooks/useLocationSuggestion";
-import { HiMapPin } from "react-icons/hi2";
+import { HiMapPin, HiMiniXMark } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { addAddress, addLatlng, addPlace } from "../utils/locationSlice";
 import useCurrentAdress from "../hooks/useCurrentAdress";
@@ -108,7 +108,10 @@ const PopupLocationCard = ({
         className="h-full fixed top-0 left-0 bg-slate-800 w-[650px] z-5000000"
         ref={locationRef}
       >
-        <div className="pl-40 pt-32">
+        <div className="pt-6 pl-40" onClick={() => setLocationPopup(false)}>
+          <HiMiniXMark className="text-3xl" />
+        </div>
+        <div className="pl-40 pt-24">
           <input
             type="text"
             value={input}
