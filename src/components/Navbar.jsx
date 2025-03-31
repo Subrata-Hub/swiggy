@@ -14,9 +14,11 @@ import { signOut } from "firebase/auth";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  // const [isSignIn, setIsSignIn] = useState(true);
   const [uid, setUid] = useState(null); // State to store the UID
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState(null);
   const [showProfileCard, setShowProfileCard] = useState(false);
+  const [disableOutsideClick, setDisableOutsideClick] = useState(false);
 
   const logInRef = useRef(null);
   const logBtnRef = useRef(null);
@@ -25,8 +27,30 @@ const Navbar = () => {
 
   // console.log(userData);
 
-  useOutSideClick(logInRef, () => setShowLoginPopup(false), logBtnRef);
-  useOutSideClick(profileRef, () => setShowProfileCard(false), profileBtnRef);
+  useOutSideClick(
+    logInRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowLoginPopup(false);
+      }
+    },
+    logBtnRef
+  );
+  useOutSideClick(
+    profileRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowProfileCard(false);
+      }
+    },
+    profileBtnRef
+  );
+
+  const handleContinueClick = () => {
+    setDisableOutsideClick(true);
+
+    setTimeout(() => setDisableOutsideClick(false), 100);
+  };
 
   useEffect(() => {
     // Use onAuthStateChanged to get the current user and their UID
@@ -40,7 +64,7 @@ const Navbar = () => {
       }
     });
 
-    // Cleanup the listener when the component unmounts
+    //   // Cleanup the listener when the component unmounts
     return () => unsubcribeAuth();
   }, []);
 
@@ -71,12 +95,17 @@ const Navbar = () => {
     }
   }, [uid]);
 
+  const handleContineueafterSignIn = () => {
+    setShowLoginPopup(false);
+    setShowProfileCard(false);
+  };
+
   const handleUserSignOut = () => {
     signOut(auth)
       .then(() => {
-        setUserData("");
+        setUserData(null);
         console.log("User gone");
-        setShowProfileCard(false);
+        // setShowProfileCard(false);
         // window.location.reload;
       })
       .catch((error) => {
@@ -100,26 +129,31 @@ const Navbar = () => {
           <div
             className=""
             onClick={() => setShowLoginPopup(true)}
-            // onMouseOutCapture={() => setShowProfileCard(false)}
             ref={logBtnRef}
           >
             <div
               ref={profileBtnRef}
-              onMouseOverCapture={() => setShowProfileCard(true)}
+              onMouseOver={() => setShowProfileCard(true)}
               className="flex items-center gap-2"
             >
               <HiOutlineUserCircle className="text-2xl" />{" "}
-              {userData.name ? <span>{userData?.name}</span> : "Sign In"}
+              {userData?.name && userData?.name !== null ? (
+                <span>{userData?.name}</span>
+              ) : (
+                "Sign In"
+              )}
+              {/* <span>Sign In</span> */}
             </div>
           </div>
-          {showLoginPopup && !userData && (
+          {showLoginPopup && (
             <>
               <div className="overlay"></div>
 
               <Login
                 setShowLoginPopup={setShowLoginPopup}
                 logInRef={logInRef}
-                setShowProfileCard={setShowProfileCard}
+                onContinue={handleContinueClick}
+                handleContineueafterSignIn={handleContineueafterSignIn}
               />
             </>
           )}
@@ -128,6 +162,7 @@ const Navbar = () => {
             <div
               className="w-32 h-10 bg-slate-800 fixed top-15 right-[250px] z-[23161365] text-center"
               onClick={handleUserSignOut}
+              onMouseLeave={() => setShowProfileCard(false)}
               ref={profileRef}
             >
               SignOut

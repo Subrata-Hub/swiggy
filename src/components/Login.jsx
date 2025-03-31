@@ -11,7 +11,7 @@ import { auth, db } from "../utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { HiMiniXMark } from "react-icons/hi2";
 
-const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
+const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
@@ -32,28 +32,30 @@ const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
         const user = userCredential.user;
         console.log(user);
 
+        // Wait a moment before accessing auth.currentUser
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         await updateProfile(user, {
           displayName: name?.current?.value,
         });
 
-        // Wait a moment before accessing auth.currentUser
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
         // const updatedUser = auth.currentUser;
 
-        onAuthStateChanged(auth, (updatedUser) => {
+        onAuthStateChanged(auth, async (updatedUser) => {
           if (updatedUser) {
             const { uid, email, displayName } = updatedUser;
             const userDocRef = doc(db, "users", uid);
-            setDoc(userDocRef, {
+            await setDoc(userDocRef, {
               uid,
               email,
               name: displayName,
             });
+
+            console.log("User signed up and data stored:", user);
+
+            setIsSignIn(true);
           }
         });
-        console.log("User signed up and data stored:", user);
-        setIsSignIn(true);
       } else {
         await signInWithEmailAndPassword(
           auth,
@@ -64,11 +66,11 @@ const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
         // const user = signINUserCadential.user;
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        onAuthStateChanged(auth, (updatedUser) => {
+        onAuthStateChanged(auth, async (updatedUser) => {
           if (updatedUser) {
             const { uid, email, displayName } = updatedUser;
             const userDocRef = doc(db, "users", uid);
-            setDoc(userDocRef, {
+            await setDoc(userDocRef, {
               uid,
               email,
               name: displayName,
@@ -77,7 +79,7 @@ const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
         });
         console.log("Sign In User");
         setShowLoginPopup(false);
-        setShowProfileCard(false);
+        handleContineueafterSignIn();
       }
     } catch (error) {
       const errorCode = error.code;
@@ -85,6 +87,10 @@ const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
       const errorMessage = error.message;
       setErrorMessage(errorMessage);
     }
+  };
+
+  const toggleFrom = () => {
+    setIsSignIn(!isSignIn);
   };
 
   return (
@@ -102,7 +108,7 @@ const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
               {isSignIn ? (
                 <>
                   <h1 className="text-2xl">LogIn</h1>
-                  <p onClick={() => setIsSignIn(!isSignIn)} className="mt-4">
+                  <p onClick={toggleFrom} className="mt-4">
                     or{" "}
                     <span className="text-orange-300">create an account</span>
                   </p>
@@ -110,7 +116,7 @@ const Login = ({ setShowLoginPopup, logInRef, setShowProfileCard }) => {
               ) : (
                 <>
                   <h1 className="text-2xl">Sign Up</h1>
-                  <p onClick={() => setIsSignIn(!isSignIn)} className="mt-4 ">
+                  <p onClick={toggleFrom} className="mt-4 ">
                     or{" "}
                     <span className="text-orange-300">
                       login to your account
