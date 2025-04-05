@@ -5,12 +5,14 @@ const usePreSearch = (LAT, LNG) => {
   const [preSearchData, setPreSearchData] = useState([]);
 
   const getPreSearchData = async () => {
-    const response = await fetch(
-      `https://www.swiggy.com/dapi/landing/PRE_SEARCH?lat=${LAT}&lng=${LNG}`
-    );
-    const data = await response.json();
+    if (LAT && LNG) {
+      const response = await fetch(
+        `https://www.swiggy.com/dapi/landing/PRE_SEARCH?lat=${LAT}&lng=${LNG}`
+      );
+      const data = await response.json();
 
-    setPreSearchData(data?.data);
+      setPreSearchData(data?.data);
+    }
   };
 
   useEffect(() => {

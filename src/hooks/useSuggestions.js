@@ -7,7 +7,7 @@ const useSuggestions = (query, LAT, LNG) => {
   const getSuggestionData = async () => {
     // setLoading(true);
 
-    if (query) {
+    if (query && LAT && LNG) {
       const response = await fetch(
         `https://www.swiggy.com/dapi/restaurants/search/suggest?lat=${LAT}&lng=${LNG}&str=${query}&includeIMItem=true`
       );

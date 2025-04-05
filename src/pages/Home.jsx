@@ -1,5 +1,6 @@
-// import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import { useDispatch, useSelector } from "react-redux";
 import Body from "../components/Body";
 import Navbar from "../components/Navbar";
 import {
@@ -7,49 +8,268 @@ import {
   addLatlng,
   // reSetLocationStore,
 } from "../utils/locationSlice";
-// import { useEffect } from "react";
+import { useEffect } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../utils/firebase";
+import { signInAnonymously } from "firebase/auth";
+import useLocationFromDB from "../hooks/useLocationFromDB";
 
 const HomePage = () => {
+  console.log("HomePage component mounted"); // Check for multiple mounts
   const dispatch = useDispatch();
+  const userLocationData = useLocationFromDB(auth?.currentUser?.uid);
+  console.log(userLocationData);
+  const location = useSelector((store) => store.location);
+  const search = useSelector((store) => store.search);
+  const cart = useSelector((store) => store.cart);
+  const config = useSelector((store) => store.config);
 
-  // const getMenuSearchResultData = async () => {
-  //   const responce = await fetch(
-  //     `https://www.swiggy.com/dapi/misc/address-recommend?place_id=ChIJbU60yXAWrjsR4E9-UejD3_g`
-  //   );
-  //   const data = await responce.json();
-  //   console.log(data);
+  // const addLocationFromDBRepetingUser = async () => {
+  //   const user = auth.currentUser.uid;
+  //   if (!user) return;
+  //   if (userLocationData === undefined) return;
+  //   if (
+  //     user &&
+  //     userLocationData !== undefined &&
+  //     location?.latlng?.LAT === undefined &&
+  //     location?.latlng?.LNG === undefined
+  //   ) {
+  //     const locationDocRef = doc(db, "locations", user?.uid);
+  //     await setDoc(locationDocRef, {
+  //       ...userLocationData,
+  //       ["locuid"]: user?.uid,
+  //     });
+  //     console.log("Location added to Firestore for user:", user?.uid);
+  //   } else {
+  //     console.log(
+  //       "addLocationToDB: Not adding location - user:",
+  //       !!user,
+  //       "location:",
+  //       location?.latlng
+  //     );
+  //   }
   // };
-
-  // getMenuSearchResultData();
 
   const getPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        function success(position) {
+        (position) => {
           dispatch(
             addAddress([position.coords.latitude, position.coords.longitude])
           );
-
           dispatch(
             addLatlng({
-              LAT: position?.coords?.latitude,
-              LNG: position?.coords?.longitude,
+              LAT: position.coords.latitude,
+              LNG: position.coords.longitude,
             })
           );
         },
-        function () {
+        () => {
           alert("Could not get your position");
         }
       );
     }
   };
 
-  // useEffect(() => {
-  //   // dispatch(reSetLocationStore());
-  //   getPosition();
-  // }, [location]);
+  const addLocationToDB = async () => {
+    try {
+      const user = auth.currentUser;
+      console.log("addLocationToDB: Current user:", user?.uid);
 
-  getPosition();
+      if (
+        user &&
+        location?.latlng?.LAT &&
+        location?.latlng?.LNG &&
+        userLocationData === undefined
+      ) {
+        const locationDocRef = doc(db, "locations", user?.uid);
+        await setDoc(locationDocRef, { ...location, ["locuid"]: user?.uid });
+        console.log("Location added to Firestore for user:", user?.uid);
+      } else {
+        console.log(
+          "addLocationToDB: Not adding location - user:",
+          !!user,
+          "location:",
+          location?.latlng
+        );
+      }
+    } catch (error) {
+      console.error("Error adding location:", error);
+    }
+  };
+
+  const addToSearchDB = async () => {
+    try {
+      const user = auth.currentUser;
+      console.log("addToSearchDB: Current user:", user?.uid);
+      if (user && search) {
+        const searchDocRef = doc(db, "search", user.uid);
+        await setDoc(searchDocRef, search);
+        console.log("search added to Firestore for user:", user?.uid);
+      }
+    } catch (error) {
+      console.error("Error adding cart:", error);
+    }
+  };
+
+  const addCartToDB = async () => {
+    try {
+      const user = auth.currentUser;
+      console.log("addCartToDB: Current user:", user?.uid);
+      if (user && cart) {
+        const cartDocRef = doc(db, "cart", user.uid);
+        await setDoc(cartDocRef, cart);
+        console.log("cart added to Firestore for user:", user?.uid);
+      }
+    } catch (error) {
+      console.error("Error adding search:", error);
+    }
+  };
+
+  const addConfigToDB = async () => {
+    try {
+      const user = auth.currentUser;
+      console.log("addConfigToDB: Current user:", user?.uid);
+      if (user && config) {
+        const configDocRef = doc(db, "config", user.uid);
+        await setDoc(configDocRef, {
+          id: user.uid, // Explicitly set the id field
+          setting: config.setting,
+        });
+        console.log("config added to Firestore for user:", user?.uid);
+      }
+    } catch (error) {
+      console.error("Error adding config:", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const user = auth?.currentUser?.uid;
+  //   if (user && userLocationData && userLocationData !== undefined) {
+  //     addLocationFromDBRepetingUser();
+  //   }
+  // }, [userLocationData]);
+
+  useEffect(() => {
+    const unSubcribeAuth = auth.onAuthStateChanged(async (user) => {
+      const storedAnonymousUid = localStorage.getItem("anonymousUid");
+      console.log(
+        "onAuthStateChanged triggered. Current user:",
+        user,
+        "Stored anonymous UID:",
+        storedAnonymousUid
+      );
+
+      if (!user && !storedAnonymousUid) {
+        console.log("Attempting anonymous sign-in.");
+        try {
+          const anonymousUserCredential = await signInAnonymously(auth);
+          const anonymousUid = anonymousUserCredential.user.uid;
+          localStorage.setItem("anonymousUid", anonymousUid);
+          console.log("Signed in anonymously. New UID:", anonymousUid);
+
+          const userDocRef = doc(db, "users", anonymousUid);
+          const docSnap = await getDoc(userDocRef);
+          if (!docSnap.exists()) {
+            await setDoc(userDocRef, {
+              uid: anonymousUid,
+              isAnonymous: true,
+            });
+            console.log("Anonymous user document created.");
+          }
+        } catch (error) {
+          console.error("Error signing in anonymously:", error);
+        }
+      } else if (user) {
+        console.log("User is signed in (permanent or anonymous):", user?.uid);
+        localStorage.removeItem("anonymousUid");
+      } else if (storedAnonymousUid && !user) {
+        console.log(
+          "Anonymous UID found in localStorage, user is null. Assuming existing anonymous session:",
+          storedAnonymousUid
+        );
+        // You might want to fetch their data here if needed
+        // getPosition();
+      }
+
+      if (user) {
+        console.log(
+          "User authenticated (after potential anonymous sign-in), fetching location..."
+        );
+        const userLocationDocRef = doc(db, "locations", user?.uid);
+        const docLocationSnap = await getDoc(userLocationDocRef);
+        if (
+          userLocationData?.place === undefined &&
+          !docLocationSnap.exists()
+        ) {
+          getPosition();
+          console.log("Initial location");
+        }
+      }
+
+      return () => unSubcribeAuth();
+    });
+    return () => unSubcribeAuth(); // Cleanup the listener
+  }, []);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user && location?.latlng?.LAT && location?.latlng?.LNG) {
+      console.log(
+        "useEffect for addLocationToDB triggered. User:",
+        user?.uid,
+        "Location:",
+        location?.latlng
+      );
+      addLocationToDB();
+    } else {
+      console.log(
+        "useEffect for addLocationToDB: Conditions not met - user:",
+        !!user,
+        "location:",
+        location?.latlng
+      );
+    }
+  }, [auth.currentUser, location?.latlng?.LAT, location?.latlng?.LNG]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user && cart?.cartItems?.length > 0) {
+      console.log(
+        "useEffect for addCartToDB triggered. User:",
+        user?.uid,
+        "Cart items:",
+        cart.cartItems.length
+      );
+      addCartToDB();
+    }
+  }, [auth.currentUser, cart]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user && search) {
+      console.log(
+        "useEffect for addToSearchDB triggered. User:",
+        user?.uid,
+        "Search:",
+        search
+      );
+      addToSearchDB();
+    }
+  }, [auth.currentUser, search]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user && config) {
+      console.log(
+        "useEffect for addConfigToDB triggered. User:",
+        user?.uid,
+        "Config:",
+        config
+      );
+      addConfigToDB();
+    }
+  }, [auth.currentUser, config]);
 
   return (
     <>

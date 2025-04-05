@@ -3,7 +3,12 @@
 import { useNavigate } from "react-router-dom";
 import { IMG_SUGGESTION } from "../utils/constant";
 import { useDispatch } from "react-redux";
-import { addSearchResultType, addSuggestionText } from "../utils/configSlice";
+import {
+  addConfigId,
+  addSearchResultType,
+  addSuggestionText,
+} from "../utils/configSlice";
+import { auth } from "../utils/firebase";
 
 const SuggestionList = ({
   searchSuggestionsData,
@@ -24,6 +29,9 @@ const SuggestionList = ({
     dispatch(addSuggestionText(query));
 
     dispatch(addSearchResultType(type));
+    if (auth.currentUser !== null) {
+      dispatch(addConfigId(auth?.currentUser?.uid));
+    }
 
     setSearchQueryInput(query);
     setShowSuggestion(false);

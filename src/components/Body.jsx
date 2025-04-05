@@ -6,14 +6,33 @@ import TopRestaurants from "./TopRestaurants";
 import RestaurantsShimmer from "../shared/shimmer/RestaurantsShimmer";
 import { useSelector } from "react-redux";
 import LocationUnAvailable from "./LocationUnAvailable";
+import useUserFromDB from "../hooks/useUserFromDB";
+import useLocationFromDB from "../hooks/useLocationFromDB";
 
 const Body = () => {
   const [loading, setLoading] = useState(true);
 
-  const latlang = useSelector((store) => store?.location?.latlng);
+  const userData = useUserFromDB();
+  // const userData = useSelector((store) => store.firebaseData.userData);
+  console.log(userData);
+  const latlng = useSelector((store) => store?.location?.latlng);
 
-  const LAT = latlang?.LAT;
-  const LNG = latlang?.LNG;
+  const userLocationData = useLocationFromDB(userData?.uid);
+  console.log(userLocationData);
+
+  console.log(userLocationData);
+
+  const LAT =
+    userLocationData?.latlng !== undefined && userLocationData?.latlng?.LAT
+      ? userLocationData?.latlng?.LAT
+      : latlng?.LAT;
+
+  const LNG =
+    userLocationData?.latlng !== undefined && userLocationData?.latlng?.LNG
+      ? userLocationData?.latlng?.LNG
+      : latlng?.LNG;
+
+  console.log(LAT, LNG);
 
   const resData = useRestaurants(setLoading, LAT, LNG);
 

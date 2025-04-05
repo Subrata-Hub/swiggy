@@ -10,10 +10,14 @@ import { useSelector } from "react-redux";
 const TagsCollectionPage = () => {
   const [loading, setLoading] = useState();
   const { collection_id, tags } = useParams();
-  const latlang = useSelector((store) => store?.location?.latlng);
 
-  const LAT = latlang?.LAT;
-  const LNG = latlang?.LNG;
+  const userLocationData = useSelector(
+    (store) => store?.firebaseData?.userLocationData
+  );
+
+  const LAT = userLocationData && userLocationData?.latlng?.LAT;
+  const LNG = userLocationData && userLocationData?.latlng?.LNG;
+
   const tagsDetailData = useTagsDetails(
     collection_id,
     tags,

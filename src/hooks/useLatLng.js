@@ -12,6 +12,8 @@ const useLatLng = (placeId) => {
       const latLngData = await response.json();
 
       setLatLng(latLngData?.data);
+    } else {
+      return;
     }
   };
 

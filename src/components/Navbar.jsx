@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link } from "react-router-dom";
 import Logo from "../assets/download.png";
 
@@ -11,12 +12,16 @@ import useOutSideClick from "../hooks/useOutsideClick";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "../utils/firebase";
 import { signOut } from "firebase/auth";
+import useLocationFromDB from "../hooks/useLocationFromDB";
+import { addUserData } from "../utils/firebaseDataSlice";
+import { useDispatch } from "react-redux";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  // const [isSignIn, setIsSignIn] = useState(true);
+
   const [uid, setUid] = useState(null); // State to store the UID
   const [userData, setUserData] = useState(null);
+
   const [showProfileCard, setShowProfileCard] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
 
@@ -24,8 +29,13 @@ const Navbar = () => {
   const logBtnRef = useRef(null);
   const profileRef = useState(null);
   const profileBtnRef = useRef(null);
+  const dispatch = useDispatch();
 
-  // console.log(userData);
+  console.log(auth?.currentUser);
+
+  const userLocationData = useLocationFromDB(userData?.uid);
+
+  console.log(userLocationData);
 
   useOutSideClick(
     logInRef,
@@ -79,6 +89,7 @@ const Navbar = () => {
           snapshot.forEach((doc) => {
             console.log("Current user data:", doc.data());
             setUserData(doc.data());
+            dispatch(addUserData(doc.data()));
           });
 
           if (snapshot.empty) {
@@ -104,9 +115,8 @@ const Navbar = () => {
     signOut(auth)
       .then(() => {
         setUserData(null);
+
         console.log("User gone");
-        // setShowProfileCard(false);
-        // window.location.reload;
       })
       .catch((error) => {
         // An error happened.
@@ -118,7 +128,7 @@ const Navbar = () => {
     <div className="bg-slate-950 h-20 flex items-center justify-between ">
       <img src={Logo} alt="logo" className="w-12" />
       <div className="flex justify-between items-center gap-32">
-        <Locationbar />
+        <Locationbar userLocationData={userLocationData && userLocationData} />
         <div className="flex items-center gap-16">
           <Link to={`/search`}>
             <div className="flex justify-center items-center gap-2">

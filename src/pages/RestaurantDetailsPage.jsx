@@ -13,7 +13,9 @@ const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const { restaurantId, areaName, restaurantName, location } = useParams();
 
-  const latlang = useSelector((store) => store?.location?.latlng);
+  const latlang = useSelector(
+    (store) => store?.firebaseData?.userLocationData?.latlng
+  );
 
   const LAT = latlang?.LAT;
   const LNG = latlang?.LNG;

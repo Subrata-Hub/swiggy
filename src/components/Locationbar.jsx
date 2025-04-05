@@ -1,36 +1,55 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
+
 import { HiChevronDown } from "react-icons/hi";
 import useOutSideClick from "../hooks/useOutsideClick";
 import { useEffect, useRef, useState } from "react";
 import PopupLocationCard from "../shared/PopupLocationCard";
-import { useDispatch, useSelector } from "react-redux";
-import useLatLng from "../hooks/useLatLng";
-import { addLatlng } from "../utils/locationSlice";
 
-const Locationbar = () => {
+import useLatLng from "../hooks/useLatLng";
+
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../utils/firebase";
+import { useSelector } from "react-redux";
+
+const Locationbar = ({ userLocationData }) => {
   const [locationPopup, setLocationPopup] = useState(false);
   const [input, setInput] = useState("");
+  const userData = useSelector((store) => store.firebaseData.userData);
 
   const locationRef = useRef(null);
   const buttonRef = useRef(null);
-  const dispatch = useDispatch();
+
   useOutSideClick(locationRef, () => setLocationPopup(false), buttonRef);
-  const place = useSelector((store) => store?.location?.place);
 
-  const latlangData = useLatLng(place?.place_id);
+  const latlangData = useLatLng(userLocationData?.place?.place_id);
+  console.log(latlangData);
 
-  const latlang = latlangData?.[0]?.geometry?.location;
+  const latlang =
+    (latlangData !== undefined || latlangData.length > 0) &&
+    latlangData?.[0]?.geometry?.location;
+  console.log(latlang);
+
+  const updateLocation = async (docId, updateField) => {
+    try {
+      const locationRef = doc(db, "locations", docId);
+      await updateDoc(locationRef, updateField);
+      console.log("Document updated successfully!");
+    } catch (error) {
+      console.error("Error updating document:", error);
+    }
+  };
 
   useEffect(() => {
-    dispatch(
-      addLatlng({
-        // LAT: `${latlang && latlang?.lat}`,
-        // LNG: `${latlang && latlang?.lng}`,
-
-        LAT: latlang && latlang?.lat,
-        LNG: latlang && latlang?.lng,
-      })
-    );
+    if (
+      userData !== undefined &&
+      latlang?.lat !== null &&
+      latlang?.LNG !== null
+    )
+      updateLocation(userData?.uid, {
+        ...userLocationData,
+        latlng: { LAT: Number(latlang?.lat), LNG: Number(latlang?.lng) },
+      });
   }, [latlang]);
 
   return (
@@ -41,17 +60,10 @@ const Locationbar = () => {
         ref={buttonRef}
         role="button"
       >
-        {/* <input
-          type="text"
-          value={`${place.description}`}
-          placeholder={`${place.description}`}
-          className="w-48"
-          onChange={}
-        /> */}
         <div className="flex justify-center items-center gap-1 w-[300px] h-10">
           <p className="font-semibold mr-1">Others</p>
           <div className="text-[14px] font-light truncate">
-            {place?.description}
+            {userLocationData?.place?.description}
           </div>
 
           <span>
@@ -65,6 +77,7 @@ const Locationbar = () => {
           <div className="overlay"></div>
           <PopupLocationCard
             // locationPopup={locationPopup}
+            userLocationData={userLocationData}
             locationRef={locationRef}
             setLocationPopup={setLocationPopup}
             input={input}

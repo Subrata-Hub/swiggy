@@ -262,7 +262,7 @@ const SearchDishesCard = ({
                             resInformation?.restaurantId,
                             menuInfo?.menuId
                           );
-                        }, 2000); // Ensures this runs after state updates in handleShowMenuCardPopup
+                        }, 1000); // Ensures this runs after state updates in handleShowMenuCardPopup
                       }}
                       ref={addResetRef}
                     >

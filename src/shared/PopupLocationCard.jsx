@@ -1,61 +1,115 @@
 import { useState } from "react";
 import useLocationSuggestion from "../hooks/useLocationSuggestion";
 import { HiMapPin, HiMiniXMark } from "react-icons/hi2";
-import { useDispatch, useSelector } from "react-redux";
-import { addAddress, addLatlng, addPlace } from "../utils/locationSlice";
-import useCurrentAdress from "../hooks/useCurrentAdress";
+
+import { useNavigate } from "react-router-dom";
+import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../utils/firebase";
+import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
 const PopupLocationCard = ({
+  userLocationData,
   locationRef,
   setLocationPopup,
   input,
   setInput,
 }) => {
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
 
-  const latlng = useSelector((store) => store?.location?.address);
-
-  const latlngStr = encodeURIComponent(latlng);
-
-  const currentAddressData = useCurrentAdress(latlngStr, setLoading);
+  const navigate = useNavigate();
 
   const suggestion = useLocationSuggestion(input);
 
-  const getLocationId = (description, place_id) => {
-    dispatch(
-      addPlace({
-        description: description,
-        place_id: place_id,
-      })
-    );
+  const userData = useSelector((store) => store.firebaseData.userData);
+
+  const updateLocation = async (docId, updateField) => {
+    try {
+      setLoading(true);
+      const locationRef = doc(db, "locations", docId);
+      await updateDoc(locationRef, updateField);
+      console.log("Document updated successfully!");
+      setLoading(false);
+    } catch (error) {
+      console.error("Error updating document:", error);
+    }
+  };
+
+  const getLocationId = async (description, place_id) => {
+    setLoading(true);
+    const place = {
+      description: description,
+      place_id: place_id,
+    };
+
+    setLocationPopup(false);
+
+    await updateLocation(userData?.uid, {
+      ...userLocationData,
+
+      place: place,
+    });
 
     setInput("");
 
-    setLocationPopup(false);
-    // navigate("/");
+    setLoading(false);
+
+    navigate("/");
+  };
+
+  const getCurrentAddress = async (latlngStr) => {
+    if (latlngStr) {
+      setInput("Fetching your current Location");
+      setLoading(true);
+      const response = await fetch(
+        `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latlngStr}`
+      );
+      const suggestionData = await response.json();
+      if (!suggestionData) return;
+
+      // setCurrentAddress(suggestionData?.data);
+
+      const user = auth?.currentUser?.uid;
+
+      const currentAddress = suggestionData?.data;
+
+      console.log(currentAddress);
+
+      if (currentAddress && currentAddress?.length > 0) {
+        await updateLocation(user, {
+          ...userLocationData,
+
+          address: latlngStr.split("%2C").map(Number),
+          latlng: {
+            LAT: Number(latlngStr.split("%2C")[0]),
+            LNG: Number(latlngStr.split("%2C")[1]),
+          },
+
+          place: {
+            description: currentAddress?.[0]?.formatted_address,
+            place_id: currentAddress?.[0]?.place_id,
+          },
+        });
+        // setLoading(false);
+      }
+
+      setInput("");
+
+      setLoading(false);
+    }
   };
 
   const getPosition = () => {
     if (navigator.geolocation) {
+      setLoading(true);
       navigator.geolocation.getCurrentPosition(
-        function success(position) {
-          dispatch(
-            addAddress([position.coords.latitude, position.coords.longitude])
-          );
+        async function success(position) {
+          const latlng = [position.coords.latitude, position.coords.longitude];
+          const latlngStr = encodeURIComponent(latlng && latlng);
 
-          dispatch(
-            addLatlng({
-              LAT: position?.coords?.latitude,
-              LNG: position?.coords?.longitude,
-            })
-          );
-          // setLocationPopup();
-          // Now get the current address from lat/lng
-          // setTimeout(() => {
-          //   getCurrentAdress(); // Ensure this runs after dispatching the address
-          // }, 500); // Adding a small delay to ensure state is updated first
+          console.log(latlngStr);
+
+          await getCurrentAddress(latlngStr);
         },
         function () {
           alert("Could not get your position");
@@ -63,44 +117,11 @@ const PopupLocationCard = ({
       );
     }
 
-    // navigate("/");
+    navigate("/");
+    setLoading(false);
 
     setLocationPopup(false);
   };
-
-  const getCurrentAdress = () => {
-    if (
-      currentAddressData &&
-      !loading &&
-      (currentAddressData?.length !== 0 || currentAddressData !== undefined)
-    ) {
-      dispatch(
-        addPlace({
-          description: currentAddressData?.[0]?.formatted_address,
-          place_id: currentAddressData?.[0]?.place_id,
-        })
-      );
-      setLocationPopup(false);
-    } else {
-      return;
-    }
-  };
-
-  // useEffect(() => {
-  //   if (
-  //     currentAddressData &&
-  //     !loading &&
-  //     (currentAddressData?.length !== 0 || currentAddressData !== undefined)
-  //   ) {
-  //     dispatch(
-  //       addPlace({
-  //         description: currentAddressData?.[0]?.formatted_address,
-  //         place_id: currentAddressData?.[0]?.place_id,
-  //       })
-  //     );
-  //   }
-
-  // }, [currentAddressData]);
 
   return (
     <div>
@@ -150,13 +171,7 @@ const PopupLocationCard = ({
               <div className="flex gap-4 mt-4 border p-4">
                 <HiMapPin className="text-xl mt-0.5" />
                 <div>
-                  <div
-                    className="font-[500] text-[16px]"
-                    onClick={() => {
-                      getPosition();
-                      getCurrentAdress();
-                    }}
-                  >
+                  <div className="font-[500] text-[16px]" onClick={getPosition}>
                     Get Current Location
                   </div>
                   <div className="font-light text-[14px]">Using GPS</div>

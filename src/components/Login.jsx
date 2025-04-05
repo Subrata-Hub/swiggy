@@ -3,13 +3,16 @@ import { useRef, useState } from "react";
 import { LOGIN_IMG } from "../utils/constant";
 import {
   createUserWithEmailAndPassword,
+  linkWithCredential,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { HiMiniXMark } from "react-icons/hi2";
+import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import { useDispatch } from "react-redux";
 
 const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   const name = useRef(null);
@@ -19,43 +22,35 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   // console.log(email.current.value);
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  // const dispatch = useDispatch()
 
   const getInputsData = async () => {
     try {
+      let userCredential;
       if (!isSignIn) {
-        const userCredential = await createUserWithEmailAndPassword(
+        userCredential = await createUserWithEmailAndPassword(
           auth,
           email.current.value,
           password.current.value
         );
 
-        const user = userCredential.user;
-        console.log(user);
-
-        // Wait a moment before accessing auth.currentUser
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        await updateProfile(user, {
+        await updateProfile(userCredential.user, {
           displayName: name?.current?.value,
         });
 
-        // const updatedUser = auth.currentUser;
+        const userDocRef = doc(db, "users", userCredential.user.uid);
 
-        onAuthStateChanged(auth, async (updatedUser) => {
-          if (updatedUser) {
-            const { uid, email, displayName } = updatedUser;
-            const userDocRef = doc(db, "users", uid);
-            await setDoc(userDocRef, {
-              uid,
-              email,
-              name: displayName,
-            });
-
-            console.log("User signed up and data stored:", user);
-
-            setIsSignIn(true);
-          }
+        await setDoc(userDocRef, {
+          uid: userCredential.user.uid,
+          name: name?.current?.value,
+          email: email.current.value,
         });
+
+        // console.log("User signed up and data stored:", user);
+
+        setIsSignIn(true);
       } else {
         await signInWithEmailAndPassword(
           auth,
@@ -63,24 +58,50 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           password.current.value
         );
 
-        // const user = signINUserCadential.user;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        onAuthStateChanged(auth, async (updatedUser) => {
-          if (updatedUser) {
-            const { uid, email, displayName } = updatedUser;
-            const userDocRef = doc(db, "users", uid);
-            await setDoc(userDocRef, {
-              uid,
-              email,
-              name: displayName,
-            });
-          }
-        });
         console.log("Sign In User");
         setShowLoginPopup(false);
         handleContineueafterSignIn();
       }
+
+      const user = userCredential.user;
+      console.log(user);
+
+      const anonymousUid = localStorage.getItem("anonymousUid");
+      if (anonymousUid) {
+        const anonymousUser = await auth.signInAnonymously(); // Sign in with the old anonymous UID
+        const credential = GoogleAuthProvider.credential(
+          null,
+          await anonymousUser.user.getIdToken()
+        ); // Get a credential (can be any provider for linking)
+
+        await linkWithCredential(user, credential);
+        localStorage.removeItem("anonymousUid");
+        console.log("Anonymous account linked!");
+
+        // Now, you should transfer the cart and location data
+        // from Redux to the newly signed-up user's Firestore document
+        const locationData =
+          JSON.parse(
+            localStorage.getItem(`anonymous_location_${anonymousUid}`)
+          ) || {};
+        const cartData =
+          JSON.parse(localStorage.getItem(`anonymous_cart_${anonymousUid}`)) ||
+          [];
+
+        await setDoc(doc(db, "users", user.uid), {
+          ...(await getDoc(doc(db, "users", user.uid))).data(), // Merge existing data
+          location: locationData,
+          cart: cartData,
+        });
+
+        localStorage.removeItem(`anonymous_location_${anonymousUid}`);
+        localStorage.removeItem(`anonymous_cart_${anonymousUid}`);
+        // dispatch(clearCart()); // Clear Redux cart as data is now in Firestore
+        // Optionally, fetch the user's data from Firestore to update Redux
+      }
+
+      // setShowLoginPopup(false);
+      // handleContineueafterSignIn();
     } catch (error) {
       const errorCode = error.code;
       console.log(errorCode);

@@ -30,11 +30,15 @@ const SearchPage = () => {
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  // const location = useLocation();
-  const latlang = useSelector((store) => store?.location?.latlng);
 
-  const LAT = latlang?.LAT;
-  const LNG = latlang?.LNG;
+  const userLocationData = useSelector(
+    (store) => store?.firebaseData?.userLocationData
+  );
+
+  const LAT = userLocationData && userLocationData?.latlng?.LAT;
+  const LNG = userLocationData && userLocationData?.latlng?.LNG;
+
+  console.log(LAT, LNG);
 
   const preSearchData = usePreSearch(LAT, LNG);
 
@@ -91,8 +95,8 @@ const SearchPage = () => {
   const addToCardSearchResults = useAddToCardSearchResults(
     suggestionText,
     setLoading,
-    resParamsObj.resId,
-    resParamsObj.menuId,
+    resParamsObj?.resId,
+    resParamsObj?.menuId,
     LAT,
     LNG
   );
@@ -156,6 +160,7 @@ const SearchPage = () => {
         searchQueryInput={searchQueryInput}
       />
       {addToCardSearchResults &&
+      addToCardSearchResults !== undefined &&
       showAddToCardSearchResultsData &&
       !searchResultsRefineData ? (
         <AddToCartSearchResults
