@@ -44,6 +44,14 @@ const SearchDishesCard = ({
 
   const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const placeData = useSelector(
+    (store) => store.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
   const menuItem = cartItems.find(
     (item) => item.menuId === searchDishesData?.info?.id
   );
@@ -206,7 +214,7 @@ const SearchDishesCard = ({
 
                 <div>
                   <Link
-                    to={`/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.areaName}/${searchDishesData?.restaurant?.info?.id}`}
+                    to={`/city/${city}/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.areaName}/${searchDishesData?.restaurant?.info?.id}`}
                   >
                     <HiArrowSmallRight className="text-2xl" />
                   </Link>

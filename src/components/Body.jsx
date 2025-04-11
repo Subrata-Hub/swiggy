@@ -13,11 +13,11 @@ const Body = () => {
   const [loading, setLoading] = useState(true);
 
   const userData = useUserFromDB();
-  // const userData = useSelector((store) => store.firebaseData.userData);
+
   console.log(userData);
   const latlng = useSelector((store) => store?.location?.latlng);
 
-  const userLocationData = useLocationFromDB(userData?.uid);
+  const userLocationData = useLocationFromDB(userData && userData?.uid);
   console.log(userLocationData);
 
   console.log(userLocationData);
@@ -54,9 +54,14 @@ const Body = () => {
             <LocationUnAvailable swiggyNotPresent={swiggyNotPresent} />
           ) : (
             <>
-              <ImageInfoLayout resData={resData} />
+              <ImageInfoLayout resData={resData} userData={userData} />
               <TopRestaurants topResData={resDataForTopRestaurants} />
-              <Restaurants allResData={resData} />
+              <Restaurants
+                allResData={resData}
+                userLocationData={
+                  userLocationData !== undefined && userLocationData
+                }
+              />
             </>
           )}
         </>

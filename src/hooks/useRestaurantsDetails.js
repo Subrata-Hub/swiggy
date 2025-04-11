@@ -19,7 +19,7 @@ const useRestaurantsDetails = (restaurantId, setLoading, LAT, LNG) => {
 
   useEffect(() => {
     getResDetailsData();
-  }, [restaurantId]);
+  }, [restaurantId, LAT, LNG]);
 
   return resDetailsData;
 };

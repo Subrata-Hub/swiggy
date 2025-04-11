@@ -6,10 +6,11 @@ import { addUserLocationData } from "../utils/firebaseDataSlice";
 
 const useLocationFromDB = (uid) => {
   const [userLocationData, setUserLocationData] = useState();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (uid) {
+    if (uid !== null && uid) {
       const userLocationCollectionRef = collection(db, "locations");
       const q = query(userLocationCollectionRef, where("locuid", "==", uid));
 

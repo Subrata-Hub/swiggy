@@ -17,6 +17,15 @@ const RestaurantDetailsPage = () => {
     (store) => store?.firebaseData?.userLocationData?.latlng
   );
 
+  const placeData = useSelector(
+    (store) => store?.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
+
   const LAT = latlang?.LAT;
   const LNG = latlang?.LNG;
 
@@ -32,7 +41,7 @@ const RestaurantDetailsPage = () => {
     restaurantName: restaurantName,
     resAreaName: areaName,
     resImg: resDetailsData?.[2]?.card?.card?.info?.cloudinaryImageId,
-    menuURL: `/city/kolkata/${restaurantName}/${areaName}/${restaurantId}`,
+    menuURL: `/city/${city}/${restaurantName}/${areaName}/${restaurantId}`,
   };
   return (
     <div className="m-36 mt-0 mb-0">

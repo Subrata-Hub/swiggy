@@ -1,12 +1,23 @@
 /* eslint-disable react/display-name */
 import { Link } from "react-router-dom";
 import { IMG_CARD_URL_2 } from "../utils/constant";
+import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
 const RestaurantCard = ({ topRes }) => {
+  const placeData = useSelector(
+    (store) => store?.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
+  console.log(city);
+
   return (
     <Link
-      to={`/city/kolkata/${topRes?.name}/${topRes?.locality}/${topRes?.id}`}
+      to={`/city/${city}/${topRes?.name}/${topRes?.locality}/${topRes?.id}`}
     >
       <div className="mb-4 relative">
         <div className="w-[283px] h-[182px] relative">

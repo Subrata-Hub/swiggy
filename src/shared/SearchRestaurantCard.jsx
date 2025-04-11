@@ -1,13 +1,22 @@
 /* eslint-disable react/display-name */
 import { Link } from "react-router-dom";
 import { IMG_SEARCH_RES } from "../utils/constant";
+import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
 const SearchRestaurantCard = ({ searchResData }) => {
+  const placeData = useSelector(
+    (store) => store?.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
   return (
     <div className="bg-slate-800 w-[423px] h-[156px] mb-2">
       <Link
-        to={`/city/kolkata/${searchResData?.name}/${searchResData?.areaName}/${searchResData?.id}`}
+        to={`/city/${city}/${searchResData?.name}/${searchResData?.areaName}/${searchResData?.id}`}
       >
         <div className="flex gap-4 items-center px-4 py-6">
           <div className="w-[88px] h-[96px] relative items-center">

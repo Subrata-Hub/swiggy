@@ -24,7 +24,7 @@ const Cart = () => {
       <div
         className={`flex justify-center items-center gap-2 relative`}
         onMouseOver={() => setPreviewCard(true)}
-        onMouseOut={() => setPreviewCard(false)}
+        // onMouseOut={() => setPreviewCard(false)}
         // onFocus={() => setPreviewCard(!previewCard)}
       >
         <svg
@@ -63,7 +63,10 @@ const Cart = () => {
         <>
           {/* <div className="overlay"></div> */}
           {cartItems.length === 0 && (
-            <div className="w-[300px] h-auto absolute top-20 right-20 z-[100000] bg-slate-900 p-10">
+            <div
+              className="w-[300px] h-auto absolute top-20 right-20 z-[100000] bg-slate-900 p-10"
+              onMouseLeave={() => setPreviewCard(false)}
+            >
               <div className="flex-col justify-center items-center">
                 <h1 className="text-3xl font-bold">Cart Empty</h1>
                 <p className="mt-2">
@@ -77,6 +80,7 @@ const Cart = () => {
             <div
               className="w-[400px] h-auto absolute top-20 right-20 z-[100000] bg-slate-900"
               ref={cartRef}
+              onMouseLeave={() => setPreviewCard(false)}
             >
               <div className="p-8">
                 <div className="flex flex-col">

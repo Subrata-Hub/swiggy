@@ -4,7 +4,12 @@ const firebaseDataSlice = createSlice({
   name: "firebaseData",
   initialState: {
     userData: [],
-    userLocationData: {},
+    userLocationData: {
+      locuid: null,
+      latlng: {},
+      place: {},
+      address: [],
+    },
   },
 
   reducers: {

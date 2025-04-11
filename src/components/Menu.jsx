@@ -10,6 +10,7 @@ import menuRight from "../assets/menuRight.svg";
 // import { Link } from "react-router-dom";
 
 import MenuSearchClick from "./MenuSearchClick";
+import MenuCarousel from "./MenuCarousel";
 
 const Menu = ({
   resDetailsData,
@@ -31,17 +32,17 @@ const Menu = ({
 
   const resMenuData = resDetailsData?.filter(
     (item) =>
-      item?.card?.card?.["@type"] !==
-      "type.googleapis.com/swiggy.presentation.food.v2.MenuVegFilterAndBadge"
+      item?.card?.card?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory" ||
+      item?.card?.card?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory"
   );
 
-  // const resMenuDataWithNestedItem = resDetailsData?.filter(
-  //   (item) =>
-  //     item?.card?.card?.["@type"] ===
-  //     "type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory"
-  // );
-
-  // const searchFill = searchData?.filter((itemFill) => itemFill?.)
+  const resMenuTopPicks = resDetailsData?.filter(
+    (item) =>
+      item?.card?.card?.["@type"] ===
+      "type.googleapis.com/swiggy.presentation.food.v2.MenuCarousel"
+  );
 
   return (
     <div className="mt-15 mx-48">
@@ -60,6 +61,10 @@ const Menu = ({
         location={location}
       />
       <MenuItemFilter setOption={setOption} activeOption={activeOption} />
+      <MenuCarousel
+        resMenuTopPicks={resMenuTopPicks}
+        resInformation={resInformation}
+      />
       <MenuCategoryList
         resMenuData={resMenuData}
         filterOption={filterOption}

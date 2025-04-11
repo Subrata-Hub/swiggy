@@ -13,42 +13,24 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 import { signInAnonymously } from "firebase/auth";
 import useLocationFromDB from "../hooks/useLocationFromDB";
+import useUserFromDB from "../hooks/useUserFromDB";
+import { addUserData } from "../utils/firebaseDataSlice";
 
 const HomePage = () => {
   console.log("HomePage component mounted"); // Check for multiple mounts
   const dispatch = useDispatch();
-  const userLocationData = useLocationFromDB(auth?.currentUser?.uid);
+  const userData = useUserFromDB();
+  // console.log(userData);
+  // const userLocationData = useLocationFromDB(
+  //   userData?.uid !== null && userData?.uid
+  // );
+
+  const userLocationData = useLocationFromDB(userData?.uid);
   console.log(userLocationData);
   const location = useSelector((store) => store.location);
   const search = useSelector((store) => store.search);
   const cart = useSelector((store) => store.cart);
   const config = useSelector((store) => store.config);
-
-  // const addLocationFromDBRepetingUser = async () => {
-  //   const user = auth.currentUser.uid;
-  //   if (!user) return;
-  //   if (userLocationData === undefined) return;
-  //   if (
-  //     user &&
-  //     userLocationData !== undefined &&
-  //     location?.latlng?.LAT === undefined &&
-  //     location?.latlng?.LNG === undefined
-  //   ) {
-  //     const locationDocRef = doc(db, "locations", user?.uid);
-  //     await setDoc(locationDocRef, {
-  //       ...userLocationData,
-  //       ["locuid"]: user?.uid,
-  //     });
-  //     console.log("Location added to Firestore for user:", user?.uid);
-  //   } else {
-  //     console.log(
-  //       "addLocationToDB: Not adding location - user:",
-  //       !!user,
-  //       "location:",
-  //       location?.latlng
-  //     );
-  //   }
-  // };
 
   const getPosition = () => {
     if (navigator.geolocation) {
@@ -73,14 +55,17 @@ const HomePage = () => {
 
   const addLocationToDB = async () => {
     try {
-      const user = auth.currentUser;
+      const user = auth?.currentUser;
+      const userLocationDocRef = doc(db, "locations", user?.uid);
+      const docLocationSnap = await getDoc(userLocationDocRef);
       console.log("addLocationToDB: Current user:", user?.uid);
 
       if (
         user &&
         location?.latlng?.LAT &&
         location?.latlng?.LNG &&
-        userLocationData === undefined
+        userLocationData === undefined &&
+        !docLocationSnap.exists()
       ) {
         const locationDocRef = doc(db, "locations", user?.uid);
         await setDoc(locationDocRef, { ...location, ["locuid"]: user?.uid });
@@ -102,7 +87,7 @@ const HomePage = () => {
     try {
       const user = auth.currentUser;
       console.log("addToSearchDB: Current user:", user?.uid);
-      if (user && search) {
+      if (user && search && userLocationData === undefined) {
         const searchDocRef = doc(db, "search", user.uid);
         await setDoc(searchDocRef, search);
         console.log("search added to Firestore for user:", user?.uid);
@@ -116,7 +101,7 @@ const HomePage = () => {
     try {
       const user = auth.currentUser;
       console.log("addCartToDB: Current user:", user?.uid);
-      if (user && cart) {
+      if (user && cart && userLocationData === undefined) {
         const cartDocRef = doc(db, "cart", user.uid);
         await setDoc(cartDocRef, cart);
         console.log("cart added to Firestore for user:", user?.uid);
@@ -130,7 +115,7 @@ const HomePage = () => {
     try {
       const user = auth.currentUser;
       console.log("addConfigToDB: Current user:", user?.uid);
-      if (user && config) {
+      if (user && config && userLocationData === undefined) {
         const configDocRef = doc(db, "config", user.uid);
         await setDoc(configDocRef, {
           id: user.uid, // Explicitly set the id field
@@ -142,13 +127,6 @@ const HomePage = () => {
       console.error("Error adding config:", error);
     }
   };
-
-  // useEffect(() => {
-  //   const user = auth?.currentUser?.uid;
-  //   if (user && userLocationData && userLocationData !== undefined) {
-  //     addLocationFromDBRepetingUser();
-  //   }
-  // }, [userLocationData]);
 
   useEffect(() => {
     const unSubcribeAuth = auth.onAuthStateChanged(async (user) => {
@@ -175,6 +153,13 @@ const HomePage = () => {
               uid: anonymousUid,
               isAnonymous: true,
             });
+
+            dispatch(
+              addUserData({
+                uid: anonymousUid,
+                isAnonymous: true,
+              })
+            );
             console.log("Anonymous user document created.");
           }
         } catch (error) {
@@ -182,7 +167,7 @@ const HomePage = () => {
         }
       } else if (user) {
         console.log("User is signed in (permanent or anonymous):", user?.uid);
-        localStorage.removeItem("anonymousUid");
+        // localStorage.removeItem("anonymousUid");
       } else if (storedAnonymousUid && !user) {
         console.log(
           "Anonymous UID found in localStorage, user is null. Assuming existing anonymous session:",
@@ -199,8 +184,8 @@ const HomePage = () => {
         const userLocationDocRef = doc(db, "locations", user?.uid);
         const docLocationSnap = await getDoc(userLocationDocRef);
         if (
-          userLocationData?.place === undefined &&
-          !docLocationSnap.exists()
+          !docLocationSnap.exists() &&
+          userLocationData?.place === undefined
         ) {
           getPosition();
           console.log("Initial location");
@@ -213,8 +198,14 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (user && location?.latlng?.LAT && location?.latlng?.LNG) {
+    const user = auth?.currentUser;
+
+    if (
+      user &&
+      location?.latlng?.LAT &&
+      location?.latlng?.LNG &&
+      userLocationData === undefined
+    ) {
       console.log(
         "useEffect for addLocationToDB triggered. User:",
         user?.uid,
@@ -234,7 +225,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const user = auth.currentUser;
-    if (user && cart?.cartItems?.length > 0) {
+    if (user && cart && userLocationData === undefined) {
       console.log(
         "useEffect for addCartToDB triggered. User:",
         user?.uid,
@@ -247,7 +238,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const user = auth.currentUser;
-    if (user && search) {
+    if (user && search && userLocationData === undefined) {
       console.log(
         "useEffect for addToSearchDB triggered. User:",
         user?.uid,
@@ -260,7 +251,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const user = auth.currentUser;
-    if (user && config) {
+    if (user && config && userLocationData === undefined) {
       console.log(
         "useEffect for addConfigToDB triggered. User:",
         user?.uid,

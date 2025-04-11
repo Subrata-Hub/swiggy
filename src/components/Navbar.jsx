@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/download.png";
 
 import Locationbar from "./Locationbar";
@@ -9,10 +8,17 @@ import Cart from "../shared/Cart";
 import { useEffect, useRef, useState } from "react";
 import Login from "./Login";
 import useOutSideClick from "../hooks/useOutsideClick";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db, auth } from "../utils/firebase";
 import { signOut } from "firebase/auth";
-import useLocationFromDB from "../hooks/useLocationFromDB";
+
 import { addUserData } from "../utils/firebaseDataSlice";
 import { useDispatch } from "react-redux";
 
@@ -27,15 +33,12 @@ const Navbar = () => {
 
   const logInRef = useRef(null);
   const logBtnRef = useRef(null);
-  const profileRef = useState(null);
+  const profileRef = useRef(null);
   const profileBtnRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  console.log(auth?.currentUser);
-
-  const userLocationData = useLocationFromDB(userData?.uid);
-
-  console.log(userLocationData);
+  // const userLocationData = useLocationFromDB(auth?.currentUser?.uid);
 
   useOutSideClick(
     logInRef,
@@ -104,7 +107,7 @@ const Navbar = () => {
       // Cleanup the snapshot listener when the component unmounts or UID changes
       return () => unsubscribeSnapshot();
     }
-  }, [uid]);
+  }, [uid, dispatch]);
 
   const handleContineueafterSignIn = () => {
     setShowLoginPopup(false);
@@ -113,10 +116,46 @@ const Navbar = () => {
 
   const handleUserSignOut = () => {
     signOut(auth)
-      .then(() => {
+      .then(async () => {
         setUserData(null);
 
         console.log("User gone");
+
+        const anonymousUid = localStorage.getItem("anonymousUid");
+
+        if (anonymousUid) {
+          // Check for anonymous user data in localStorage
+
+          const locationData =
+            JSON.parse(
+              localStorage.getItem(`anonymous_location_${anonymousUid}`)
+            ) || {};
+
+          if (locationData && locationData.LAT && locationData.LNG) {
+            // Ensure location is transferred to Firestore
+            const locationRef = doc(db, "locations", anonymousUid);
+            updateDoc(
+              locationRef,
+              { ...locationData, locuid: anonymousUid }
+              // { merge: true }
+            )
+              .then(() => {
+                console.log(
+                  "Location data updated for anonymous user in Firestore."
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  "Error updating location data for anonymous user:",
+                  error
+                );
+              });
+
+            // Remove location data from localStorage
+            localStorage.removeItem(`anonymous_location_${anonymousUid}`);
+          }
+        }
+        navigate("/"); // Redirect after sign-out
       })
       .catch((error) => {
         // An error happened.
@@ -128,7 +167,8 @@ const Navbar = () => {
     <div className="bg-slate-950 h-20 flex items-center justify-between ">
       <img src={Logo} alt="logo" className="w-12" />
       <div className="flex justify-between items-center gap-32">
-        <Locationbar userLocationData={userLocationData && userLocationData} />
+        {/* <Locationbar userLocationData={userLocationData && userLocationData} /> */}
+        <Locationbar />
         <div className="flex items-center gap-16">
           <Link to={`/search`}>
             <div className="flex justify-center items-center gap-2">
@@ -168,16 +208,19 @@ const Navbar = () => {
             </>
           )}
 
-          {showProfileCard && !showLoginPopup && userData && (
-            <div
-              className="w-32 h-10 bg-slate-800 fixed top-15 right-[250px] z-[23161365] text-center"
-              onClick={handleUserSignOut}
-              onMouseLeave={() => setShowProfileCard(false)}
-              ref={profileRef}
-            >
-              SignOut
-            </div>
-          )}
+          {showProfileCard &&
+            !showLoginPopup &&
+            userData &&
+            !userData?.isAnonymous && (
+              <div
+                className="w-32 h-10 bg-slate-800 fixed top-15 right-[250px] z-[23161365] text-center"
+                onClick={handleUserSignOut}
+                onMouseLeave={() => setShowProfileCard(false)}
+                ref={profileRef}
+              >
+                SignOut
+              </div>
+            )}
           <Cart />
         </div>
       </div>

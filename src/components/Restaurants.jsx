@@ -3,7 +3,7 @@
 import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 /* eslint-disable react/prop-types */
-const Restaurants = ({ allResData }) => {
+const Restaurants = ({ allResData, userLocationData }) => {
   const resDataForRestaurantsTitle = allResData?.filter(
     (item) => item?.card?.card?.id === "popular_restaurants_title"
   );
@@ -25,6 +25,7 @@ const Restaurants = ({ allResData }) => {
             topRes={restaurant?.info}
             key={restaurant?.info?.id}
             offer={restaurant?.info?.aggregatedDiscountInfoV3}
+            userLocationData={userLocationData}
           />
         ))}
       </div>

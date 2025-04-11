@@ -24,6 +24,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
   const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   // const [counter, setCounter] = useState(0);
 
   const menuDishesCardRef = useRef(null);
@@ -75,6 +76,10 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
   const handleShowPopup = () => {
     setShowPopup(!showPopup);
+  };
+
+  const handleShowMore = () => {
+    setShowMore(true);
   };
 
   const menuInfo = {
@@ -174,7 +179,18 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             ""
           )}
 
-          <p className="mt-2">{resMenuItem?.card?.info?.description}</p>
+          <p>
+            {!showMore &&
+            resMenuItem?.card?.info?.description?.split("").length >= 160
+              ? resMenuItem?.card?.info?.description?.split("").slice(0, 160)
+              : resMenuItem?.card?.info?.description}
+            <span className="ml-1 font-semibold" onClick={handleShowMore}>
+              {!showMore &&
+              resMenuItem?.card?.info?.description?.split("").length >= 160
+                ? "....More"
+                : ""}
+            </span>
+          </p>
         </div>
         <div className="relative">
           {resMenuItem?.card?.info?.imageId ? (

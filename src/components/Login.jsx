@@ -9,10 +9,11 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+
 import { HiMiniXMark } from "react-icons/hi2";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 import { useDispatch } from "react-redux";
+import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
 
 const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   const name = useRef(null);
@@ -22,7 +23,7 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   // console.log(email.current.value);
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const getInputsData = async () => {
     try {
@@ -48,6 +49,14 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           email: email.current.value,
         });
 
+        dispatch(
+          addUserData({
+            uid: userCredential.user.uid,
+            name: name?.current?.value,
+            email: email.current.value,
+          })
+        );
+
         // console.log("User signed up and data stored:", user);
 
         setIsSignIn(true);
@@ -57,6 +66,32 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           email.current.value,
           password.current.value
         );
+
+        const anonymousUid = localStorage.getItem("anonymousUid");
+
+        const locationData =
+          JSON.parse(
+            localStorage.getItem(`anonymous_location_${anonymousUid}`)
+          ) || {};
+
+        if (locationData !== undefined) {
+          const locationDocRef = doc(db, "locations", auth?.currentUser?.uid);
+          await setDoc(locationDocRef, {
+            ...locationData,
+            locuid: auth.currentUser.uid,
+          });
+
+          dispatch(
+            addUserLocationData({
+              ...locationData,
+              locuid: auth.currentUser.uid,
+            })
+          );
+          // localStorage.removeItem("anonymousUid");
+          // Clean up the localStorage
+          localStorage.removeItem(`anonymous_location_${anonymousUid}`);
+          localStorage.removeItem("anonymousUid");
+        }
 
         console.log("Sign In User");
         setShowLoginPopup(false);
@@ -84,14 +119,14 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           JSON.parse(
             localStorage.getItem(`anonymous_location_${anonymousUid}`)
           ) || {};
-        const cartData =
-          JSON.parse(localStorage.getItem(`anonymous_cart_${anonymousUid}`)) ||
-          [];
+        // const cartData =
+        //   JSON.parse(localStorage.getItem(`anonymous_cart_${anonymousUid}`)) ||
+        //   [];
 
         await setDoc(doc(db, "users", user.uid), {
           ...(await getDoc(doc(db, "users", user.uid))).data(), // Merge existing data
           location: locationData,
-          cart: cartData,
+          // cart: cartData,
         });
 
         localStorage.removeItem(`anonymous_location_${anonymousUid}`);

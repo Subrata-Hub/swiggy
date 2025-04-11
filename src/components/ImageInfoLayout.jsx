@@ -2,7 +2,7 @@ import ImageInfoLayoutCard from "./ImageInfoLayoutCard";
 // import TopRestaurants from "./TopRestaurants";
 
 /* eslint-disable react/prop-types */
-const ImageInfoLayout = ({ resData }) => {
+const ImageInfoLayout = ({ resData, userData }) => {
   if (!resData) return;
   const resDataForImageInfoLayoutHeader = resData?.filter(
     (item) => item?.card?.card?.id === "whats_on_your_mind"
@@ -18,7 +18,11 @@ const ImageInfoLayout = ({ resData }) => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold">{topRestaurantsHeader}</h1>
+      <h1 className="text-2xl font-bold">
+        {userData !== undefined && userData?.name}
+        {", "}
+        {topRestaurantsHeader}
+      </h1>
 
       <div className="w-full  overflow-x-auto hide-scrollbar">
         <div className="flex">

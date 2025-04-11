@@ -45,13 +45,13 @@ appStore.subscribe(() => {
   const state = appStore.getState();
   const anonymousUid = localStorage.getItem("anonymousUid");
   if (anonymousUid) {
-    localStorage.setItem(
-      `anonymous_cart_${anonymousUid}`,
-      JSON.stringify(state.cart)
-    );
+    // localStorage.setItem(
+    //   `anonymous_cart_${anonymousUid}`,
+    //   JSON.stringify(state.cart)
+    // );
     localStorage.setItem(
       `anonymous_location_${anonymousUid}`,
-      JSON.stringify(state.location)
+      JSON.stringify(state.firebaseData?.userLocationData)
     );
   }
 });
