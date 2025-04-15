@@ -21,6 +21,8 @@ const useAddToCardSearchResults = (
 
       setCartSearchResultsData(data?.data);
       setLoading(false);
+    } else {
+      return;
     }
   };
 

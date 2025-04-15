@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Link } from "react-router-dom";
 import SearchDishesCard from "../shared/SearchDishesCard";
 import SearchResultShimmer from "../shared/shimmer/SearchResultShimmer";

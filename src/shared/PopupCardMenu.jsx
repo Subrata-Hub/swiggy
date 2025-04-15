@@ -261,7 +261,7 @@ const PopupCardMenu = ({
                                 group?.maxAddons,
                                 item?.id,
                                 item?.name,
-                                item?.price / 100,
+                                item?.price / 100 || 0,
 
                                 e.target.checked
                                 // e.target.disabled

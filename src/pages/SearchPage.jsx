@@ -161,8 +161,7 @@ const SearchPage = () => {
       />
       {addToCardSearchResults &&
       addToCardSearchResults !== undefined &&
-      showAddToCardSearchResultsData &&
-      !searchResultsRefineData ? (
+      showAddToCardSearchResultsData ? (
         <AddToCartSearchResults
           showSuggestion={showSuggestion}
           loading={loading}
@@ -189,3 +188,5 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+
+// // !searchResultsRefineData
