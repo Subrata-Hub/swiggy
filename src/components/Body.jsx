@@ -14,13 +14,18 @@ const Body = () => {
 
   const userData = useUserFromDB();
 
-  console.log(userData);
   const latlng = useSelector((store) => store?.location?.latlng);
 
-  const userLocationData = useLocationFromDB(userData && userData?.uid);
-  console.log(userLocationData);
+  const currentLocation = JSON.parse(localStorage.getItem("current_location"));
 
-  console.log(userLocationData);
+  const currentLocationId = useSelector(
+    (store) => store.firebaseData?.userLocationData?.currentLocId
+  );
+
+  const userLocationData = useLocationFromDB(
+    (currentLocationId !== null && currentLocationId) || currentLocation?.id,
+    setLoading
+  );
 
   const LAT =
     userLocationData?.latlng !== undefined && userLocationData?.latlng?.LAT

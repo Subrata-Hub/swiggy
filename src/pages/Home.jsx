@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Body from "../components/Body";
 import Navbar from "../components/Navbar";
 import {
@@ -9,33 +9,84 @@ import {
   // reSetLocationStore,
 } from "../utils/locationSlice";
 import { useEffect } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 import { signInAnonymously } from "firebase/auth";
-import useLocationFromDB from "../hooks/useLocationFromDB";
-import useUserFromDB from "../hooks/useUserFromDB";
-import { addUserData } from "../utils/firebaseDataSlice";
+
+import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
 
 const HomePage = () => {
   console.log("HomePage component mounted"); // Check for multiple mounts
   const dispatch = useDispatch();
-  const userData = useUserFromDB();
-  // console.log(userData);
-  // const userLocationData = useLocationFromDB(
-  //   userData?.uid !== null && userData?.uid
-  // );
 
-  const userLocationData = useLocationFromDB(userData?.uid);
-  console.log(userLocationData);
-  const location = useSelector((store) => store.location);
-  const search = useSelector((store) => store.search);
-  const cart = useSelector((store) => store.cart);
-  const config = useSelector((store) => store.config);
+  const createNewLocationAndLinkToUser = async (userId, locationData) => {
+    try {
+      const locationsCollection = collection(db, "locations"); // Assuming your locations collection is named "locations"
+      const newLocationDocRef = await addDoc(locationsCollection, locationData);
+      const newLocationId = newLocationDocRef.id;
+
+      // Now, update the user's document with the new location ID
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        await updateDoc(userRef, {
+          locations: arrayUnion(newLocationId),
+        });
+        addUserLocationData({
+          ...locationData,
+          ["currentLocId"]: newLocationId,
+        });
+      } else {
+        console.error(
+          `User document with ID "${userId}" not found. Cannot link location.`
+        );
+        // setLoading(false);
+        return null; // Or throw an error
+      }
+
+      console.log("New location created and linked to user successfully!");
+      return newLocationId;
+    } catch (error) {
+      console.error("Error creating location and linking to user:", error);
+      throw error;
+    }
+  };
 
   const getPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
+          if (auth?.currentUser) {
+            const initialLocData = {
+              userId: auth?.currentUser?.uid,
+              place: {},
+              latlng: {
+                LAT: position.coords.latitude,
+                LNG: position.coords.longitude,
+              },
+
+              address: [position.coords.latitude, position.coords.longitude],
+            };
+
+            await createNewLocationAndLinkToUser(
+              auth?.currentUser?.uid,
+              initialLocData
+            );
+            localStorage.setItem(
+              "InitialLocation",
+              JSON.stringify(initialLocData)
+            );
+          }
+
           dispatch(
             addAddress([position.coords.latitude, position.coords.longitude])
           );
@@ -50,81 +101,6 @@ const HomePage = () => {
           alert("Could not get your position");
         }
       );
-    }
-  };
-
-  const addLocationToDB = async () => {
-    try {
-      const user = auth?.currentUser;
-      const userLocationDocRef = doc(db, "locations", user?.uid);
-      const docLocationSnap = await getDoc(userLocationDocRef);
-      console.log("addLocationToDB: Current user:", user?.uid);
-
-      if (
-        user &&
-        location?.latlng?.LAT &&
-        location?.latlng?.LNG &&
-        userLocationData === undefined &&
-        !docLocationSnap.exists()
-      ) {
-        const locationDocRef = doc(db, "locations", user?.uid);
-        await setDoc(locationDocRef, { ...location, ["locuid"]: user?.uid });
-        console.log("Location added to Firestore for user:", user?.uid);
-      } else {
-        console.log(
-          "addLocationToDB: Not adding location - user:",
-          !!user,
-          "location:",
-          location?.latlng
-        );
-      }
-    } catch (error) {
-      console.error("Error adding location:", error);
-    }
-  };
-
-  const addToSearchDB = async () => {
-    try {
-      const user = auth.currentUser;
-      console.log("addToSearchDB: Current user:", user?.uid);
-      if (user && search && userLocationData === undefined) {
-        const searchDocRef = doc(db, "search", user.uid);
-        await setDoc(searchDocRef, search);
-        console.log("search added to Firestore for user:", user?.uid);
-      }
-    } catch (error) {
-      console.error("Error adding cart:", error);
-    }
-  };
-
-  const addCartToDB = async () => {
-    try {
-      const user = auth.currentUser;
-      console.log("addCartToDB: Current user:", user?.uid);
-      if (user && cart && userLocationData === undefined) {
-        const cartDocRef = doc(db, "cart", user.uid);
-        await setDoc(cartDocRef, cart);
-        console.log("cart added to Firestore for user:", user?.uid);
-      }
-    } catch (error) {
-      console.error("Error adding search:", error);
-    }
-  };
-
-  const addConfigToDB = async () => {
-    try {
-      const user = auth.currentUser;
-      console.log("addConfigToDB: Current user:", user?.uid);
-      if (user && config && userLocationData === undefined) {
-        const configDocRef = doc(db, "config", user.uid);
-        await setDoc(configDocRef, {
-          id: user.uid, // Explicitly set the id field
-          setting: config.setting,
-        });
-        console.log("config added to Firestore for user:", user?.uid);
-      }
-    } catch (error) {
-      console.error("Error adding config:", error);
     }
   };
 
@@ -150,12 +126,20 @@ const HomePage = () => {
           const docSnap = await getDoc(userDocRef);
           if (!docSnap.exists()) {
             await setDoc(userDocRef, {
+              // email: "",
+              // name: "",
+              locations: [],
+              cart: [],
+              search: [],
               uid: anonymousUid,
               isAnonymous: true,
             });
 
             dispatch(
               addUserData({
+                locations: [],
+                cart: [],
+                search: [],
                 uid: anonymousUid,
                 isAnonymous: true,
               })
@@ -181,86 +165,22 @@ const HomePage = () => {
         console.log(
           "User authenticated (after potential anonymous sign-in), fetching location..."
         );
-        const userLocationDocRef = doc(db, "locations", user?.uid);
-        const docLocationSnap = await getDoc(userLocationDocRef);
-        if (
-          !docLocationSnap.exists() &&
-          userLocationData?.place === undefined
-        ) {
+
+        const initialLocation = JSON.parse(
+          localStorage.getItem("InitialLocation")
+        );
+
+        const currentLocation = JSON.parse(
+          localStorage.getItem("current_location")
+        );
+        if (!initialLocation && !currentLocation) {
           getPosition();
           console.log("Initial location");
         }
       }
-
-      return () => unSubcribeAuth();
     });
     return () => unSubcribeAuth(); // Cleanup the listener
   }, []);
-
-  useEffect(() => {
-    const user = auth?.currentUser;
-
-    if (
-      user &&
-      location?.latlng?.LAT &&
-      location?.latlng?.LNG &&
-      userLocationData === undefined
-    ) {
-      console.log(
-        "useEffect for addLocationToDB triggered. User:",
-        user?.uid,
-        "Location:",
-        location?.latlng
-      );
-      addLocationToDB();
-    } else {
-      console.log(
-        "useEffect for addLocationToDB: Conditions not met - user:",
-        !!user,
-        "location:",
-        location?.latlng
-      );
-    }
-  }, [auth.currentUser, location?.latlng?.LAT, location?.latlng?.LNG]);
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (user && cart && userLocationData === undefined) {
-      console.log(
-        "useEffect for addCartToDB triggered. User:",
-        user?.uid,
-        "Cart items:",
-        cart.cartItems.length
-      );
-      addCartToDB();
-    }
-  }, [auth.currentUser, cart]);
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (user && search && userLocationData === undefined) {
-      console.log(
-        "useEffect for addToSearchDB triggered. User:",
-        user?.uid,
-        "Search:",
-        search
-      );
-      addToSearchDB();
-    }
-  }, [auth.currentUser, search]);
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (user && config && userLocationData === undefined) {
-      console.log(
-        "useEffect for addConfigToDB triggered. User:",
-        user?.uid,
-        "Config:",
-        config
-      );
-      addConfigToDB();
-    }
-  }, [auth.currentUser, config]);
 
   return (
     <>

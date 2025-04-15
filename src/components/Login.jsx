@@ -47,13 +47,22 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           uid: userCredential.user.uid,
           name: name?.current?.value,
           email: email.current.value,
+          locations: [],
+          cart: [],
+          search: [],
         });
 
         dispatch(
           addUserData({
+            // uid: userCredential.user.uid,
+            // name: name?.current?.value,
+            // email: email.current.value,
             uid: userCredential.user.uid,
             name: name?.current?.value,
             email: email.current.value,
+            locations: [],
+            cart: [],
+            search: [],
           })
         );
 

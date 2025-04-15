@@ -3,20 +3,29 @@ import useLocationSuggestion from "../hooks/useLocationSuggestion";
 import { HiMapPin, HiMiniXMark } from "react-icons/hi2";
 
 import { useNavigate } from "react-router-dom";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserLocationData } from "../utils/firebaseDataSlice";
+import Spineer from "./Spineer";
+// import { arrayUnion } from "firebase/firestore/lite";
 
 /* eslint-disable react/prop-types */
 const PopupLocationCard = ({
-  userLocationData,
   locationRef,
   setLocationPopup,
-  input,
-  setInput,
+  // input,
+  // setInput,
 }) => {
   const [loading, setLoading] = useState(true);
+  const [input, setInput] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,19 +34,68 @@ const PopupLocationCard = ({
 
   const userData = useSelector((store) => store?.firebaseData?.userData);
 
-  const updateLocation = async (docId, updateField) => {
+  // const updateUserDataWithNewLocation = async (userId, newLocationId) => {
+  //   const userRef = doc(db, "users", userId);
+  //   await updateDoc(userRef, {
+  //     locations: arrayUnion(newLocationId),
+  //   });
+  // };
+
+  const createNewLocationAndLinkToUser = async (userId, locationData) => {
     try {
-      setLoading(true);
-      const locationRef = doc(db, "locations", docId);
-      console.log(locationRef);
-      await updateDoc(locationRef, updateField);
-      dispatch(addUserLocationData(updateField));
-      console.log("Document updated successfully!");
-      setLoading(false);
+      const locationsCollection = collection(db, "locations"); // Assuming your locations collection is named "locations"
+      const newLocationDocRef = await addDoc(locationsCollection, locationData);
+      const newLocationId = newLocationDocRef.id;
+
+      console.log(newLocationId);
+
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        // Now, update the user's document with the new location ID
+        // await updateUserDataWithNewLocation(userId, newLocationId);
+
+        await updateDoc(userRef, {
+          locations: arrayUnion(newLocationId),
+        });
+
+        dispatch(
+          addUserLocationData({
+            ...locationData,
+            ["currentLocId"]: newLocationId,
+          })
+        );
+      } else {
+        console.error(
+          `User document with ID "${userId}" not found. Cannot link location.`
+        );
+        // setLoading(false);
+        return null; // Or throw an error
+      }
+
+      console.log("New location created and linked to user successfully!");
+
+      return newLocationId;
     } catch (error) {
-      console.error("Error updating document:", error);
+      console.error("Error creating location and linking to user:", error);
+      throw error;
     }
   };
+
+  // const updateLocation = async (docId, updateField) => {
+  //   try {
+  //     setLoading(true);
+  //     const locationRef = doc(db, "locations", docId);
+  //     console.log(locationRef);
+  //     await updateDoc(locationRef, updateField);
+  //     dispatch(addUserLocationData(updateField));
+  //     console.log("Document updated successfully!");
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error updating document:", error);
+  //   }
+  // };
 
   const getLatLng = async (placeId) => {
     if (placeId) {
@@ -79,7 +137,8 @@ const PopupLocationCard = ({
     const address_components = location?.address_components;
 
     const updatePayload = {
-      ...userLocationData,
+      // ...userLocationData,
+      userId: userData !== null && userData?.uid,
       place,
     };
 
@@ -91,21 +150,26 @@ const PopupLocationCard = ({
       updatePayload.address_components = address_components;
     }
 
-    setLocationPopup(false);
+    // await updateLocation(
+    //   userData !== undefined && userData?.uid,
+    //   updatePayload
+    // );
 
-    await updateLocation(
-      userData !== undefined && userData?.uid,
+    await createNewLocationAndLinkToUser(
+      userData !== null && userData?.uid,
       updatePayload
     );
 
     setInput("");
+
     setLoading(false);
+    setLocationPopup(false);
     navigate("/");
   };
 
   const getCurrentAddress = async (latlngStr) => {
     if (latlngStr) {
-      // setInput("Fetching your current Location");
+      setInput("Fetching your current Location");
       setLoading(true);
       const response = await fetch(
         `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latlngStr}`
@@ -122,8 +186,8 @@ const PopupLocationCard = ({
       console.log(currentAddress);
 
       if (currentAddress && currentAddress?.length > 0) {
-        await updateLocation(user, {
-          ...userLocationData,
+        await createNewLocationAndLinkToUser(user, {
+          // ...userLocationData,
 
           address: latlngStr.split("%2C").map(Number),
           latlng: {
@@ -140,10 +204,6 @@ const PopupLocationCard = ({
         });
         // setLoading(false);
       }
-
-      setInput("");
-
-      setLoading(false);
     }
   };
 
@@ -158,6 +218,10 @@ const PopupLocationCard = ({
           console.log(latlngStr);
 
           await getCurrentAddress(latlngStr);
+
+          setInput("");
+
+          // setLoading(false);
         },
         function () {
           alert("Could not get your position");
@@ -168,6 +232,7 @@ const PopupLocationCard = ({
     setLoading(false);
 
     setLocationPopup(false);
+
     navigate("/");
   };
 
@@ -188,44 +253,59 @@ const PopupLocationCard = ({
             className="w-96 border h-14 px-5"
             onChange={(e) => setInput(e.target.value)}
           />
-          {suggestion && (
-            <div className="mt-6">
-              {suggestion &&
-                suggestion?.map((item, index) => (
-                  <div key={index} className="flex flex-col gap-4">
-                    <div
-                      className="flex gap-4 mt-4"
-                      onClick={() =>
-                        getLocationId(item?.description, item?.place_id)
-                      }
-                    >
+
+          {loading && !suggestion ? (
+            <Spineer loading={loading} />
+          ) : (
+            <>
+              <div>
+                {suggestion && (
+                  <div className="mt-6">
+                    {suggestion &&
+                      suggestion?.map((item, index) => (
+                        <div key={index} className="flex flex-col gap-4">
+                          <div
+                            className="flex gap-4 mt-4"
+                            onClick={() =>
+                              getLocationId(item?.description, item?.place_id)
+                            }
+                          >
+                            <HiMapPin className="text-xl mt-0.5" />
+                            <div>
+                              <div className="font-[500] text-[16px]">
+                                {item?.structured_formatting?.main_text}
+                              </div>
+                              <div className="font-light text-[14px]">
+                                {item?.structured_formatting?.secondary_text}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="w-96 h-[1px] bg-slate-600 mt-2"></div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                {suggestion.length === 0 && (
+                  <div className="mt-13 w-96">
+                    <div className="flex gap-4 mt-4 border p-4">
                       <HiMapPin className="text-xl mt-0.5" />
                       <div>
-                        <div className="font-[500] text-[16px]">
-                          {item?.structured_formatting?.main_text}
+                        <div
+                          className="font-[500] text-[16px]"
+                          onClick={getPosition}
+                        >
+                          Get Current Location
                         </div>
-                        <div className="font-light text-[14px]">
-                          {item?.structured_formatting?.secondary_text}
-                        </div>
+                        <div className="font-light text-[14px]">Using GPS</div>
                       </div>
                     </div>
-                    <div className="w-96 h-[1px] bg-slate-600 mt-2"></div>
                   </div>
-                ))}
-            </div>
-          )}
-          {(suggestion.length === 0 || !loading) && (
-            <div className="mt-13 w-96">
-              <div className="flex gap-4 mt-4 border p-4">
-                <HiMapPin className="text-xl mt-0.5" />
-                <div>
-                  <div className="font-[500] text-[16px]" onClick={getPosition}>
-                    Get Current Location
-                  </div>
-                  <div className="font-light text-[14px]">Using GPS</div>
-                </div>
+                )}
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

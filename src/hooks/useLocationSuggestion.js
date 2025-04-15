@@ -12,6 +12,10 @@ const useLocationSuggestion = (input) => {
       const suggestionData = await response.json();
 
       setLocationSuggestion(suggestionData?.data);
+    } else {
+      setLocationSuggestion([]);
+
+      return;
     }
   };
 

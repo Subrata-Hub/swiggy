@@ -20,7 +20,7 @@ const ImageInfoLayout = ({ resData, userData }) => {
     <div className="">
       <h1 className="text-2xl font-bold">
         {userData !== undefined && userData?.name}
-        {", "}
+        {userData !== undefined && userData?.name ? ", " : ""}
         {topRestaurantsHeader}
       </h1>
 
