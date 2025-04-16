@@ -159,6 +159,7 @@ const Navbar = () => {
             localStorage.removeItem(`anonymous_location_${anonymousUid}`);
           }
         }
+
         navigate("/"); // Redirect after sign-out
       })
       .catch((error) => {

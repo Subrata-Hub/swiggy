@@ -9,15 +9,7 @@ import {
   // reSetLocationStore,
 } from "../utils/locationSlice";
 import { useEffect } from "react";
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 import { signInAnonymously } from "firebase/auth";
 
@@ -38,13 +30,13 @@ const HomePage = () => {
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        await updateDoc(userRef, {
-          locations: arrayUnion(newLocationId),
-          // locations: arrayUnion(locationData?.place),
-        });
+        // await updateDoc(userRef, {
+        //   locations: arrayUnion(newLocationId),
+        //   // locations: arrayUnion(locationData?.place),
+        // });
         addUserLocationData({
           ...locationData,
-          ["currentLocId"]: newLocationId,
+          // ["currentLocId"]: newLocationId,
         });
       } else {
         console.error(
@@ -69,7 +61,7 @@ const HomePage = () => {
           if (auth?.currentUser) {
             const initialLocData = {
               userId: auth?.currentUser?.uid,
-              locations: [],
+              // locations: [],
               place: {},
               latlng: {
                 LAT: position.coords.latitude,
