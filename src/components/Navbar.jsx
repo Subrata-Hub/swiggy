@@ -38,8 +38,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const userLocationData = useLocationFromDB(auth?.currentUser?.uid);
-
   useOutSideClick(
     logInRef,
     () => {
@@ -124,12 +122,15 @@ const Navbar = () => {
         const anonymousUid = localStorage.getItem("anonymousUid");
 
         if (anonymousUid) {
-          // Check for anonymous user data in localStorage
+          const userLocationData =
+            JSON.parse(localStorage.getItem(`locations`)) || {};
 
-          // const locationData =
-          //   JSON.parse(
-          //     localStorage.getItem(`anonymous_location_${anonymousUid}`)
-          //   ) || {};
+          const userDocRef = doc(db, "users", anonymousUid);
+
+          updateDoc(userDocRef, {
+            ...userData,
+            locations: userLocationData,
+          });
 
           const locationData =
             JSON.parse(localStorage.getItem(`current_location`)) || {};

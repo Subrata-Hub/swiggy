@@ -35,6 +35,10 @@ const useUserFromDB = () => {
           snapshot.forEach((doc) => {
             console.log("Current user data:", doc.data());
             setUserData(doc.data());
+            localStorage.setItem(
+              "locations",
+              JSON.stringify(doc.data()?.locations)
+            );
           });
 
           if (snapshot.empty) {

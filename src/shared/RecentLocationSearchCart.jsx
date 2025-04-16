@@ -6,14 +6,17 @@ import useUserFromDB from "../hooks/useUserFromDB";
 const RecentLocationSearchCart = ({ getLocationId }) => {
   const userData = useUserFromDB();
   console.log(userData);
+  const userDataWithDescription =
+    userData?.locations !== undefined &&
+    userData?.locations?.filter((item) => item?.description);
   return (
     <div className="">
-      {userData && userData?.locations?.length > 0 && (
+      {userDataWithDescription && userDataWithDescription?.length > 0 && (
         <>
           <div className="border mt-6 w-96 mb-10">
             <h4 className="pl-12 mt-2 text-[13px]">RECENT SEARCHES</h4>
-            {userData &&
-              userData?.locations?.map((item, index) => (
+            {userDataWithDescription &&
+              userDataWithDescription?.map((item, index) => (
                 <div key={index} className="flex flex-col gap-4">
                   <div
                     className="flex gap-4 mt-4 pl-4 cursor-pointer"
@@ -26,7 +29,7 @@ const RecentLocationSearchCart = ({ getLocationId }) => {
                     <div className="">
                       <div className="font-[500] text-[16px]">
                         {/* {item?.structured_formatting?.main_text} */}
-                        {item?.description.split(",")[0]}
+                        {item?.description?.split(",")[0]}
                       </div>
                       <div className="font-light text-[14px]">
                         {item?.description}

@@ -309,7 +309,9 @@ const PopupLocationCard = ({
               </div>
             </>
           )}
-          <RecentLocationSearchCart getLocationId={getLocationId} />
+          {suggestion.length === 0 && (
+            <RecentLocationSearchCart getLocationId={getLocationId} />
+          )}
           {/* <div className="mt-6 w-96 mb-10">
             
           </div> */}

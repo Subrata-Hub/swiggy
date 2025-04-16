@@ -40,6 +40,7 @@ const HomePage = () => {
       if (userSnap.exists()) {
         await updateDoc(userRef, {
           locations: arrayUnion(newLocationId),
+          // locations: arrayUnion(locationData?.place),
         });
         addUserLocationData({
           ...locationData,
@@ -68,6 +69,7 @@ const HomePage = () => {
           if (auth?.currentUser) {
             const initialLocData = {
               userId: auth?.currentUser?.uid,
+              locations: [],
               place: {},
               latlng: {
                 LAT: position.coords.latitude,
@@ -117,6 +119,8 @@ const HomePage = () => {
       if (!user && !storedAnonymousUid) {
         console.log("Attempting anonymous sign-in.");
         try {
+          const locationData =
+            JSON.parse(localStorage.getItem(`locations`)) || [];
           const anonymousUserCredential = await signInAnonymously(auth);
           const anonymousUid = anonymousUserCredential.user.uid;
           localStorage.setItem("anonymousUid", anonymousUid);
@@ -124,11 +128,12 @@ const HomePage = () => {
 
           const userDocRef = doc(db, "users", anonymousUid);
           const docSnap = await getDoc(userDocRef);
+
           if (!docSnap.exists()) {
             await setDoc(userDocRef, {
               // email: "",
               // name: "",
-              locations: [],
+              locations: locationData,
               cart: [],
               search: [],
               uid: anonymousUid,
@@ -137,7 +142,7 @@ const HomePage = () => {
 
             dispatch(
               addUserData({
-                locations: [],
+                locations: locationData,
                 cart: [],
                 search: [],
                 uid: anonymousUid,

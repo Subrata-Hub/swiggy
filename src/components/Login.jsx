@@ -3,15 +3,14 @@ import { useRef, useState } from "react";
 import { LOGIN_IMG } from "../utils/constant";
 import {
   createUserWithEmailAndPassword,
-  linkWithCredential,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 
 import { HiMiniXMark } from "react-icons/hi2";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
+
 import { useDispatch } from "react-redux";
 import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
 
@@ -28,6 +27,8 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   const getInputsData = async () => {
     try {
       let userCredential;
+      const userLocationData =
+        JSON.parse(localStorage.getItem(`locations`)) || {};
       if (!isSignIn) {
         userCredential = await createUserWithEmailAndPassword(
           auth,
@@ -35,7 +36,7 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           password.current.value
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // await new Promise((resolve) => setTimeout(resolve, 500));
 
         await updateProfile(userCredential.user, {
           displayName: name?.current?.value,
@@ -47,20 +48,18 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           uid: userCredential.user.uid,
           name: name?.current?.value,
           email: email.current.value,
-          locations: [],
+          locations: userLocationData,
           cart: [],
           search: [],
         });
 
         dispatch(
           addUserData({
-            // uid: userCredential.user.uid,
-            // name: name?.current?.value,
-            // email: email.current.value,
             uid: userCredential.user.uid,
             name: name?.current?.value,
             email: email.current.value,
-            locations: [],
+
+            locations: userLocationData,
             cart: [],
             search: [],
           })
@@ -77,11 +76,6 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
         );
 
         const anonymousUid = localStorage.getItem("anonymousUid");
-
-        // const locationData =
-        //   JSON.parse(
-        //     localStorage.getItem(`anonymous_location_${anonymousUid}`)
-        //   ) || {};
 
         const locationData =
           JSON.parse(localStorage.getItem(`current_location`)) || {};
@@ -109,46 +103,6 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
         setShowLoginPopup(false);
         handleContineueafterSignIn();
       }
-
-      const user = userCredential.user;
-      console.log(user);
-
-      const anonymousUid = localStorage.getItem("anonymousUid");
-      if (anonymousUid) {
-        const anonymousUser = await auth.signInAnonymously(); // Sign in with the old anonymous UID
-        const credential = GoogleAuthProvider.credential(
-          null,
-          await anonymousUser.user.getIdToken()
-        ); // Get a credential (can be any provider for linking)
-
-        await linkWithCredential(user, credential);
-        localStorage.removeItem("anonymousUid");
-        console.log("Anonymous account linked!");
-
-        // Now, you should transfer the cart and location data
-        // from Redux to the newly signed-up user's Firestore document
-        const locationData =
-          JSON.parse(
-            localStorage.getItem(`anonymous_location_${anonymousUid}`)
-          ) || {};
-        // const cartData =
-        //   JSON.parse(localStorage.getItem(`anonymous_cart_${anonymousUid}`)) ||
-        //   [];
-
-        await setDoc(doc(db, "users", user.uid), {
-          ...(await getDoc(doc(db, "users", user.uid))).data(), // Merge existing data
-          location: locationData,
-          // cart: cartData,
-        });
-
-        localStorage.removeItem(`anonymous_location_${anonymousUid}`);
-        localStorage.removeItem(`anonymous_cart_${anonymousUid}`);
-        // dispatch(clearCart()); // Clear Redux cart as data is now in Firestore
-        // Optionally, fetch the user's data from Firestore to update Redux
-      }
-
-      // setShowLoginPopup(false);
-      // handleContineueafterSignIn();
     } catch (error) {
       const errorCode = error.code;
       console.log(errorCode);
