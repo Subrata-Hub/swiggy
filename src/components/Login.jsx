@@ -78,16 +78,19 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
 
         const anonymousUid = localStorage.getItem("anonymousUid");
 
+        // const locationData =
+        //   JSON.parse(
+        //     localStorage.getItem(`anonymous_location_${anonymousUid}`)
+        //   ) || {};
+
         const locationData =
-          JSON.parse(
-            localStorage.getItem(`anonymous_location_${anonymousUid}`)
-          ) || {};
+          JSON.parse(localStorage.getItem(`current_location`)) || {};
 
         if (locationData !== undefined) {
           const locationDocRef = doc(db, "locations", auth?.currentUser?.uid);
           await setDoc(locationDocRef, {
             ...locationData,
-            locuid: auth.currentUser.uid,
+            userId: auth.currentUser.uid,
           });
 
           dispatch(

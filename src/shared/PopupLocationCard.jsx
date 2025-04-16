@@ -15,6 +15,7 @@ import { db } from "../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserLocationData } from "../utils/firebaseDataSlice";
 import Spineer from "./Spineer";
+import RecentLocationSearchCart from "./RecentLocationSearchCart";
 // import { arrayUnion } from "firebase/firestore/lite";
 
 /* eslint-disable react/prop-types */
@@ -57,7 +58,7 @@ const PopupLocationCard = ({
         // await updateUserDataWithNewLocation(userId, newLocationId);
 
         await updateDoc(userRef, {
-          locations: arrayUnion(newLocationId),
+          locations: arrayUnion(locationData.place),
         });
 
         dispatch(
@@ -120,6 +121,7 @@ const PopupLocationCard = ({
 
     const location = data[0];
     const latlang = location?.geometry?.location;
+    console.log(location);
 
     const place = {
       description: description,
@@ -239,13 +241,13 @@ const PopupLocationCard = ({
   return (
     <div>
       <div
-        className="h-full fixed top-0 left-0 bg-slate-800 w-[650px] z-5000000"
+        className="h-full fixed top-0 left-0 bg-slate-800 w-[650px] z-5000000 overflow-y-auto hide-scrollbar"
         ref={locationRef}
       >
         <div className="pt-6 pl-40" onClick={() => setLocationPopup(false)}>
           <HiMiniXMark className="text-3xl" />
         </div>
-        <div className="pl-40 pt-24">
+        <div className="pl-40 pt-16">
           <input
             type="text"
             value={input}
@@ -265,7 +267,7 @@ const PopupLocationCard = ({
                       suggestion?.map((item, index) => (
                         <div key={index} className="flex flex-col gap-4">
                           <div
-                            className="flex gap-4 mt-4"
+                            className="flex gap-4 mt-4 cursor-pointer"
                             onClick={() =>
                               getLocationId(item?.description, item?.place_id)
                             }
@@ -294,7 +296,7 @@ const PopupLocationCard = ({
                       <HiMapPin className="text-xl mt-0.5" />
                       <div>
                         <div
-                          className="font-[500] text-[16px]"
+                          className="font-[500] text-[16px] cursor-pointer"
                           onClick={getPosition}
                         >
                           Get Current Location
@@ -307,6 +309,10 @@ const PopupLocationCard = ({
               </div>
             </>
           )}
+          <RecentLocationSearchCart getLocationId={getLocationId} />
+          {/* <div className="mt-6 w-96 mb-10">
+            
+          </div> */}
         </div>
       </div>
     </div>

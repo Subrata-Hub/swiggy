@@ -126,17 +126,20 @@ const Navbar = () => {
         if (anonymousUid) {
           // Check for anonymous user data in localStorage
 
+          // const locationData =
+          //   JSON.parse(
+          //     localStorage.getItem(`anonymous_location_${anonymousUid}`)
+          //   ) || {};
+
           const locationData =
-            JSON.parse(
-              localStorage.getItem(`anonymous_location_${anonymousUid}`)
-            ) || {};
+            JSON.parse(localStorage.getItem(`current_location`)) || {};
 
           if (locationData && locationData.LAT && locationData.LNG) {
             // Ensure location is transferred to Firestore
             const locationRef = doc(db, "locations", anonymousUid);
             updateDoc(
               locationRef,
-              { ...locationData, locuid: anonymousUid }
+              { ...locationData, userId: anonymousUid }
               // { merge: true }
             )
               .then(() => {
