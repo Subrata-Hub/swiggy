@@ -3,13 +3,17 @@
 import { useDispatch } from "react-redux";
 import Body from "../components/Body";
 import Navbar from "../components/Navbar";
-import {
-  addAddress,
-  addLatlng,
-  // reSetLocationStore,
-} from "../utils/locationSlice";
+
 import { useEffect } from "react";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 import { signInAnonymously } from "firebase/auth";
 
@@ -30,14 +34,17 @@ const HomePage = () => {
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        // await updateDoc(userRef, {
-        //   locations: arrayUnion(newLocationId),
-        //   // locations: arrayUnion(locationData?.place),
-        // });
-        addUserLocationData({
-          ...locationData,
-          // ["currentLocId"]: newLocationId,
+        await updateDoc(userRef, {
+          // locations: arrayUnion(newLocationId),
+          locations: arrayUnion(locationData?.place),
         });
+
+        dispatch(
+          addUserLocationData({
+            ...locationData,
+            ["currentLocId"]: newLocationId,
+          })
+        );
       } else {
         console.error(
           `User document with ID "${userId}" not found. Cannot link location.`
@@ -79,17 +86,18 @@ const HomePage = () => {
               "InitialLocation",
               JSON.stringify(initialLocData)
             );
+            // dispatch(addUserLocationData(initialLocData));
           }
 
-          dispatch(
-            addAddress([position.coords.latitude, position.coords.longitude])
-          );
-          dispatch(
-            addLatlng({
-              LAT: position.coords.latitude,
-              LNG: position.coords.longitude,
-            })
-          );
+          // dispatch(
+          //   addAddress([position.coords.latitude, position.coords.longitude])
+          // );
+          // dispatch(
+          //   addLatlng({
+          //     LAT: position.coords.latitude,
+          //     LNG: position.coords.longitude,
+          //   })
+          // );
         },
         () => {
           alert("Could not get your position");

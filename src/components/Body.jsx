@@ -15,10 +15,7 @@ const Body = () => {
   const userData = useUserFromDB();
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
-
-  const latlngData = useSelector((store) => store?.location?.latlng);
-
-  const latlng = currentLocation === undefined && latlngData;
+  const initialLocation = JSON.parse(localStorage.getItem("InitialLocation"));
 
   const currentLocationId = useSelector(
     (store) => store.firebaseData?.userLocationData?.currentLocId
@@ -28,6 +25,12 @@ const Body = () => {
     (currentLocationId !== null && currentLocationId) || currentLocation?.id,
     setLoading
   );
+
+  const latlng =
+    userLocationData === undefined &&
+    currentLocation === undefined &&
+    initialLocation &&
+    initialLocation?.latlng;
 
   const LAT =
     userLocationData?.latlng !== undefined && userLocationData?.latlng?.LAT
@@ -40,18 +43,6 @@ const Body = () => {
       : latlng?.LNG;
 
   console.log(LAT, LNG);
-
-  // const LAT =
-  //   userLocationData?.latlng !== undefined &&
-  //   userLocationData?.latlng?.LAT &&
-  //   userLocationData?.latlng?.LAT;
-
-  // const LNG =
-  //   userLocationData?.latlng !== undefined &&
-  //   userLocationData?.latlng?.LNG &&
-  //   userLocationData?.latlng?.LNG;
-
-  // console.log(LAT, LNG);
 
   const resData = useRestaurants(setLoading, LAT, LNG);
 
