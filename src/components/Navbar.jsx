@@ -21,6 +21,7 @@ import { signOut } from "firebase/auth";
 
 import { addUserData } from "../utils/firebaseDataSlice";
 import { useDispatch } from "react-redux";
+import updateAllUserCarts from "../actions/updateAllUserCarts";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -112,28 +113,35 @@ const Navbar = () => {
     setShowProfileCard(false);
   };
 
-  const handleUserSignOut = () => {
+  const handleUserSignOut = async () => {
+    const anonymousUid = localStorage.getItem("anonymousUid");
+    // await updateAllUserCarts(auth?.currentUser?.uid, anonymousUid);
+
     signOut(auth)
       .then(async () => {
         setUserData(null);
 
         console.log("User gone");
 
-        const anonymousUid = localStorage.getItem("anonymousUid");
-
         if (anonymousUid) {
           const userLocationData =
             JSON.parse(localStorage.getItem(`locations`)) || {};
 
           const userDocRef = doc(db, "users", anonymousUid);
+          const cartData = JSON.parse(localStorage.getItem(`cart_items`)) || {};
+
+          const cart = cartData?.cartItems?.map((cart) => cart?.cartId);
 
           updateDoc(userDocRef, {
             ...userData,
             locations: userLocationData,
+            cart: cart,
           });
 
           const locationData =
             JSON.parse(localStorage.getItem(`current_location`)) || {};
+
+          await updateAllUserCarts(auth?.currentUser?.uid, anonymousUid);
 
           if (locationData && locationData.LAT && locationData.LNG) {
             // Ensure location is transferred to Firestore

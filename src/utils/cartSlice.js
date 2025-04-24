@@ -16,10 +16,16 @@ const cartSlice = createSlice({
     },
     addCartItems: (state, action) => {
       state.cartItems.push(action.payload);
-      state.totalCardItems = state.totalCardItems + 1;
+      if (action.payload.isCommingFromDB) {
+        state.totalCardItems =
+          state.totalCardItems + action.payload.totalMenuItems;
+      } else {
+        state.totalCardItems = state.totalCardItems + 1;
+      }
+      // state.totalCardItems = state.totalCardItems + 1;
     },
     updateCardItems: (state, action) => {
-      state.cartItems = state.cartItems.flatMap((ele) =>
+      state.cartItems = state.cartItems.map((ele) =>
         ele?.menuId === action.payload?.menuId
           ? { ...ele, totalMenuItems: action.payload?.totalMenuItems }
           : ele

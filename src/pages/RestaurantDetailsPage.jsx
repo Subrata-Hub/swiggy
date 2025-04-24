@@ -20,16 +20,16 @@ const RestaurantDetailsPage = () => {
     (store) => store?.firebaseData?.userLocationData?.latlng
   );
 
-  const placeData = useSelector(
-    (store) => store?.firebaseData?.userLocationData
-  );
-  const placeArray = placeData
-    ? placeData
-    : currentLocation?.address_components?.filter((cityList) =>
-        cityList?.types?.find((item) => item === "city")
-      );
+  // const placeData = useSelector(
+  //   (store) => store?.firebaseData?.userLocationData
+  // );
+  // const placeArray = placeData
+  //   ? placeData
+  //   : currentLocation?.address_components?.filter((cityList) =>
+  //       cityList?.types?.find((item) => item === "city")
+  //     );
 
-  const city = placeArray?.[0]?.long_name;
+  // const city = placeArray?.[0]?.long_name;
 
   const LAT = latlang?.LAT ? latlang?.LAT : currentLocation?.latlng?.LAT;
   const LNG = latlang?.LNG ? latlang?.LNG : currentLocation?.latlng?.LNG;
@@ -46,7 +46,7 @@ const RestaurantDetailsPage = () => {
     restaurantName: restaurantName,
     resAreaName: areaName,
     resImg: resDetailsData?.[2]?.card?.card?.info?.cloudinaryImageId,
-    menuURL: `/city/${city}/${restaurantName}/${areaName}/${restaurantId}`,
+    menuURL: `/city/${location}/${restaurantName}/${areaName}/${restaurantId}`,
   };
   return (
     <div className="m-36 mt-0 mb-0">

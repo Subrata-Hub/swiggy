@@ -1,8 +1,12 @@
 /* eslint-disable react/prop-types */
 
 import { useDispatch } from "react-redux";
-import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
-import { addResParams } from "../utils/searchSlice";
+import { reSetStore } from "../utils/cartSlice";
+// import { addResParams } from "../utils/searchSlice";
+
+import { auth } from "../utils/firebase";
+import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
+import deleteAllUserCarts from "../actions/deleteAllUserCarts";
 
 const PopupResetCard = ({
   setShowResetCardPopup,
@@ -12,12 +16,11 @@ const PopupResetCard = ({
 
   setShowPopupBeforeReset,
   searchDishesData,
-  setShowAddToCardSearchResultsData,
+  // setShowAddToCardSearchResultsData,
 }) => {
   const dispatch = useDispatch();
-  // const cart = useSelector((state) => state.cart);
 
-  const handleResetCart = () => {
+  const handleResetCart = async () => {
     // setShowAddToCardSearchResultsData();
     if (searchDishesData?.info.addons) {
       setShowPopupBeforeReset(true);
@@ -26,29 +29,48 @@ const PopupResetCard = ({
       // counter = 0;
 
       setShowResetCardPopup(false);
-      // dispatch(addResParams({}));
-      // setShowAddToCardSearchResultsData(true);
-
-      // const newCounter = counter + 1;
-      // // setCounter(newCounter);
-
-      // const updatedCardInfo = {
-      //   ...menuInfo,
-      //   totalMenuItems: newCounter,
-      // };
-      // dispatch(addCartItems(updatedCardInfo));
     } else {
+      const userId = auth?.currentUser?.uid;
+      if (!userId) {
+        console.log("User not authenticated.");
+        return;
+      }
+
+      // Save previous cart info
+      const preservedMenuInfo = { ...menuInfo };
+      const preservedResInfo = { ...resInformation };
+
+      await deleteAllUserCarts(userId);
+
       dispatch(reSetStore());
 
-      dispatch(addResInfo(resInformation));
       const newCounter = counter + 1;
       // setCounter(newCounter);
 
-      const updatedCardInfo = {
-        ...menuInfo,
+      const cartItemInfo = {
+        cartItems: preservedMenuInfo,
+        resInfo: preservedResInfo,
         totalMenuItems: newCounter,
+        userId: auth.currentUser.uid,
       };
-      dispatch(addCartItems(updatedCardInfo));
+
+      await createCartAndLinkToUser(auth?.currentUser?.uid, cartItemInfo);
+
+      // const updatedCardInfo = {
+      //   ...preservedMenuInfo,
+      //   totalMenuItems: newCounter,
+      // };
+      // dispatch(addResInfo(preservedResInfo));
+      // dispatch(addCartItems({ ...updatedCardInfo, cartId }));
+
+      // const cartData = {
+      //   cartResInfo: preservedResInfo,
+      //   items: [preservedMenuInfo],
+      //   // totalItems,
+      //   // subTotal,
+      // };
+
+      // localStorage.setItem("cart_items", JSON.stringify(cartData));
 
       setShowResetCardPopup(false);
     }

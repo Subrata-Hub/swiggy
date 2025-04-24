@@ -1,20 +1,9 @@
 /* eslint-disable react/display-name */
 import { Link } from "react-router-dom";
 import { IMG_CARD_URL_2 } from "../utils/constant";
-import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
-const RestaurantCard = ({ topRes }) => {
-  const placeData = useSelector(
-    (store) => store?.firebaseData?.userLocationData
-  );
-  const placeArray = placeData?.address_components?.filter((cityList) =>
-    cityList?.types?.find((item) => item === "city")
-  );
-
-  const city = placeArray?.[0]?.long_name;
-  console.log(city);
-
+const RestaurantCard = ({ topRes, city }) => {
   return (
     <Link
       to={`/city/${city}/${topRes?.name}/${topRes?.locality}/${topRes?.id}`}
@@ -51,9 +40,9 @@ const RestaurantCard = ({ topRes }) => {
 // export default RestaurantCard;
 
 const RestaurantCardWithOffer = (RestaurantCard) => {
-  return ({ topRes, offer }) => (
+  return ({ topRes, offer, city }) => (
     <div className="flex flex-col relative">
-      <RestaurantCard topRes={topRes} />
+      <RestaurantCard topRes={topRes} city={city} />
       <div className="absolute bottom-[140px] px-3 w-full">
         {offer && (
           <div className="flex font-bold text-[18px]">

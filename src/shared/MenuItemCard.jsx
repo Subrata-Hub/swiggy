@@ -17,6 +17,15 @@ import {
   updateCardItems,
 } from "../utils/cartSlice";
 import PopupResetCard from "./PopupResetCard";
+import {
+  arrayRemove,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { auth, db } from "../utils/firebase";
+import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
 
 const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -37,11 +46,20 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
   const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
 
+  const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
+  // console.log(userCartItems);
+
   const cartItems = useSelector((state) => state.cart.cartItems);
   const menuItem = cartItems.find(
     (item) => item.menuId === resMenuItem?.card?.info?.id
   );
-  let counter = menuItem?.totalMenuItems || 0;
+
+  const userMenuItem = userCartItems?.items?.[0]?.find(
+    (item) => item.menuId === resMenuItem?.card?.info?.id
+  );
+
+  // console.log(userMenuItem);
+  let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
 
   useOutSideClick(
     menuDishesCardRef,
@@ -90,9 +108,51 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     menuPrice: resMenuItem?.card?.info?.price
       ? resMenuItem?.card?.info?.price / 100
       : resMenuItem?.card?.info?.defaultPrice / 100,
+
+    // totalMenuItems: counter + 1,
   };
 
-  const handleShowMenuCardPopup = () => {
+  const updateCardItemAndFirestore =
+    (item, action, cartId) => async (dispatch) => {
+      dispatch(updateCardItems({ ...item, action, cartId })); // Dispatch the synchronous Redux update
+      console.log(item);
+
+      if (cartId) {
+        const cartRef = doc(db, "cart", cartId);
+        try {
+          const cartSnap = await getDoc(cartRef);
+
+          if (cartSnap.exists()) {
+            await updateDoc(cartRef, {
+              // cartItems: updatedCartItems,
+              totalMenuItems: item.totalMenuItems, // Use the updated item count
+            });
+          }
+        } catch (error) {
+          console.error("Error updating cart in Firestore:", error);
+          // Handle error appropriately (e.g., dispatch an error action)
+        }
+      } else {
+        console.warn("cartId is undefined, cannot update Firestore.");
+      }
+    };
+
+  async function deleteMenutem(documentId) {
+    try {
+      const docRef = doc(db, "cart", documentId);
+      await deleteDoc(docRef);
+
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(userRef, {
+        cart: arrayRemove(documentId),
+      });
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error deleting document:", error);
+    }
+  }
+
+  const handleShowMenuCardPopup = async () => {
     if (resMenuItem?.card?.info.addons) {
       if (
         cartItems.length >= 1 &&
@@ -106,39 +166,66 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     } else {
       if (
         restaurantInfoFromCard &&
-        cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !== resInformation?.restaurantId
+        (cartItems.length >= 1 || userCartItems?.cartItems?.length >= 1) &&
+        (restaurantInfoFromCard?.restaurantId ||
+          userCartItems?.resInfo?.restaurantId) !== resInformation?.restaurantId
       ) {
         setShowResetCardPopup(true);
       } else {
         const newCounter = counter + 1;
         // setCounter(newCounter);
 
+        // const tempCartId = "temp_" + Date.now();
+
         const updatedCardInfo = {
           ...menuInfo,
           totalMenuItems: newCounter,
+          // cartId: tempCartId,
         };
+
+        const cartItemInfo = {
+          cartItems: menuInfo,
+          resInfo: resInformation,
+          totalMenuItems: newCounter,
+          userId: auth.currentUser.uid,
+        };
+
+        const cartId = await createCartAndLinkToUser(
+          auth?.currentUser?.uid,
+          cartItemInfo
+        );
 
         disPatch(addResInfo(resInformation));
 
-        disPatch(addCartItems(updatedCardInfo));
+        // disPatch(addCartItems(updatedCardInfo));
+        disPatch(addCartItems({ ...updatedCardInfo, cartId }));
       }
     }
   };
 
-  const updatingCardItem = (item, action) => {
+  const updatingCardItem = async (item, action, cartId) => {
     // setCounter(item);
 
     const updatedCardInfo = {
       ...menuInfo,
       totalMenuItems: item, // Use the latest item count directly
       action: action,
+      cartId,
     };
 
-    disPatch(updateCardItems(updatedCardInfo));
+    // disPatch(updateCardItems(updatedCardInfo));
+
+    disPatch(
+      updateCardItemAndFirestore(
+        { ...menuInfo, totalMenuItems: item },
+        action,
+        cartId
+      )
+    );
 
     if (item === 0) {
       disPatch(removeCardItems(updatedCardInfo));
+      await deleteMenutem(cartId);
     }
   };
 
@@ -230,7 +317,15 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             {counter >= 1 && (
               <div className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
                 <div className="flex justify-center items-center gap-7">
-                  <div onClick={() => updatingCardItem(counter - 1, "Remove")}>
+                  <div
+                    onClick={() =>
+                      updatingCardItem(
+                        counter - 1,
+                        "Remove",
+                        menuItem?.cartId || userMenuItem?.cartId
+                      )
+                    }
+                  >
                     {" "}
                     <IoRemove />
                   </div>
@@ -239,7 +334,13 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
                   <div
                     className=""
-                    onClick={() => updatingCardItem(counter + 1, "Add")}
+                    onClick={() =>
+                      updatingCardItem(
+                        counter + 1,
+                        "Add",
+                        menuItem?.cartId || userMenuItem?.cartId
+                      )
+                    }
                   >
                     {" "}
                     <IoAdd />

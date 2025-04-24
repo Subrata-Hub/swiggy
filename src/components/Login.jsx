@@ -13,6 +13,7 @@ import { HiMiniXMark } from "react-icons/hi2";
 
 import { useDispatch } from "react-redux";
 import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
+import updateAllUserCarts from "../actions/updateAllUserCarts";
 
 const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   const name = useRef(null);
@@ -44,12 +45,16 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
 
         const userDocRef = doc(db, "users", userCredential.user.uid);
 
+        const cartData = JSON.parse(localStorage.getItem(`cart_items`)) || {};
+
+        const cart = cartData?.cartItems?.map((cart) => cart?.cartId);
+
         await setDoc(userDocRef, {
           uid: userCredential.user.uid,
           name: name?.current?.value,
           email: email.current.value,
           locations: userLocationData,
-          cart: [],
+          cart: cart,
           search: [],
         });
 
@@ -60,7 +65,7 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
             email: email.current.value,
 
             locations: userLocationData,
-            cart: [],
+            cart: cart,
             search: [],
           })
         );
@@ -76,6 +81,8 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
         );
 
         const anonymousUid = localStorage.getItem("anonymousUid");
+
+        await updateAllUserCarts(anonymousUid, auth?.currentUser?.uid);
 
         const locationData =
           JSON.parse(localStorage.getItem(`current_location`)) || {};

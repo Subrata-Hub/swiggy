@@ -32,6 +32,8 @@ appStore.subscribe(() => {
       JSON.stringify(state.firebaseData?.userLocationData)
     );
   }
+
+  localStorage.setItem(`cart_items`, JSON.stringify(state.cart));
 });
 
 export default appStore;
