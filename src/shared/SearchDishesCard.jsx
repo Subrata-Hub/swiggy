@@ -5,28 +5,21 @@ import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
-import { IoAdd } from "react-icons/io5";
-import { IoRemove } from "react-icons/io5";
 
 import useOutSideClick from "../hooks/useOutsideClick";
 import PopupSearchDishesCard from "./PopupSearchDishesCard";
 import PopupCardMenu from "./PopupCardMenu";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addCartItems,
-  addResInfo,
-  removeCardItems,
-  updateCardItems,
-} from "../utils/cartSlice";
+import { useSelector } from "react-redux";
+
 import PopupResetCard from "./PopupResetCard";
-import { addResParams } from "../utils/searchSlice";
-import { toast } from "react-toastify";
+
+import AddMenuItemToCart from "./AddMenuItemToCart";
 const SearchDishesCard = ({
   searchDishesData,
   resInformationForMoreDishes,
   hideHeader = false,
-  setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
+  setShowAddToCardSearchResultsData,
 }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
@@ -40,10 +33,12 @@ const SearchDishesCard = ({
   const detailMenuButtonRef = useRef(null);
   const addResetRef = useRef(null);
   const resetPopupCardRef = useRef(null);
-  const dispatch = useDispatch();
 
-  const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
+  const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const userMenuItem = userCartItems?.items?.[0]?.find(
+    (item) => item.menuId === searchDishesData?.info?.id
+  );
   const placeData = useSelector(
     (store) => store.firebaseData?.userLocationData
   );
@@ -55,7 +50,7 @@ const SearchDishesCard = ({
   const menuItem = cartItems.find(
     (item) => item.menuId === searchDishesData?.info?.id
   );
-  let counter = menuItem?.totalMenuItems || 0;
+  let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
 
   useOutSideClick(searchDishesCardRef, () => {
     if (!disableOutsideClick) {
@@ -108,85 +103,12 @@ const SearchDishesCard = ({
     resId:
       resInformationForMoreDishes?.restaurantId || resInformation?.restaurantId,
     menuName: searchDishesData?.info?.name,
-    vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
+    // vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
+    vegClassifier: searchDishesData?.info?.isVeg === 1 ? "VEG" : "NONVEG",
+
     menuPrice: searchDishesData?.info?.price
       ? searchDishesData?.info?.price / 100
       : searchDishesData?.info?.defaultPrice / 100,
-  };
-
-  const handleShowMenuCardPopup = () => {
-    if (searchDishesData?.info.addons) {
-      if (
-        restaurantInfoFromCard &&
-        cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !==
-          // searchDishesData?.restaurant?.info?.id
-          // (resInformation
-          //   ? resInformation?.restaurantId
-          //   : resInformationForMoreDishes?.restaurantId)
-          (resInformationForMoreDishes?.restaurantId ||
-            resInformation?.restaurantId)
-      ) {
-        setShowResetCardPopup(true);
-
-        // setShowMenuCardPopup(false);
-      } else {
-        setShowMenuCardPopup(!showMenuCardPopup);
-        counter = 0;
-      }
-    } else {
-      if (
-        restaurantInfoFromCard &&
-        cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !==
-          (resInformationForMoreDishes?.restaurantId ||
-            resInformation?.restaurantId)
-      ) {
-        setShowResetCardPopup(true);
-      } else {
-        const newCounter = counter + 1;
-        // setCounter(newCounter);
-
-        const updatedCardInfo = {
-          ...menuInfo,
-          totalMenuItems: newCounter,
-        };
-
-        dispatch(addResInfo(resInformationForMoreDishes || resInformation));
-        dispatch(addCartItems(updatedCardInfo));
-      }
-    }
-  };
-
-  const updatingCardItem = (item, action) => {
-    // setCounter(item);
-
-    const updatedCardInfo = {
-      ...menuInfo,
-      totalMenuItems: item, // Use the latest item count directly
-      action: action,
-    };
-
-    dispatch(updateCardItems(updatedCardInfo));
-
-    if (item === 0) {
-      dispatch(removeCardItems(updatedCardInfo));
-    }
-  };
-
-  const goToSearchResultsPage = (resId, menuId) => {
-    // if (showResetCardPopup) return;
-    if (!searchDishesData?.info?.addons && resId && menuId) {
-      dispatch(
-        addResParams({
-          resId: resId,
-          menuId: menuId,
-        })
-      );
-
-      setShowAddToCardSearchResultsData(!showAddToCardSearchResultsData);
-      toast(`Add item to the card from ${resInformation.restaurantName}`);
-    }
   };
 
   return (
@@ -253,60 +175,43 @@ const SearchDishesCard = ({
                 </span>
               </button>
             </div>
-            <div className="w-[156px] h-[144px] relative">
-              <img
-                src={IMG_SEARCH_DISH + searchDishesData?.info?.imageId}
-                className="w-[156px] h-[144px] object-cover rounded-2xl"
+            <div className="relative">
+              {searchDishesData?.info?.imageId ? (
+                <img
+                  src={IMG_SEARCH_DISH + searchDishesData?.info?.imageId}
+                  className="w-[156px] h-[144px] object-cover rounded-2xl"
+                />
+              ) : (
+                <div className="w-[156px] h-[144px] "></div>
+              )}
+              <AddMenuItemToCart
+                resInformation={resInformationForMoreDishes || resInformation}
+                resMenuItem={searchDishesData}
+                menuInfo={menuInfo}
+                addonButtonRef={addonButtonRef}
+                addResetRef={addResetRef}
+                setShowResetCardPopup={setShowResetCardPopup}
+                showMenuCardPopup={showMenuCardPopup}
+                setShowMenuCardPopup={setShowMenuCardPopup}
+                // goToSearchResultsPage={goToSearchResultsPage}
+                menuItem={menuItem}
+                userMenuItem={userMenuItem}
+                counter={counter}
+                cartItems={cartItems}
+                userCartItems={userCartItems}
+                setShowAddToCardSearchResultsData={
+                  setShowAddToCardSearchResultsData
+                }
+                showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+                // isSearchResults={true}
+                isImage={searchDishesData?.info?.imageId ? true : false}
               />
-              <div className="absolute top-[124px] left-5">
-                {!counter && (
-                  <div ref={addonButtonRef}>
-                    <button
-                      className="px-10 py-2 bg-slate-900 text-emerald-500 rounded-xl"
-                      onClick={() => {
-                        handleShowMenuCardPopup(); // Execute first function
-                        setTimeout(() => {
-                          goToSearchResultsPage(
-                            resInformation?.restaurantId,
-                            menuInfo?.menuId
-                          );
-                        }, 1000); // Ensures this runs after state updates in handleShowMenuCardPopup
-                      }}
-                      ref={addResetRef}
-                    >
-                      ADD
-                    </button>
-                  </div>
-                )}
 
-                {(counter || counter > 0) && (
-                  <div className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
-                    <div className="flex justify-center items-center gap-7">
-                      <div
-                        onClick={() => updatingCardItem(counter - 1, "Remove")}
-                      >
-                        {" "}
-                        <IoRemove />
-                      </div>
-
-                      <p className=""> {counter}</p>
-
-                      <div
-                        className=""
-                        onClick={() => updatingCardItem(counter + 1, "Add")}
-                      >
-                        {" "}
-                        <IoAdd />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="pt-5 pl-7 text-[13.5px]">
+              {/* <div className="pt-5 pl-7 text-[13.5px]">
                 {searchDishesData?.info?.addons && (
                   <p className="">Customisable</p>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -320,18 +225,26 @@ const SearchDishesCard = ({
               searchDishesData={searchDishesData}
               handleShowPopup={handleShowPopup}
               counter={counter}
-              handleShowMenuCardPopup={handleShowMenuCardPopup}
-              goToSearchResultsPage={goToSearchResultsPage}
-              updatingCardItem={updatingCardItem}
+              setShowResetCardPopup={setShowResetCardPopup}
+              showMenuCardPopup={showMenuCardPopup}
+              setShowMenuCardPopup={setShowMenuCardPopup}
               addResetRef={addResetRef}
               addonButtonRef={addonButtonRef}
               menuInfo={menuInfo}
               resInformation={resInformation}
+              menuItem={menuItem}
+              userMenuItem={userMenuItem}
+              cartItems={cartItems}
+              userCartItems={userCartItems}
+              setShowAddToCardSearchResultsData={
+                setShowAddToCardSearchResultsData
+              }
+              showAddToCardSearchResultsData={showAddToCardSearchResultsData}
             />
           </div>
         </>
       )}
-      {((showMenuCardPopup && searchDishesData?.info.addons) ||
+      {((showMenuCardPopup && searchDishesData?.info?.addons) ||
         showPopupBeforeReset) && (
         <>
           <div className="overlay"></div>
@@ -347,7 +260,6 @@ const SearchDishesCard = ({
               }
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
-              // showMenuCardPopup={showMenuCardPopup}
               onContinue={handleContinueClick}
               setShowAddToCardSearchResultsData={
                 setShowAddToCardSearchResultsData

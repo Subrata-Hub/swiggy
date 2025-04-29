@@ -10,18 +10,20 @@ import { getFormatedPrice } from "../utils/constant";
 import { toast } from "react-toastify";
 
 import { addResParams } from "../utils/searchSlice";
+import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
+import { auth } from "../utils/firebase";
+import deleteAllUserCarts from "../actions/deleteAllUserCarts";
 
 const PopupCardMenu = ({
   searchDishesData,
   setShowMenuCardPopup,
-  // handleShowMenuCardPopup,
-  // setCounter,
+
   resInformation,
   counter,
   resId,
   setShowPopupBeforeReset,
   showPopupBeforeReset,
-  // showMenuCardPopup,
+
   onContinue,
   setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
@@ -106,31 +108,63 @@ const PopupCardMenu = ({
     menuId: searchDishesData?.info?.id,
     resId: resId,
     menuName: searchDishesData?.info?.name,
-    vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
+    // vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
+    vegClassifier: searchDishesData?.info?.isVeg === 1 ? "VEG" : "NONVEG",
 
     menuPrice: totalPrice,
   };
 
-  const handleAddItemToCart = (item) => {
+  const handleAddItemToCart = async (item) => {
     if (showPopupBeforeReset) {
       counter = 0;
+
+      // Save previous cart info
+      const preservedMenuInfo = { ...menuInfo };
+      const preservedResInfo = { ...resInformation };
+      await deleteAllUserCarts(auth?.currentUser?.uid);
       dispatch(reSetStore());
       const updatedCardInfo = {
-        ...menuInfo,
+        // ...preservedMenuInfo,
+        cartItems: preservedMenuInfo,
+        resInfo: preservedResInfo,
         totalMenuItems: item,
+        userId: auth.currentUser.uid,
       };
-      dispatch(addResInfo(resInformation));
-      dispatch(addCartItems(updatedCardInfo));
+      // const updateStore = {
+      //   ...preservedMenuInfo,
+      //   totalMenuItems: item,
+      //   userId: auth.currentUser.uid,
+      // };
+
+      await createCartAndLinkToUser(auth?.currentUser?.uid, updatedCardInfo);
+      // dispatch(addResInfo(preservedResInfo));
+      // dispatch(addCartItems({ ...updateStore, cartId }));
+
       setShowPopupBeforeReset(false);
       setShowMenuCardPopup(false);
       // setShowAddToCardSearchResultsData(true);
     } else {
       const updatedCardInfo = {
+        // ...menuInfo,
+        cartItems: menuInfo,
+        resInfo: resInformation,
+        totalMenuItems: item,
+        userId: auth.currentUser.uid,
+      };
+
+      const updateStore = {
         ...menuInfo,
         totalMenuItems: item,
+        userId: auth.currentUser.uid,
       };
+
+      const cartId = await createCartAndLinkToUser(
+        auth?.currentUser?.uid,
+        updatedCardInfo
+      );
       dispatch(addResInfo(resInformation));
-      dispatch(addCartItems(updatedCardInfo));
+      dispatch(addCartItems({ ...updateStore, cartId }));
+
       setShowPopupBeforeReset(false);
       setShowMenuCardPopup(false);
       setShowAddToCardSearchResultsData(true);
@@ -152,6 +186,7 @@ const PopupCardMenu = ({
 
   const goToSearchResultsPage = (resId, menuId) => {
     if (!resParamsObj?.resId && !resParamsObj?.menuId) {
+      console.log("xyz");
       dispatch(
         addResParams({
           resId: resId,
@@ -165,6 +200,7 @@ const PopupCardMenu = ({
       resParamsObj?.resId &&
       resParamsObj?.menuId
     ) {
+      console.log("abc");
       dispatch(
         addResParams({
           resId: resId,
@@ -178,6 +214,7 @@ const PopupCardMenu = ({
       resParamsObj?.resId &&
       resParamsObj?.menuId
     ) {
+      console.log("pqr");
       return;
     }
   };
@@ -320,6 +357,7 @@ const PopupCardMenu = ({
             className="px-15 py-3 bg-emerald-600 rounded-2xl"
             onClick={() => {
               handleAddItemToCart(counter + 1);
+
               goToSearchResultsPage(resId, searchDishesData?.info?.id);
             }}
           >

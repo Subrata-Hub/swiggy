@@ -59,6 +59,7 @@ const Menu = ({
         areaName={areaName}
         restaurantName={restaurantName}
         location={location}
+        // resInformation={resInformation}
       />
       <MenuItemFilter setOption={setOption} activeOption={activeOption} />
       <MenuCarousel

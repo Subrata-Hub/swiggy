@@ -167,6 +167,7 @@ const SearchPage = () => {
           loading={loading}
           addToCardSearchResults={addToCardSearchResults}
           setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
+          showAddToCardSearchResultsData={showAddToCardSearchResultsData}
         />
       ) : (
         <SearchResults

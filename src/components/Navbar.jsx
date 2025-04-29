@@ -21,7 +21,6 @@ import { signOut } from "firebase/auth";
 
 import { addUserData } from "../utils/firebaseDataSlice";
 import { useDispatch } from "react-redux";
-import updateAllUserCarts from "../actions/updateAllUserCarts";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -141,7 +140,7 @@ const Navbar = () => {
           const locationData =
             JSON.parse(localStorage.getItem(`current_location`)) || {};
 
-          await updateAllUserCarts(auth?.currentUser?.uid, anonymousUid);
+          // await updateAllUserCarts(auth?.currentUser?.uid, anonymousUid);
 
           if (locationData && locationData.LAT && locationData.LNG) {
             // Ensure location is transferred to Firestore

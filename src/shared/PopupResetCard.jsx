@@ -22,7 +22,7 @@ const PopupResetCard = ({
 
   const handleResetCart = async () => {
     // setShowAddToCardSearchResultsData();
-    if (searchDishesData?.info.addons) {
+    if (searchDishesData?.info?.addons) {
       setShowPopupBeforeReset(true);
 
       // dispatch(reSetStore());
@@ -54,12 +54,15 @@ const PopupResetCard = ({
         userId: auth.currentUser.uid,
       };
 
-      await createCartAndLinkToUser(auth?.currentUser?.uid, cartItemInfo);
+      console.log(cartItemInfo);
 
       // const updatedCardInfo = {
       //   ...preservedMenuInfo,
       //   totalMenuItems: newCounter,
+      //   userId: auth.currentUser.uid,
       // };
+
+      await createCartAndLinkToUser(auth?.currentUser?.uid, cartItemInfo);
       // dispatch(addResInfo(preservedResInfo));
       // dispatch(addCartItems({ ...updatedCardInfo, cartId }));
 

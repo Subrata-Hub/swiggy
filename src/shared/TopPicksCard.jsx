@@ -1,18 +1,14 @@
 import { TOP_PIC_IMG } from "../utils/constant";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
-import { useDispatch, useSelector } from "react-redux";
-import { IoAdd, IoRemove } from "react-icons/io5";
+import { useSelector } from "react-redux";
+
 import { useRef, useState } from "react";
-import {
-  addCartItems,
-  addResInfo,
-  removeCardItems,
-  updateCardItems,
-} from "../utils/cartSlice";
+
 import PopupResetCard from "./PopupResetCard";
 import PopupCardMenu from "./PopupCardMenu";
 import useOutSideClick from "../hooks/useOutsideClick";
+import AddMenuItemToCart from "./AddMenuItemToCart";
 
 /* eslint-disable react/prop-types */
 const TopPicksCard = ({ topPicksData, resInformation }) => {
@@ -24,13 +20,16 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
   const addResetRef = useRef(null);
   const menuItemCardRef = useRef(null);
   const resetPopupCardRef = useRef(null);
-  const disPatch = useDispatch();
-  const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
+
   const cartItems = useSelector((state) => state.cart.cartItems);
   const menuItem = cartItems.find(
     (item) => item.menuId === topPicksData?.info?.id
   );
-  let counter = menuItem?.totalMenuItems || 0;
+  const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
+  const userMenuItem = userCartItems?.items?.[0]?.find(
+    (item) => item.menuId === topPicksData?.info?.id
+  );
+  let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
 
   //   useOutSideClick(
   //     menuDishesCardRef,
@@ -58,9 +57,11 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     addResetRef
   );
 
+  console.log(resInformation);
+
   const menuInfo = {
     menuId: topPicksData?.info?.id,
-    resId: resInformation?.info?.restaurantId,
+    resId: resInformation && resInformation?.restaurantId,
     menuName: topPicksData?.info?.name,
     vegClassifier: topPicksData?.info?.itemAttribute?.vegClassifier,
     menuPrice: topPicksData?.info?.price
@@ -73,55 +74,6 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     setTimeout(() => setDisableOutsideClick(false), 100);
   };
 
-  const handleShowMenuCardPopup = () => {
-    if (topPicksData?.info?.addons) {
-      if (
-        cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !== resInformation?.restaurantId
-      ) {
-        setShowResetCardPopup(true);
-      } else {
-        setShowMenuCardPopup(!showMenuCardPopup);
-        counter = 0;
-      }
-    } else {
-      if (
-        restaurantInfoFromCard &&
-        cartItems.length >= 1 &&
-        restaurantInfoFromCard?.restaurantId !== resInformation?.restaurantId
-      ) {
-        setShowResetCardPopup(true);
-      } else {
-        const newCounter = counter + 1;
-        // setCounter(newCounter);
-
-        const updatedCardInfo = {
-          ...menuInfo,
-          totalMenuItems: newCounter,
-        };
-
-        disPatch(addResInfo(resInformation));
-
-        disPatch(addCartItems(updatedCardInfo));
-      }
-    }
-  };
-
-  const updatingCardItem = (item, action) => {
-    // setCounter(item);
-
-    const updatedCardInfo = {
-      ...menuInfo,
-      totalMenuItems: item, // Use the latest item count directly
-      action: action,
-    };
-
-    disPatch(updateCardItems(updatedCardInfo));
-
-    if (item === 0) {
-      disPatch(removeCardItems(updatedCardInfo));
-    }
-  };
   return (
     <>
       <div className="w-[292px] h-[330px] bg-cyan-950 border-slate-200  ">
@@ -162,38 +114,25 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
               ? topPicksData?.info?.price / 100
               : topPicksData?.info?.defaultPrice / 100}
           </div>
-          {counter === 0 && (
-            <div ref={addonButtonRef}>
-              <button
-                className="px-10 py-2 bg-slate-900 text-emerald-500 shadow-lg"
-                onClick={handleShowMenuCardPopup}
-                ref={addResetRef}
-              >
-                ADD
-              </button>
-            </div>
-          )}
-
-          {counter >= 1 && (
-            <div className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
-              <div className="flex justify-center items-center gap-7">
-                <div onClick={() => updatingCardItem(counter - 1, "Remove")}>
-                  {" "}
-                  <IoRemove />
-                </div>
-
-                <p className=""> {counter}</p>
-
-                <div
-                  className=""
-                  onClick={() => updatingCardItem(counter + 1, "Add")}
-                >
-                  {" "}
-                  <IoAdd />
-                </div>
-              </div>
-            </div>
-          )}
+        </div>
+        <div className="absolute top-[140px] right-[152px] z-100">
+          <AddMenuItemToCart
+            resInformation={resInformation}
+            resMenuItem={topPicksData}
+            menuInfo={menuInfo}
+            addonButtonRef={addonButtonRef}
+            addResetRef={addResetRef}
+            setShowResetCardPopup={setShowResetCardPopup}
+            showMenuCardPopup={showMenuCardPopup}
+            setShowMenuCardPopup={setShowMenuCardPopup}
+            setShowAddToCardSearchResultsData={false}
+            menuItem={menuItem}
+            userMenuItem={userMenuItem}
+            counter={counter}
+            cartItems={cartItems}
+            isImage={true}
+            topPicksData={true}
+          />
         </div>
       </div>
       {((showMenuCardPopup && topPicksData?.info?.addons) ||

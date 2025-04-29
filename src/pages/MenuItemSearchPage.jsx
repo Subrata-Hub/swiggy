@@ -29,6 +29,14 @@ const MenuItemSearchPage = () => {
     }
   }, [query, menuItemsList]);
 
+  const resInformation = {
+    restaurantId: restaurantId,
+    restaurantName: restaurantName,
+    resAreaName: areaName,
+    // resImg: resDetailsData?.[2]?.card?.card?.info?.cloudinaryImageId,
+    menuURL: `/city/${location}/${restaurantName}/${areaName}/${restaurantId}`,
+  };
+
   return (
     <div className="m-36 mt-0 mb-0">
       <Navbar />
@@ -38,7 +46,10 @@ const MenuItemSearchPage = () => {
         location={location}
         areaName={areaName}
       />
-      <SearchMenuItemCard menuItemsListFilter={menuItems} />
+      <SearchMenuItemCard
+        menuItemsListFilter={menuItems}
+        resInformation={resInformation}
+      />
     </div>
   );
 };

@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Link } from "react-router-dom";
 import SearchDishesCard from "../shared/SearchDishesCard";
 import SearchResultShimmer from "../shared/shimmer/SearchResultShimmer";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+// import { useEffect } from "react";
+// import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
@@ -11,9 +10,13 @@ const AddToCartSearchResults = ({
   loading,
   showSuggestion,
   addToCardSearchResults,
+
   setShowAddToCardSearchResultsData,
+  showAddToCardSearchResultsData,
 }) => {
-  const cartNumber = useSelector((state) => state.cart.totalCardItems);
+  // const cartNumber = useSelector((state) => state.cart.totalCardItems);
+  // const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
+
   const searchResultLabel = addToCardSearchResults?.cards?.filter(
     (item) =>
       item?.card?.card?.["@type"] ===
@@ -31,6 +34,12 @@ const AddToCartSearchResults = ({
       "type.googleapis.com/swiggy.gandalf.widgets.v2.Collection"
   );
 
+  // const userMenuItem = userCartItems?.items?.[0]?.find(
+  //   (item) => item.menuId === ?.info?.id
+  // );
+
+  console.log(moreDishesData);
+
   const moreDishesDataWithResInfo =
     moreDishesData?.[0]?.card?.card?.groupBy?.card?.card;
 
@@ -42,15 +51,19 @@ const AddToCartSearchResults = ({
     menuURL: `/city/kolkata/${moreDishesDataWithResInfo?.info?.name}/${moreDishesDataWithResInfo?.info?.locality}/${moreDishesDataWithResInfo?.info?.id}`,
   };
 
-  const backToSearchResultsPage = () => {
-    setShowAddToCardSearchResultsData(false);
-  };
+  // const backToSearchResultsPage = () => {
+  //   setShowAddToCardSearchResultsData(false);
+  // };
 
-  useEffect(() => {
-    if (cartNumber === 0) {
-      setShowAddToCardSearchResultsData(false);
-    }
-  }, [cartNumber]);
+  // useEffect(() => {
+  //   if (cartNumber === 0 && showAddToCardSearchResultsData) {
+  //     setShowAddToCardSearchResultsData(false);
+  //   } else {
+  //     setShowAddToCardSearchResultsData(true);
+  //   }
+  // }, [cartNumber]);
+
+  // console.log(searchResultsForDishes);
 
   return (
     <div className="mx-36">
@@ -88,6 +101,12 @@ const AddToCartSearchResults = ({
                             resInformationForMoreDishes
                           }
                           hideHeader={true}
+                          setShowAddToCardSearchResultsData={
+                            setShowAddToCardSearchResultsData
+                          }
+                          showAddToCardSearchResultsData={
+                            showAddToCardSearchResultsData
+                          }
                         />
                       </div>
                     ))}
@@ -100,7 +119,7 @@ const AddToCartSearchResults = ({
               </Link>
               <div
                 className="w-full h-[250px] bg-slate-800 mt-4 flex justify-center"
-                onClick={backToSearchResultsPage}
+                // onClick={backToSearchResultsPage}
               >
                 <button className="mt-10">
                   {searchResultLabel?.[2]?.card?.card?.text}
