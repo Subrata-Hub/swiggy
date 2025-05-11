@@ -28,7 +28,7 @@ const SuggestionList = ({
   function addResItemToLocalStorage(Item) {
     let resSearchArray;
 
-    resSearchArray = getResSearchFromLocalStorage().items;
+    resSearchArray = getResSearchFromLocalStorage()?.items;
 
     resSearchArray?.push(Item);
 

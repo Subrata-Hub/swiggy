@@ -19,7 +19,7 @@ const ResentResSearchList = ({
   const dispatch = useDispatch();
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
   const recentResSearchArray = JSON.parse(localStorage.getItem("resItems"));
-  const recentResSearchUniqueArray = [...new Set(recentResSearchArray.items)];
+  const recentResSearchUniqueArray = [...new Set(recentResSearchArray?.items)];
   console.log(recentResSearchUniqueArray);
 
   const goToQueryPage = (query) => {
