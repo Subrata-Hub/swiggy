@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/download.png";
 
 import Locationbar from "./Locationbar";
@@ -37,6 +37,10 @@ const Navbar = () => {
   const profileBtnRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const pathname = location.pathname;
+  console.log(pathname);
 
   useOutSideClick(
     logInRef,
@@ -175,19 +179,26 @@ const Navbar = () => {
       });
   };
 
+  const goToSearchBar = () => {
+    if (pathname !== "/search") {
+      localStorage.removeItem("recent_Search");
+      navigate("/search");
+    }
+  };
+
   return (
     <div className="bg-slate-950 h-20 flex items-center justify-between ">
       <img src={Logo} alt="logo" className="w-12" />
       <div className="flex justify-between items-center gap-32">
-        {/* <Locationbar userLocationData={userLocationData && userLocationData} /> */}
         <Locationbar />
         <div className="flex items-center gap-16">
-          <Link to={`/search`}>
-            <div className="flex justify-center items-center gap-2">
-              <HiOutlineSearch className="text-2xl" />
-              <span className="text-[18px]">Search</span>
-            </div>
-          </Link>
+          <div
+            className="flex justify-center items-center gap-2"
+            onClick={goToSearchBar}
+          >
+            <HiOutlineSearch className="text-2xl" />
+            <span className="text-[18px]">Search</span>
+          </div>
           <div
             className=""
             onClick={() => setShowLoginPopup(true)}

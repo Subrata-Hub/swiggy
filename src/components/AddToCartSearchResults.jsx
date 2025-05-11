@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import SearchDishesCard from "../shared/SearchDishesCard";
 import SearchResultShimmer from "../shared/shimmer/SearchResultShimmer";
 // import { useEffect } from "react";
+// import { useEffect } from "react";
 // import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 
@@ -13,9 +14,11 @@ const AddToCartSearchResults = ({
 
   setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
+  city,
 }) => {
   // const cartNumber = useSelector((state) => state.cart.totalCardItems);
   // const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
+  // const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
 
   const searchResultLabel = addToCardSearchResults?.cards?.filter(
     (item) =>
@@ -48,7 +51,7 @@ const AddToCartSearchResults = ({
     restaurantName: moreDishesDataWithResInfo?.info?.name,
     resAreaName: moreDishesDataWithResInfo?.info?.locality,
     resImg: moreDishesDataWithResInfo?.info?.cloudinaryImageId,
-    menuURL: `/city/kolkata/${moreDishesDataWithResInfo?.info?.name}/${moreDishesDataWithResInfo?.info?.locality}/${moreDishesDataWithResInfo?.info?.id}`,
+    menuURL: `/city/${city}/${moreDishesDataWithResInfo?.info?.name}/${moreDishesDataWithResInfo?.info?.locality}/${moreDishesDataWithResInfo?.info?.id}`,
   };
 
   // const backToSearchResultsPage = () => {

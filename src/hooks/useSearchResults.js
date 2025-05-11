@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 
-const useSearchResults = (query, setLoading, LAT, LNG) => {
+const useSearchResults = (query, setLoading, LAT, LNG, submitAction) => {
   const [searchData, setSearchData] = useState();
+
+  // console.log(suggestionText);
 
   const getSearchData = async () => {
     setLoading(true);
     if (query && query !== "") {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=SUGGESTION`
+        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=${submitAction}`
       );
       const data = await response.json();
 
@@ -20,7 +22,7 @@ const useSearchResults = (query, setLoading, LAT, LNG) => {
 
   useEffect(() => {
     getSearchData();
-  }, [query]);
+  }, [query, submitAction]);
 
   return searchData;
 };

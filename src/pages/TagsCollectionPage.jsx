@@ -15,6 +15,15 @@ const TagsCollectionPage = () => {
     (store) => store?.firebaseData?.userLocationData
   );
 
+  const placeData = useSelector(
+    (store) => store.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
+
   const LAT = userLocationData && userLocationData?.latlng?.LAT;
   const LNG = userLocationData && userLocationData?.latlng?.LNG;
 
@@ -42,7 +51,7 @@ const TagsCollectionPage = () => {
             {preview?.count} to explore
           </h1>
 
-          <TagsDetails restaurantList={restaurantList} />
+          <TagsDetails restaurantList={restaurantList} city={city} />
         </>
       )}
     </div>

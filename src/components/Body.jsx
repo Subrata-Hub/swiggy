@@ -46,6 +46,15 @@ const Body = () => {
 
   const resData = useRestaurants(setLoading, LAT, LNG);
 
+  const placeData = useSelector(
+    (store) => store.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
+
   const resDataForTopRestaurants = resData?.filter(
     (item) => item?.card?.card?.id === "top_brands_for_you"
   );
@@ -65,12 +74,16 @@ const Body = () => {
           ) : (
             <>
               <ImageInfoLayout resData={resData} userData={userData} />
-              <TopRestaurants topResData={resDataForTopRestaurants} />
+              <TopRestaurants
+                topResData={resDataForTopRestaurants}
+                city={city}
+              />
               <Restaurants
                 allResData={resData}
                 userLocationData={
                   userLocationData !== undefined && userLocationData
                 }
+                city={city}
               />
             </>
           )}

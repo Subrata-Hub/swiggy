@@ -4,7 +4,7 @@ import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 // import RestaurantCard from "../shared/RestaurantCard";
 
-const TagsDetails = ({ restaurantList }) => {
+const TagsDetails = ({ restaurantList, city }) => {
   return (
     <div className="flex flex-wrap gap-8 mt-8">
       {restaurantList?.map((restaurant) => (
@@ -12,6 +12,7 @@ const TagsDetails = ({ restaurantList }) => {
           topRes={restaurant?.card?.card?.info}
           key={restaurant?.card?.card?.info?.id}
           offer={restaurant?.card?.card?.info?.aggregatedDiscountInfoV3}
+          city={city}
         />
       ))}
     </div>

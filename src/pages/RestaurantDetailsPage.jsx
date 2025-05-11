@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const { restaurantId, areaName, restaurantName, location } = useParams();
+  // localStorage.removeItem("recent_Search");
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
   console.log(currentLocation);

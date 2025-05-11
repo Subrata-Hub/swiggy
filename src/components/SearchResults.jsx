@@ -2,7 +2,7 @@ import SearchDishesCard from "../shared/SearchDishesCard";
 import { SearchRestaurantCardWithOffer } from "../shared/SearchRestaurantCard";
 
 import { useDispatch, useSelector } from "react-redux";
-import { addSearchResultType } from "../utils/configSlice";
+import { addIsSelected, addSearchResultType } from "../utils/configSlice";
 import {
   addFilterObject,
   addIsResetStore,
@@ -21,7 +21,6 @@ const SearchResults = ({
   loading,
   showSuggestion,
   searchResultsType,
-  setIsSelected,
 
   selectedOption,
   searchResultsRefineData,
@@ -39,6 +38,8 @@ const SearchResults = ({
   const selectedOptionTitle = useSelector(
     (store) => store?.search?.options?.radioOptionLabel
   );
+
+  const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
 
   const searchResultsForDishes = searchResultsRefineData?.DISH?.cards?.filter(
     (dish) =>
@@ -62,7 +63,16 @@ const SearchResults = ({
 
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
-    setIsSelected(true);
+    // setIsSelected(true);
+
+    dispatch(addIsSelected(true));
+
+    // localStorage.setItem(
+    //   "selected",
+    //   JSON.stringify({
+    //     isSelected: true,
+    //   })
+    // );
 
     dispatch(addIsSearchResults(true));
   };
@@ -90,9 +100,11 @@ const SearchResults = ({
     setShowOptions(false);
   };
 
+  // || currentSearch.suggestionText
+
   return (
     <div className="mx-36">
-      {!showSuggestion && (
+      {(!showSuggestion || currentSearch?.suggestionText) && (
         <div>
           {loading ? (
             <SearchResultShimmer />

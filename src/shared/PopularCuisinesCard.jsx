@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { IMG_POPULAR_CUSINESS } from "../utils/constant";
 import { useDispatch } from "react-redux";
 
-import { addSuggestionText } from "../utils/configSlice";
+import { addSearchActionType, addSuggestionText } from "../utils/configSlice";
 
 /* eslint-disable react/prop-types */
 const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
@@ -15,9 +15,12 @@ const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
 
   const updateUrl = () => {
     navigate(`?query=${query}`);
+
+    localStorage.removeItem("recent_Search");
     setSearchQueryInput(query);
 
     dispatch(addSuggestionText(query));
+    dispatch(addSearchActionType("SUGGESTION"));
   };
 
   return (

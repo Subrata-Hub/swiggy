@@ -1,19 +1,9 @@
 // import RestaurantCard from "../shared/RestaurantCard";
 
-import { useSelector } from "react-redux";
 import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 /* eslint-disable react/prop-types */
-const Restaurants = ({ allResData, userLocationData }) => {
-  const placeData = useSelector(
-    (store) => store?.firebaseData?.userLocationData
-  );
-  const placeArray = placeData?.address_components?.filter((cityList) =>
-    cityList?.types?.find((item) => item === "city")
-  );
-
-  const city = placeArray?.[0]?.long_name;
-  console.log(city);
+const Restaurants = ({ allResData, userLocationData, city }) => {
   const resDataForRestaurantsTitle = allResData?.filter(
     (item) => item?.card?.card?.id === "popular_restaurants_title"
   );

@@ -19,24 +19,38 @@ import { addIsResetStore, resetState } from "../utils/searchSlice";
 import useAddToCardSearchResults from "../hooks/useAddToCardSearchResults";
 import AddToCartSearchResults from "../components/AddToCartSearchResults";
 
+import useSearchResultsForEnter from "../hooks/useSearchResultsForEnter";
+
+import ResentResSearchList from "../components/ResentResSearchList";
+
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
 
-  const [isSelected, setIsSelected] = useState(false);
   const [searchResultsRefineData, setSearchResultsRefineData] = useState(null);
   const [showAddToCardSearchResultsData, setShowAddToCardSearchResultsData] =
     useState(false);
-  const [searchQueryInput, setSearchQueryInput] = useState("");
+
+  const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
+
+  const [searchQueryInput, setSearchQueryInput] = useState(
+    currentSearch?.suggestionText
+  );
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  const currentLocation = JSON.parse(localStorage.getItem("current_location"));
 
   const userLocationData = useSelector(
     (store) => store?.firebaseData?.userLocationData
   );
 
-  const LAT = userLocationData && userLocationData?.latlng?.LAT;
-  const LNG = userLocationData && userLocationData?.latlng?.LNG;
+  const LAT =
+    (userLocationData && userLocationData?.latlng?.LAT) ||
+    currentLocation.latlng.LAT;
+  const LNG =
+    (userLocationData && userLocationData?.latlng?.LNG) ||
+    currentLocation.latlng.LNG;
 
   console.log(LAT, LNG);
 
@@ -47,11 +61,17 @@ const SearchPage = () => {
   const suggestionText = useSelector(
     (store) => store?.config?.setting?.suggestionText
   );
-
   const searchResultsType = useSelector(
     (store) => store?.config?.setting?.searchResultType
   );
 
+  const selectedFromStore = useSelector(
+    (store) => store?.config?.setting?.isSelected
+  );
+
+  const submitAction = useSelector(
+    (store) => store?.config?.setting?.searchActionType
+  );
   const selectedOption = useSelector(
     (store) => store?.search?.options?.radioOptionValue
   );
@@ -60,19 +80,38 @@ const SearchPage = () => {
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
   const resParamsObj = useSelector((store) => store?.search?.resParams);
+  const placeData = useSelector(
+    (store) => store.firebaseData?.userLocationData
+  );
+  const placeArray = placeData?.address_components?.filter((cityList) =>
+    cityList?.types?.find((item) => item === "city")
+  );
+
+  const city = placeArray?.[0]?.long_name;
+
   const searchSuggestionsData = useSuggestions(searchQueryInput, LAT, LNG);
 
   const searchResultsData = useSearchResults(
     suggestionText,
     setLoading,
     LAT,
-    LNG
+    LNG,
+    submitAction
+  );
+
+  const searchResultsDataForEnter = useSearchResultsForEnter(
+    currentSearch?.suggestionText,
+    setLoading,
+    LAT,
+    LNG,
+    location.pathname
   );
 
   const selectedTabSearchResults = useSelectedTabResult(
-    suggestionText,
-    searchResultsType,
-    isSelected,
+    suggestionText ? suggestionText : currentSearch?.suggestionText,
+    searchResultsType ? searchResultsType : currentSearch?.searchResultType,
+
+    selectedFromStore,
     setLoading,
     LAT,
     LNG
@@ -82,8 +121,9 @@ const SearchPage = () => {
   const encodedString = encodeURIComponent(objectString);
 
   const filterSearchResults = useSearchFilter(
-    suggestionText,
-    searchResultsType,
+    currentSearch?.suggestionText || suggestionText,
+    currentSearch?.searchResultType || searchResultsType,
+
     encodedString,
     selectedOption,
     setLoading,
@@ -101,6 +141,8 @@ const SearchPage = () => {
     LNG
   );
 
+  console.log(addToCardSearchResults);
+
   const getRefineData = (data) => {
     const refineSearchResultsData = data?.cards?.filter(
       (item) =>
@@ -110,7 +152,9 @@ const SearchPage = () => {
     return refineSearchResultsData?.[0]?.groupedCard?.cardGroupMap;
   };
 
-  const searchResultsHeader = searchResultsData?.cards?.filter(
+  const searchResultsHeader = (
+    searchResultsData || searchResultsDataForEnter
+  )?.cards?.filter(
     (item) =>
       item?.card?.card?.["@type"] ===
       "type.googleapis.com/swiggy.gandalf.widgets.v2.Navigation"
@@ -123,6 +167,12 @@ const SearchPage = () => {
       dispatch(addIsResetStore(true));
     }
   }, [searchResultsData, location.pathname, dispatch]);
+
+  useEffect(() => {
+    if (searchResultsDataForEnter) {
+      setSearchResultsRefineData(getRefineData(searchResultsDataForEnter));
+    }
+  }, [searchResultsDataForEnter]);
 
   useEffect(() => {
     if (selectedTabSearchResults) {
@@ -145,12 +195,20 @@ const SearchPage = () => {
         searchQueryInput={searchQueryInput}
       />
 
+      <ResentResSearchList
+        suggestionText={suggestionText}
+        searchQueryInput={searchQueryInput}
+        setSearchQueryInput={setSearchQueryInput}
+        setShowSuggestion={setShowSuggestion}
+      />
+
       <PopularCuisinesList
         popularCuisinesData={popularCuisinesData}
         suggestionText={suggestionText}
         setSearchQueryInput={setSearchQueryInput}
         searchQueryInput={searchQueryInput}
       />
+
       <SuggestionList
         searchSuggestionsData={searchSuggestionsData}
         setShowSuggestion={setShowSuggestion}
@@ -159,27 +217,31 @@ const SearchPage = () => {
         setSearchQueryInput={setSearchQueryInput}
         searchQueryInput={searchQueryInput}
       />
+
       {addToCardSearchResults &&
       addToCardSearchResults !== undefined &&
       showAddToCardSearchResultsData ? (
         <AddToCartSearchResults
           showSuggestion={showSuggestion}
           loading={loading}
-          addToCardSearchResults={addToCardSearchResults}
+          addToCardSearchResults={
+            addToCardSearchResults && addToCardSearchResults
+          }
           setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
           showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+          city={city}
         />
       ) : (
         <SearchResults
           loading={loading}
           showSuggestion={showSuggestion}
-          searchResultsType={searchResultsType}
-          setIsSelected={setIsSelected}
+          searchResultsType={
+            searchResultsType || currentSearch?.searchResultType
+          }
           selectedOption={selectedOption}
           searchResultsRefineData={searchResultsRefineData}
           searchResultsHeader={searchResultsHeader}
           fillObj={fillObj}
-          // addToCardSearchResults={addToCardSearchResults}
           setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
           showAddToCardSearchResultsData={showAddToCardSearchResultsData}
         />

@@ -21,6 +21,7 @@ import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
 
 const HomePage = () => {
   console.log("HomePage component mounted"); // Check for multiple mounts
+  localStorage.removeItem("recent_Search");
   const dispatch = useDispatch();
 
   const createNewLocationAndLinkToUser = async (userId, locationData) => {

@@ -8,9 +8,10 @@ const PopularCuisinesList = ({
   setSearchQueryInput,
   searchQueryInput,
 }) => {
+  const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
   return (
     <div className="">
-      {((!suggestionText && !searchQueryInput) || searchQueryInput === "") && (
+      {(!suggestionText || !searchQueryInput) && !currentSearch && (
         <div className="px-40 pt-8">
           <div>{popularCuisinesData?.header?.title}</div>
           <div className="flex w-full gap-2 overflow-x-auto hide-scrollbar mt-4">

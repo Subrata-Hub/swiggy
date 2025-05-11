@@ -10,7 +10,7 @@ const useAddToCardSearchResults = (
   LNG
 ) => {
   const [cartSearchResultsData, setCartSearchResultsData] = useState();
-  console.log(LAT, LNG);
+
   const getCardSearchResultsData = async () => {
     if (resId && menuId) {
       setLoading(true);

@@ -1,17 +1,7 @@
-import { useSelector } from "react-redux";
 import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 /* eslint-disable react/prop-types */
-const TopRestaurants = ({ topResData }) => {
-  const placeData = useSelector(
-    (store) => store?.firebaseData?.userLocationData
-  );
-  const placeArray = placeData?.address_components?.filter((cityList) =>
-    cityList?.types?.find((item) => item === "city")
-  );
-
-  const city = placeArray?.[0]?.long_name;
-  console.log(city);
+const TopRestaurants = ({ topResData, city }) => {
   const topRestaurantsHeader = topResData?.[0]?.card?.card?.header?.title;
   const topRestaurants =
     topResData?.[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
