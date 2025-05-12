@@ -193,7 +193,7 @@ const Navbar = () => {
         <Locationbar />
         <div className="flex items-center gap-16">
           <div
-            className="flex justify-center items-center gap-2"
+            className="flex justify-center items-center gap-2 cursor-pointer"
             onClick={goToSearchBar}
           >
             <HiOutlineSearch className="text-2xl" />
