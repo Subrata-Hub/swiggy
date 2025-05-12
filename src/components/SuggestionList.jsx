@@ -28,23 +28,40 @@ const SuggestionList = ({
   function addResItemToLocalStorage(Item) {
     let resSearchArray;
 
-    resSearchArray = getResSearchFromLocalStorage()?.items;
+    resSearchArray = getResSearchFromLocalStorage().items;
+    // resSearchArray = getResSearchFromLocalStorage();
 
     resSearchArray?.push(Item);
 
+    // localStorage.setItem("resItems", JSON.stringify({ items: resSearchArray }));
     localStorage.setItem("resItems", JSON.stringify({ items: resSearchArray }));
   }
 
-  function getResSearchFromLocalStorage() {
-    let resSearchArray;
+  // function getResSearchFromLocalStorage() {
+  //   let resSearchArray;
 
-    if (localStorage.getItem("resItems") === null) {
-      resSearchArray = [];
-    } else {
-      resSearchArray = JSON.parse(localStorage.getItem("resItems"));
+  //   if (localStorage.getItem("resItems") === undefined) {
+  //     resSearchArray = {};
+  //   } else {
+  //     resSearchArray = JSON.parse(localStorage.getItem("resItems"));
+  //   }
+
+  //   return resSearchArray;
+  // }
+
+  function getResSearchFromLocalStorage() {
+    const stored = localStorage.getItem("resItems");
+
+    if (!stored) {
+      return { items: [] }; // return default structure
     }
 
-    return resSearchArray;
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed?.items ? parsed : { items: [] };
+    } catch {
+      return { items: [] };
+    }
   }
 
   const goToQueryPage = (query, type) => {

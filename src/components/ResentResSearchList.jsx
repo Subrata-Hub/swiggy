@@ -6,6 +6,7 @@ import {
   addSearchResultType,
   addSuggestionText,
 } from "../utils/configSlice";
+import { useState } from "react";
 
 /* eslint-disable react/prop-types */
 const ResentResSearchList = ({
@@ -15,12 +16,19 @@ const ResentResSearchList = ({
   setSearchQueryInput,
   setShowSuggestion,
 }) => {
+  const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
   const recentResSearchArray = JSON.parse(localStorage.getItem("resItems"));
+  console.log(recentResSearchArray);
   const recentResSearchUniqueArray = [...new Set(recentResSearchArray?.items)];
   console.log(recentResSearchUniqueArray);
+
+  const renserRecentResSearch =
+    recentResSearchUniqueArray?.length > 0 && !showMore
+      ? recentResSearchUniqueArray.slice(0, 3)
+      : recentResSearchUniqueArray;
 
   const goToQueryPage = (query) => {
     navigate(`/search?query=${query}`);
@@ -44,32 +52,49 @@ const ResentResSearchList = ({
     setShowSuggestion(false);
   };
 
+  const handaleShowMore = () => {
+    if (recentResSearchUniqueArray.length > 3) {
+      setShowMore(true);
+    }
+  };
+
   return (
     (!suggestionText || !searchQueryInput) &&
     !currentSearch && (
-      <div className="px-40 pt-8">
-        <div className="flex justify-between">
-          <h2>Resent Searches</h2>
-          <p>Show more</p>
-        </div>
+      <>
+        {recentResSearchUniqueArray?.length > 0 ? (
+          <div className="px-40 pt-8">
+            <div className="flex justify-between">
+              <h2>Resent Searches</h2>
+              <p
+                className="text-orange-400 cursor-pointer"
+                onClick={handaleShowMore}
+              >
+                {!showMore ? "Show More" : ""}
+              </p>
+            </div>
 
-        <div className="mt-4">
-          {recentResSearchUniqueArray.length > 0 &&
-            recentResSearchUniqueArray?.map((recentResSearch, index) => (
-              <>
-                <div
-                  key={index}
-                  className="flex gap-2"
-                  onClick={() => goToQueryPage(recentResSearch)}
-                >
-                  <HiOutlineSearch className="text-2xl" />
-                  <p>{recentResSearch}</p>
-                </div>
-                <div className="w-full bg-gray-500 h-[0.5px] my-4"></div>
-              </>
-            ))}
-        </div>
-      </div>
+            <div className="mt-4">
+              {recentResSearchUniqueArray?.length > 0 &&
+                renserRecentResSearch?.map((recentResSearch, index) => (
+                  <>
+                    <div
+                      key={index}
+                      className="flex gap-4 cursor-pointer items-center"
+                      onClick={() => goToQueryPage(recentResSearch)}
+                    >
+                      <HiOutlineSearch className="text-xl" />
+                      <p>{recentResSearch}</p>
+                    </div>
+                    <div className="w-full bg-gray-500 h-[0.5px] my-4"></div>
+                  </>
+                ))}
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+      </>
     )
   );
 };

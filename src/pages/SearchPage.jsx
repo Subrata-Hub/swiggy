@@ -195,6 +195,15 @@ const SearchPage = () => {
         searchQueryInput={searchQueryInput}
       />
 
+      <SuggestionList
+        searchSuggestionsData={searchSuggestionsData}
+        setShowSuggestion={setShowSuggestion}
+        showSuggestion={showSuggestion}
+        setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
+        setSearchQueryInput={setSearchQueryInput}
+        searchQueryInput={searchQueryInput}
+      />
+
       <ResentResSearchList
         suggestionText={suggestionText}
         searchQueryInput={searchQueryInput}
@@ -207,15 +216,7 @@ const SearchPage = () => {
         suggestionText={suggestionText}
         setSearchQueryInput={setSearchQueryInput}
         searchQueryInput={searchQueryInput}
-      />
-
-      <SuggestionList
-        searchSuggestionsData={searchSuggestionsData}
-        setShowSuggestion={setShowSuggestion}
         showSuggestion={showSuggestion}
-        setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
-        setSearchQueryInput={setSearchQueryInput}
-        searchQueryInput={searchQueryInput}
       />
 
       {addToCardSearchResults &&

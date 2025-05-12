@@ -7,24 +7,27 @@ const PopularCuisinesList = ({
   suggestionText,
   setSearchQueryInput,
   searchQueryInput,
+  showSuggestion,
 }) => {
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
+
   return (
     <div className="">
-      {(!suggestionText || !searchQueryInput) && !currentSearch && (
-        <div className="px-40 pt-8">
-          <div>{popularCuisinesData?.header?.title}</div>
-          <div className="flex w-full gap-2 overflow-x-auto hide-scrollbar mt-4">
-            {popularCuisinesData?.imageGridCards?.info?.map((card) => (
-              <PopularCuisinesCard
-                key={card?.id}
-                popularCuisines={card}
-                setSearchQueryInput={setSearchQueryInput}
-              />
-            ))}
+      {(!suggestionText || !searchQueryInput) &&
+        (!currentSearch || !showSuggestion) && (
+          <div className="px-40 pt-8">
+            <div>{popularCuisinesData?.header?.title}</div>
+            <div className="flex w-full gap-2 overflow-x-auto hide-scrollbar mt-4">
+              {popularCuisinesData?.imageGridCards?.info?.map((card) => (
+                <PopularCuisinesCard
+                  key={card?.id}
+                  popularCuisines={card}
+                  setSearchQueryInput={setSearchQueryInput}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };
