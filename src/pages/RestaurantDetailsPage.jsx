@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
+
 import useRestaurantsDetails from "../hooks/useRestaurantsDetails";
 import RestaurantsInfo from "../components/RestaurantsInfo";
 import OfferCard from "../shared/OfferCard";
@@ -50,8 +50,7 @@ const RestaurantDetailsPage = () => {
     menuURL: `/city/${location}/${restaurantName}/${areaName}/${restaurantId}`,
   };
   return (
-    <div className="m-36 mt-0 mb-0">
-      <Navbar />
+    <>
       {loading && resDetailsData.length === 0 ? (
         <RestaurantDetailShimmer />
       ) : (
@@ -76,7 +75,7 @@ const RestaurantDetailsPage = () => {
           <PopupCardView />
         </>
       )}
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import MenuSearchBar from "../components/MenuSearchBar";
-import Navbar from "../components/Navbar";
 
 import { useSelector } from "react-redux";
 
@@ -38,8 +37,7 @@ const MenuItemSearchPage = () => {
   };
 
   return (
-    <div className="m-36 mt-0 mb-0">
-      <Navbar />
+    <>
       <MenuSearchBar
         restaurantName={restaurantName}
         restaurantId={restaurantId}
@@ -50,7 +48,7 @@ const MenuItemSearchPage = () => {
         menuItemsListFilter={menuItems}
         resInformation={resInformation}
       />
-    </div>
+    </>
   );
 };
 

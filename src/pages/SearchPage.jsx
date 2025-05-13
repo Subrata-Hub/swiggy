@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useSelector } from "react-redux";
-import Navbar from "../components/Navbar";
+
 import Searchbar from "../components/Searchbar";
 import SuggestionList from "../components/SuggestionList";
 import usePreSearch from "../hooks/usePreSearch";
@@ -187,8 +187,7 @@ const SearchPage = () => {
   }, [filterSearchResults]);
 
   return (
-    <div className="m-36 mt-0 mb-0">
-      <Navbar />
+    <>
       <Searchbar
         setShowSuggestion={setShowSuggestion}
         setSearchQueryInput={setSearchQueryInput}
@@ -247,10 +246,8 @@ const SearchPage = () => {
           showAddToCardSearchResultsData={showAddToCardSearchResultsData}
         />
       )}
-    </div>
+    </>
   );
 };
 
 export default SearchPage;
-
-// // !searchResultsRefineData

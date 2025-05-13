@@ -2,7 +2,6 @@
 
 import { useDispatch } from "react-redux";
 import Body from "../components/Body";
-import Navbar from "../components/Navbar";
 
 import { useEffect } from "react";
 import {
@@ -87,18 +86,7 @@ const HomePage = () => {
               "InitialLocation",
               JSON.stringify(initialLocData)
             );
-            // dispatch(addUserLocationData(initialLocData));
           }
-
-          // dispatch(
-          //   addAddress([position.coords.latitude, position.coords.longitude])
-          // );
-          // dispatch(
-          //   addLatlng({
-          //     LAT: position.coords.latitude,
-          //     LNG: position.coords.longitude,
-          //   })
-          // );
         },
         () => {
           alert("Could not get your position");
@@ -190,10 +178,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="m-36 mt-0 mb-0">
-        <Navbar />
-        <Body />
-      </div>
+      <Body />
     </>
   );
 };

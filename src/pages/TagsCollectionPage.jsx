@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import useTagsDetails from "../hooks/useTagsDetails";
-import Navbar from "../components/Navbar";
 
 import TagsDetails from "../components/TagsDetails";
 import { useState } from "react";
@@ -39,8 +38,7 @@ const TagsCollectionPage = () => {
   const restaurantList = tagsDetailData?.slice(2);
 
   return (
-    <div className="m-36 mt-0 mb-0">
-      <Navbar />
+    <>
       {loading && tagsDetailData.length === 0 ? (
         <TagDetailShimmer />
       ) : (
@@ -54,7 +52,7 @@ const TagsCollectionPage = () => {
           <TagsDetails restaurantList={restaurantList} city={city} />
         </>
       )}
-    </div>
+    </>
   );
 };
 
