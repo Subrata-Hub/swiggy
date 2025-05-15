@@ -1,7 +1,7 @@
 const RestaurantDetailShimmer = () => {
   return (
-    <div className="">
-      <div className="px-48 animate-pulse">
+    <div className="mt-15 m-[140px]">
+      <div className=" animate-pulse">
         {/* Title Skeleton */}
         <div className="h-8 w-40 bg-slate-700 rounded mt-10"></div>
 

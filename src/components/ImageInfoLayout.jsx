@@ -17,7 +17,7 @@ const ImageInfoLayout = ({ resData, userData }) => {
     resDataForImageInfoLayout?.[0]?.card?.card?.imageGridCards?.info;
 
   return (
-    <div className="">
+    <div className="mx-2">
       <h1 className="text-2xl font-bold">
         {userData !== undefined && userData?.name}
         {userData !== undefined && userData?.name ? ", " : ""}

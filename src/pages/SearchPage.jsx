@@ -187,7 +187,7 @@ const SearchPage = () => {
   }, [filterSearchResults]);
 
   return (
-    <>
+    <div className="mt-28 mx-[140px]">
       <Searchbar
         setShowSuggestion={setShowSuggestion}
         setSearchQueryInput={setSearchQueryInput}
@@ -246,7 +246,7 @@ const SearchPage = () => {
           showAddToCardSearchResultsData={showAddToCardSearchResultsData}
         />
       )}
-    </>
+    </div>
   );
 };
 

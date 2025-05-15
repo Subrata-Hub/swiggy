@@ -241,7 +241,7 @@ const PopupLocationCard = ({
   return (
     <div>
       <div
-        className="h-full fixed top-0 left-0 bg-slate-800 w-[650px] z-5000000 overflow-y-auto hide-scrollbar"
+        className="h-full fixed top-0 left-0 bg-slate-800 w-[650px] z-[2316136] overflow-y-auto hide-scrollbar"
         ref={locationRef}
       >
         <div className="pt-6 pl-40" onClick={() => setLocationPopup(false)}>

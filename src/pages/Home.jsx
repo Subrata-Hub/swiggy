@@ -177,9 +177,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <>
+    <div className="mt-24 mx-[140px]">
       <Body />
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/download.png";
 
 import Locationbar from "./Locationbar";
@@ -187,11 +187,17 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-slate-950 h-20 flex items-center justify-between ">
-      <img src={Logo} alt="logo" className="w-12" />
-      <div className="flex justify-between items-center gap-32">
-        <Locationbar />
-        <div className="flex items-center gap-16">
+    <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[200000]">
+      <div className="mx-4 px-[120px]  h-20 flex items-center justify-between">
+        <div className="flex items-center justify-between gap-12">
+          <Link to={"/"}>
+            <img src={Logo} alt="logo" className="w-12" />
+          </Link>
+
+          <Locationbar />
+        </div>
+
+        <div className="flex  items-center gap-16">
           <div
             className="flex justify-center items-center gap-2 cursor-pointer"
             onClick={goToSearchBar}

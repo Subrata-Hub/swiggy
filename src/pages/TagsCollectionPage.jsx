@@ -38,7 +38,7 @@ const TagsCollectionPage = () => {
   const restaurantList = tagsDetailData?.slice(2);
 
   return (
-    <>
+    <div className="pt-15 m-[140px] mt-0 mb-0">
       {loading && tagsDetailData.length === 0 ? (
         <TagDetailShimmer />
       ) : (
@@ -52,7 +52,7 @@ const TagsCollectionPage = () => {
           <TagsDetails restaurantList={restaurantList} city={city} />
         </>
       )}
-    </>
+    </div>
   );
 };
 

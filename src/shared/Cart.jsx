@@ -135,7 +135,7 @@ const Cart = () => {
           {cartItems?.length === 0 &&
             (!userCartItems?.items || userCartItems?.items?.length === 0) && (
               <div
-                className="w-[300px] h-auto absolute top-20 right-20 z-[100000] bg-slate-900 p-10"
+                className="w-[300px] h-auto fixed top-20 right-20 z-[1000000] bg-slate-900 border-4 border-slate-700 shadow-2xl p-10"
                 onMouseLeave={() => setPreviewCard(false)}
               >
                 <div className="flex-col justify-center items-center">
@@ -150,7 +150,7 @@ const Cart = () => {
 
           {(cartItems?.length > 0 || userCartItems?.items?.length > 0) && (
             <div
-              className="w-[400px] h-auto absolute top-20 right-20 z-[100000] bg-slate-900"
+              className="w-[400px] h-auto absolute top-20 right-20 z-[100000] bg-slate-900 border-2 border-slate-800 shadow-xl shadow-slate-800"
               ref={cartRef}
               onMouseLeave={() => setPreviewCard(false)}
             >

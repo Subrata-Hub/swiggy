@@ -23,12 +23,12 @@ const Locationbar = () => {
   return (
     <>
       <div
-        className="pr-[350px] ml-6 cursor-pointer"
+        className="max-w-[300px] cursor-pointer"
         onClick={() => setLocationPopup(true)}
         ref={buttonRef}
         role="button"
       >
-        <div className="flex justify-center items-center gap-1 w-[300px] h-10">
+        <div className="flex justify-center items-center gap-1 ">
           <p className="font-semibold mr-1">Others</p>
           <div className="text-[14px] font-light truncate">
             {userLocationData?.place?.description ||
@@ -37,7 +37,7 @@ const Locationbar = () => {
 
           <span>
             {" "}
-            <HiChevronDown className="text-2xl" />
+            <HiChevronDown className="text-2xl ml-2" />
           </span>
         </div>
       </div>

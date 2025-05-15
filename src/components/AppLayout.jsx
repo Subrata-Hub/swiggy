@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 
 const AppLayout = () => {
   return (
-    <div className="m-36 mt-0 mb-0">
+    <div className="w-full overflow-hidden">
       <Navbar />
       <Outlet />
     </div>

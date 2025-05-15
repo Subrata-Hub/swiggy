@@ -50,7 +50,7 @@ const RestaurantDetailsPage = () => {
     menuURL: `/city/${location}/${restaurantName}/${areaName}/${restaurantId}`,
   };
   return (
-    <>
+    <div className="mt-32 mx-[140px]">
       {loading && resDetailsData.length === 0 ? (
         <RestaurantDetailShimmer />
       ) : (
@@ -75,7 +75,7 @@ const RestaurantDetailsPage = () => {
           <PopupCardView />
         </>
       )}
-    </>
+    </div>
   );
 };
 
