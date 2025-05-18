@@ -1,9 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/download.png";
+import swiggy_logo from "../assets/swiggy-1.svg";
+import swiggy_logo2 from "../assets/swiggy_logo2.jpeg";
 
 import Locationbar from "./Locationbar";
 
 import { HiOutlineSearch, HiOutlineUserCircle } from "react-icons/hi";
+import { HiHome } from "react-icons/hi2";
 import Cart from "../shared/Cart";
 import { useEffect, useRef, useState } from "react";
 import Login from "./Login";
@@ -20,7 +23,7 @@ import { db, auth } from "../utils/firebase";
 import { signOut } from "firebase/auth";
 
 import { addUserData } from "../utils/firebaseDataSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -41,6 +44,12 @@ const Navbar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   console.log(pathname);
+
+  const currentLocation = JSON.parse(localStorage.getItem("current_location"));
+
+  const userLocationData = useSelector(
+    (store) => store.firebaseData?.userLocationData
+  );
 
   useOutSideClick(
     logInRef,
@@ -187,26 +196,39 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[200000]">
-      <div className="mx-4 px-[120px]  h-20 flex items-center justify-between">
-        <div className="flex items-center justify-between gap-12">
-          <Link to={"/"}>
-            <img src={Logo} alt="logo" className="w-12" />
-          </Link>
+    <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[2000000]">
+      <div className="mx-3  sm:px-4 md:px-[60px] lg:px-[120px]  h-20 flex items-center justify-between">
+        <div className="flex-col">
+          <div className="flex gap-2 -mt-2 sm:mt-0 sm:gap-6 items-center justify-between ">
+            <div className="">
+              <Link to={"/"}>
+                <img
+                  src={Logo}
+                  alt="logo"
+                  className="hidden sm:flex sm:w-10 md:w-12"
+                />
+              </Link>
 
-          <Locationbar />
+              <Link to={"/"}>
+                {/* <img src={Logo} alt="logo" className="flex sm:hidden w-12" /> */}
+                <HiHome className="flex sm:hidden text-3xl" />
+              </Link>
+            </div>
+
+            <Locationbar />
+          </div>
         </div>
 
-        <div className="flex  items-center gap-16">
+        <div className="flex items-center sm:gap-6 md:gap-8 lg:gap-14">
           <div
-            className="flex justify-center items-center gap-2 cursor-pointer"
+            className="hidden sm:flex justify-center items-center gap-2 cursor-pointer"
             onClick={goToSearchBar}
           >
             <HiOutlineSearch className="text-2xl" />
             <span className="text-[18px]">Search</span>
           </div>
           <div
-            className=""
+            className="flex"
             onClick={() => setShowLoginPopup(true)}
             ref={logBtnRef}
           >
@@ -215,11 +237,11 @@ const Navbar = () => {
               onMouseOver={() => setShowProfileCard(true)}
               className="flex items-center gap-2"
             >
-              <HiOutlineUserCircle className="text-2xl" />{" "}
+              <HiOutlineUserCircle className="text-5xl sm:text-2xl" />{" "}
               {userData?.name && userData?.name !== null ? (
-                <span>{userData?.name}</span>
+                <span className="hidden sm:flex">{userData?.name}</span>
               ) : (
-                "Sign In"
+                <span className="hidden sm:flex">Sign In</span>
               )}
               {/* <span>Sign In</span> */}
             </div>
@@ -250,8 +272,13 @@ const Navbar = () => {
                 SignOut
               </div>
             )}
+
           <Cart />
         </div>
+      </div>
+      <div className="flex sm:hidden ml-4 -mt-6 max-w-[250px] sm:mt-0 text-[13px] font-light truncate ">
+        {userLocationData?.place?.description ||
+          currentLocation?.place?.description}
       </div>
     </div>
   );

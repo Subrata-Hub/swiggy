@@ -13,7 +13,7 @@ const RecentLocationSearchCart = ({ getLocationId }) => {
     <div className="">
       {userDataWithDescription && userDataWithDescription?.length > 0 && (
         <>
-          <div className="border mt-6 w-96 mb-10">
+          <div className="border mt-6 w-full sm:w-96 mb-10">
             <h4 className="pl-12 mt-2 text-[13px]">RECENT SEARCHES</h4>
             {userDataWithDescription &&
               userDataWithDescription?.map((item, index) => (

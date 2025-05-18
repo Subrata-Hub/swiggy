@@ -124,13 +124,16 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
 
   return (
     <div
-      className="fixed h-full top-0 right-0 w-[600px] bg-slate-800 z-[2316136]"
+      className="fixed h-full top-0 right-0 w-full px-2 sm:px-0 sm:w-[450px] md:w-[550px] lg:w-[630px] bg-slate-800 z-[2316136]"
       ref={logInRef}
     >
-      <div className="pt-10 pl-20" onClick={() => setShowLoginPopup(false)}>
+      <div
+        className="pt-10 pl-2 sm:pl-4 md:pl-20"
+        onClick={() => setShowLoginPopup(false)}
+      >
         <HiMiniXMark className="text-3xl" />
       </div>
-      <div className="mt-16 pl-20 w-[450px]">
+      <div className="mt-16 pl-2  sm:pl-4 md:pl-20 w-full sm:w-[450px]">
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="flex gap-10 justify-between items-center">
             <div className="flex-col">

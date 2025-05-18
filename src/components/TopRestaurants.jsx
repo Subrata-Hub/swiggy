@@ -8,10 +8,10 @@ const TopRestaurants = ({ topResData, city }) => {
 
   return (
     <>
-      <div className={`${topRestaurantsHeader ? "mt-10" : "mt-0"}`}>
+      <div className={`${topRestaurantsHeader ? "mt-3 sm:mt-10" : "mt-0"}`}>
         <h1 className="text-[22px] font-semibold">{topRestaurantsHeader}</h1>
         <div className="flex w-full overflow-x-auto hide-scrollbar mt-4">
-          <div className="flex gap-8">
+          <div className="flex gap-4 sm:gap-4 md:gap-6 lg:gap-6 xl:gap-8">
             {topRestaurants?.map((topRes) => (
               <EnhancedRestaurantCard
                 topRes={topRes?.info}
@@ -24,7 +24,7 @@ const TopRestaurants = ({ topResData, city }) => {
         </div>
       </div>
       {topRestaurants && (
-        <div className="w-full h-[1px] bg-slate-700 mt-13"></div>
+        <div className="w-full h-[1px] bg-slate-700 mt-5 sm:mt-13"></div>
       )}
     </>
   );

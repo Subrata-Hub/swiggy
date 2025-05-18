@@ -29,15 +29,16 @@ const Locationbar = () => {
         role="button"
       >
         <div className="flex justify-center items-center gap-1 ">
-          <p className="font-semibold mr-1">Others</p>
-          <div className="text-[14px] font-light truncate">
+          <p className="hidden sm:flex font-semibold mr-1">Others</p>
+          <p className="flex sm:hidden font-semibold text-xl">Home</p>
+          <div className="hidden sm:flex text-[14px] font-light truncate">
             {userLocationData?.place?.description ||
               currentLocation?.place?.description}
           </div>
 
           <span>
             {" "}
-            <HiChevronDown className="text-2xl ml-2" />
+            <HiChevronDown className="text-2xl ml-0 sm:ml-2" />
           </span>
         </div>
       </div>

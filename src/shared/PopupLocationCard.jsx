@@ -241,18 +241,21 @@ const PopupLocationCard = ({
   return (
     <div>
       <div
-        className="h-full fixed top-0 left-0 bg-slate-800 w-[650px] z-[2316136] overflow-y-auto hide-scrollbar"
+        className="h-full fixed top-0 left-0 bg-slate-800 w-full sm:w-[450px] md:w-[550px] lg:w-[630px] z-[2316136] overflow-y-auto hide-scrollbar"
         ref={locationRef}
       >
-        <div className="pt-6 pl-40" onClick={() => setLocationPopup(false)}>
+        <div
+          className="pt-4 sm:pt-6 pl-2 sm:pl-6 md:pl-14 lg:pl-40"
+          onClick={() => setLocationPopup(false)}
+        >
           <HiMiniXMark className="text-3xl" />
         </div>
-        <div className="pl-40 pt-16">
+        <div className="pl-4 sm:pl-6 md:pl-20 lg:pl-40 pt-4 sm:pt-16">
           <input
             type="text"
             value={input}
             placeholder="Search for area, Street name..."
-            className="w-96 border h-14 px-5"
+            className="w-full sm:w-96 border h-14 px-5"
             onChange={(e) => setInput(e.target.value)}
           />
 
@@ -291,7 +294,7 @@ const PopupLocationCard = ({
 
               <div>
                 {suggestion.length === 0 && (
-                  <div className="mt-13 w-96">
+                  <div className="mt-13 w-full sm:w-96">
                     <div className="flex gap-4 mt-4 border p-4">
                       <HiMapPin className="text-xl mt-0.5" />
                       <div>

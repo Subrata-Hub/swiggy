@@ -97,7 +97,7 @@ const Cart = () => {
   return (
     <>
       <div
-        className={`flex justify-center items-center gap-2 relative`}
+        className={`hidden sm:flex justify-center items-center gap-2 relative`}
         onMouseOver={() => setPreviewCard(true)}
       >
         <svg
