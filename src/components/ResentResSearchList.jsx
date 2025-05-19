@@ -63,7 +63,7 @@ const ResentResSearchList = ({
     !currentSearch && (
       <>
         {recentResSearchUniqueArray?.length > 0 ? (
-          <div className="px-40 pt-8">
+          <div className="px-3 sm:px-4 pt-8">
             <div className="flex justify-between">
               <h2>Resent Searches</h2>
               <p

@@ -34,12 +34,12 @@ const Searchbar = ({
   };
 
   return (
-    <div className="mt-4 flex items-center px-36 relative">
+    <div className="mt-4 flex px-1 sm:px-0 items-center  relative ">
       <input
         type="search"
         value={searchQueryInput}
         placeholder={`Search for restaurant and food`}
-        className="pl-6 w-full h-12 bg-slate-800 outline-none"
+        className="pl-6 w-full h-12 bg-slate-800 rounded-2xl sm:rounded-none outline-none"
         onChange={(e) => getSearchQuery(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {

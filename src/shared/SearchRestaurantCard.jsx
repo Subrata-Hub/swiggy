@@ -14,7 +14,7 @@ const SearchRestaurantCard = ({ searchResData }) => {
 
   const city = placeArray?.[0]?.long_name;
   return (
-    <div className="bg-slate-800 w-[423px] h-[156px] mb-2">
+    <div className="bg-slate-800 w-[380px] xs:w-[380px] sm:w-[280px] md:w-[320px] lg:w-[430px] xl:w-[450px] 2xl:w-[435px] h-[156px] mb-2">
       <Link
         to={`/city/${city}/${searchResData?.name}/${searchResData?.areaName}/${searchResData?.id}`}
       >

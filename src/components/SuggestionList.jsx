@@ -94,8 +94,10 @@ const SuggestionList = ({
     setShowAddToCardSearchResultsData(false);
   };
 
+  // px-40
+
   return (
-    <div className="px-40 mt-6">
+    <div className="mt-6">
       {showSuggestion &&
         searchQueryInput !== "" &&
         searchQueryInput !== currentSearch?.suggestionText && (

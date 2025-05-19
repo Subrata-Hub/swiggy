@@ -187,7 +187,7 @@ const SearchPage = () => {
   }, [filterSearchResults]);
 
   return (
-    <div className="mt-28 mx-[140px]">
+    <div className="mt-28 mx-0 xs:mx-[10px]  sm:mx-[30px] md:mx-[30px] lg:mx-[50px] xl:mx-[150px] 2xl:mx-[290px]">
       <Searchbar
         setShowSuggestion={setShowSuggestion}
         setSearchQueryInput={setSearchQueryInput}

@@ -11,7 +11,7 @@ const TopRestaurants = ({ topResData, city }) => {
       <div className={`${topRestaurantsHeader ? "mt-3 sm:mt-10" : "mt-0"}`}>
         <h1 className="text-[22px] font-semibold">{topRestaurantsHeader}</h1>
         <div className="flex w-full overflow-x-auto hide-scrollbar mt-4">
-          <div className="flex gap-4 sm:gap-4 md:gap-6 lg:gap-6 xl:gap-8">
+          <div className="flex justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-6 xl:gap-6">
             {topRestaurants?.map((topRes) => (
               <EnhancedRestaurantCard
                 topRes={topRes?.info}

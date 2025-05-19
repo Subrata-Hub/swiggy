@@ -11,11 +11,13 @@ const PopularCuisinesList = ({
 }) => {
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
 
+  // px-40
+
   return (
     <div className="">
       {(!suggestionText || !searchQueryInput) &&
         (!currentSearch || !showSuggestion) && (
-          <div className="px-40 pt-8">
+          <div className="pt-8 px-4">
             <div>{popularCuisinesData?.header?.title}</div>
             <div className="flex w-full gap-2 overflow-x-auto hide-scrollbar mt-4">
               {popularCuisinesData?.imageGridCards?.info?.map((card) => (

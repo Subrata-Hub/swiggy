@@ -177,7 +177,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="mt-24 mx-4 sm:mx-[40px] md:mx-[80px] lg:mx-[140px] xl:mx-[140px] ">
+    <div className="mt-24 mx-4 sm:mx-[40px] md:mx-[30px] lg:mx-[50px] xl:mx-[140px] ">
       <Body />
     </div>
   );

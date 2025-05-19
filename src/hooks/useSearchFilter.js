@@ -16,8 +16,10 @@ const useSearchFilter = (
 
   // const isFillBtn = useSelector((store) => store?.search?.isFillBtnSelected);
 
+  console.log(facets, isReSetStore);
+
   const getSearchData = async () => {
-    if (!isReSetStore && selectedOption && suggestionText !== "") {
+    if ((!isReSetStore || selectedOption) && suggestionText !== "") {
       setLoading(true);
 
       const response = await fetch(

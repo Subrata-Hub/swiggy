@@ -114,7 +114,7 @@ const SearchDishesCard = ({
   return (
     <>
       <div
-        className={`bg-slate-800 w-[438px] ${
+        className={`bg-slate-800  w-[380px] xs:w-[380px] sm:w-[300px] md:w-[340px] lg:w-[430px] xl:w-[438px]  ${
           !hideHeader ? "h-[287px]" : "h-[200px]"
         } mb-2 rounded-2xl`}
       >

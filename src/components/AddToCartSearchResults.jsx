@@ -69,7 +69,7 @@ const AddToCartSearchResults = ({
   // console.log(searchResultsForDishes);
 
   return (
-    <div className="mx-36">
+    <div className="">
       {!showSuggestion && (
         <div>
           {loading ? (

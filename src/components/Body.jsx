@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import LocationUnAvailable from "./LocationUnAvailable";
 import useUserFromDB from "../hooks/useUserFromDB";
 import useLocationFromDB from "../hooks/useLocationFromDB";
-import SearchBarForMobile from "./SearchBarForMobile";
+// import SearchBarForMobile from "./SearchBarForMobile";
 
 const Body = () => {
   const [loading, setLoading] = useState(true);
