@@ -2,7 +2,7 @@ import RestaurantCardShimmer from "./RestaurantCardShimmer";
 
 const RestaurantsShimmer = () => {
   return (
-    <div>
+    <div className="w-full">
       <div className="h-8 w-100 bg-slate-800 mt-6"></div>
 
       <div className="w-full  overflow-x-auto hide-scrollbar mt-6">

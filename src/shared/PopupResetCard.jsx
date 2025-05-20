@@ -79,7 +79,7 @@ const PopupResetCard = ({
     }
   };
   return (
-    <div className="w-[520px] h-[220px] p-[30px] bg-slate-800 fixed z-[11999] bottom-15 right-[30%] rounded-3xl">
+    <div className="w-full sm:w-[520px] h-[220px] p-[20px] sm:p-[30px] bg-slate-800 fixed z-[11999] bottom-60 sm:bottom-36 md:bottom-15 right-[0%] sm:right-[10%] md:right-[18%] lg:right-[25%] xl:right-[30%] 2xl:right-[35%] rounded-3xl">
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="font-bold text-[22px]">Items already in cart</h2>

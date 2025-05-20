@@ -45,7 +45,7 @@ const Menu = ({
   );
 
   return (
-    <div className="mt-15 mx-48">
+    <div className="mt-15">
       <div className="flex justify-center items-center">
         <div className="flex text-center">
           <img src={menuLeft} />

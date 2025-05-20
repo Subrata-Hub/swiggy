@@ -88,22 +88,22 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     <>
       {/* <div className="w-full h-[0.3px] bg-slate-700"></div> */}
       <div
-        className={`flex justify-between py-6 ${
+        className={`flex justify-between gap-2 py-6 ${
           resMenuItem?.card?.info?.description ? "mb-5" : "mb-8"
         }`}
       >
         <div className="w-3/4">
           {resMenuItem?.card?.info?.itemAttribute?.vegClassifier ===
           "NONVEG" ? (
-            <img src={nonVeg} />
+            <img src={nonVeg} className="w-4 sm:w-5" />
           ) : (
-            <img src={veg} />
+            <img src={veg} className="w-4 sm:w-5" />
           )}
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-[17px] sm:text-xl font-semibold">
             {" "}
             {resMenuItem?.card?.info?.name}
           </h2>
-          <p className="mt-2">
+          <p className="mt-1 sm:mt-2">
             ₹
             {resMenuItem?.card?.info?.price
               ? resMenuItem?.card?.info?.price / 100
@@ -115,7 +115,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             </span>
           </p>
           {resMenuItem?.card?.info?.ratings?.aggregatedRating?.rating ? (
-            <p className="text-[12px] py-3">
+            <p className="text-[12px] py-1.5 sm:py-3">
               ❇️
               {`${resMenuItem?.card?.info?.ratings?.aggregatedRating?.rating}(
                     ${resMenuItem?.card?.info?.ratings?.aggregatedRating?.ratingCountV2}
@@ -125,7 +125,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             ""
           )}
 
-          <p>
+          <p className="text-[13px] sm:text-[15px] md:text-[16px]">
             {!showMore &&
             resMenuItem?.card?.info?.description?.split("").length >= 160
               ? resMenuItem?.card?.info?.description?.split("").slice(0, 160)
@@ -169,7 +169,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             <div className="">
               <img
                 src={IMG_MENU + resMenuItem?.card?.info?.imageId}
-                className="object-cover w-[156px] h-[144px] rounded-2xl"
+                className="object-cover w-[140px] sm:w-[156px] h-[130px] sm:h-[144px] rounded-2xl"
               />
             </div>
           ) : (

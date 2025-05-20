@@ -179,10 +179,10 @@ const SearchDishesCard = ({
               {searchDishesData?.info?.imageId ? (
                 <img
                   src={IMG_SEARCH_DISH + searchDishesData?.info?.imageId}
-                  className="w-[156px] h-[144px] object-cover rounded-2xl"
+                  className="w-[136px] sm:w-[156px] h-[130px] sm:h-[144px] object-cover rounded-2xl"
                 />
               ) : (
-                <div className="w-[156px] h-[144px] "></div>
+                <div className="w-[136px] sm:w-[156px] h-[130px] sm:h-[144px] "></div>
               )}
               <AddMenuItemToCart
                 resInformation={resInformationForMoreDishes || resInformation}

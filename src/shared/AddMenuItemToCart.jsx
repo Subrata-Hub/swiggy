@@ -194,7 +194,9 @@ const AddMenuItemToCart = ({
   // absolute top-[124px] left-5
   return (
     <div
-      className={`absolute ${isImage ? "top-[124px]" : "top-14"} left-6`}
+      className={`absolute ${
+        isImage ? "top-[110px] sm:top-[124px]" : "top-14"
+      } left-4.5 sm:left-6`}
       // className={`absolute flex justify-end ${
       //   isSearchResults ? "top-[92px] left-[156px]" : "right-[156px] top-[2px]"
       // }  `}
@@ -209,7 +211,7 @@ const AddMenuItemToCart = ({
         {counter === 0 && (
           <div ref={addonButtonRef}>
             <button
-              className="px-10 py-2 bg-slate-900 text-emerald-500 shadow-md rounded-xl shadow-cyan-950"
+              className="px-8 sm:px-10 py-2 bg-slate-900 text-emerald-500 shadow-md rounded-xl shadow-cyan-950"
               // onClick={handleShowMenuCardPopup}
               onClick={() => {
                 handleShowMenuCardPopup();
@@ -228,7 +230,7 @@ const AddMenuItemToCart = ({
         )}
 
         {counter >= 1 && (
-          <div className="w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
+          <div className="w-[100px] sm:w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
             <div className="flex justify-center items-center gap-7">
               <div
                 onClick={() =>

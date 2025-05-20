@@ -21,11 +21,11 @@ const MenuSearchBar = ({
   };
 
   return (
-    <div className="mt-4 flex items-center px-40 relative">
+    <div className="mt-4 flex items-center relative">
       <Link
         to={`/city/${location}/${restaurantName}/${areaName}/${restaurantId}`}
       >
-        <HiArrowLeft className="absolute left-48 top-4" />
+        <HiArrowLeft className="absolute left-2 top-4" />
       </Link>
       <input
         type="search"

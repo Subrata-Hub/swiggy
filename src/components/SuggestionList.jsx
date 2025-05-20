@@ -97,7 +97,7 @@ const SuggestionList = ({
   // px-40
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 ml-3">
       {showSuggestion &&
         searchQueryInput !== "" &&
         searchQueryInput !== currentSearch?.suggestionText && (

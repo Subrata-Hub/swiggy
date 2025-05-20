@@ -37,7 +37,7 @@ const MenuItemSearchPage = () => {
   };
 
   return (
-    <>
+    <div className="mt-32 mx-2 xs:mx-[30px]  sm:mx-[50px] md:mx-[60px] lg:mx-[120px] xl:mx-[180px] 2xl:mx-[340px]">
       <MenuSearchBar
         restaurantName={restaurantName}
         restaurantId={restaurantId}
@@ -48,7 +48,7 @@ const MenuItemSearchPage = () => {
         menuItemsListFilter={menuItems}
         resInformation={resInformation}
       />
-    </>
+    </div>
   );
 };
 

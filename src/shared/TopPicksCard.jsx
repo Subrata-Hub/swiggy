@@ -76,7 +76,7 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
   return (
     <>
-      <div className="w-[292px] h-[330px] bg-cyan-950 border-slate-200  ">
+      <div className="w-[250px] sm:w-[292px] h-[300px] sm:h-[330px] bg-cyan-950 border-slate-200  ">
         <img
           src={TOP_PIC_IMG + topPicksData?.info?.imageId}
           className="w-full h-full object-cover rounded-3xl  border-2"
@@ -95,11 +95,11 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
         <div className="absolute w-full h-40 top-0 z-100 bg-gradient-to-t from-transparent via-slate-900/100 to-slate-900 pt-5 px-5">
           {topPicksData?.info?.itemAttribute?.vegClassifier === "NONVEG" ? (
-            <img src={nonVeg} />
+            <img src={nonVeg} className="w-4 sm:w-5" />
           ) : (
-            <img src={veg} />
+            <img src={veg} className="w-4 sm:w-5" />
           )}
-          <h2 className="font-semibold text-[19px] mt-1 line-clamp-2">
+          <h2 className="font-semibold text-[17px] sm:text-[19px] mt-1 line-clamp-2">
             {topPicksData?.info?.name}
           </h2>
           <p className="text-[12px] font-extralight text-gray-300 w-full mt-1 line-clamp-2">
@@ -115,7 +115,7 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
               : topPicksData?.info?.defaultPrice / 100}
           </div>
         </div>
-        <div className="absolute top-[140px] right-[152px] z-100">
+        <div className="absolute top-[130px] sm:top-[140px] right-[130px] sm:right-[152px] z-100">
           <AddMenuItemToCart
             resInformation={resInformation}
             resMenuItem={topPicksData}

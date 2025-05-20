@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import useRestaurantsDetails from "../hooks/useRestaurantsDetails";
 import RestaurantsInfo from "../components/RestaurantsInfo";
@@ -8,10 +8,12 @@ import { useState } from "react";
 import RestaurantDetailShimmer from "../shared/shimmer/RestaurantDetailShimmer";
 import PopupCardView from "../shared/PopupCardView";
 import { useSelector } from "react-redux";
+import { HiArrowLeft } from "react-icons/hi2";
 
 const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const { restaurantId, areaName, restaurantName, location } = useParams();
+  const navigate = useNavigate();
   // localStorage.removeItem("recent_Search");
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
@@ -49,32 +51,48 @@ const RestaurantDetailsPage = () => {
     resImg: resDetailsData?.[2]?.card?.card?.info?.cloudinaryImageId,
     menuURL: `/city/${location}/${restaurantName}/${areaName}/${restaurantId}`,
   };
+
+  const goToPreviousPage = () => {
+    navigate(history.back());
+  };
   return (
-    <div className="mt-32 mx-[140px]">
-      {loading && resDetailsData.length === 0 ? (
-        <RestaurantDetailShimmer />
-      ) : (
-        <>
-          <RestaurantsInfo resDetailsData={resDetailsData} />
-          <OfferCard
-            resDetailsData={
-              resDetailsData?.[3]?.card?.card?.gridElements?.infoWithStyle
-                ?.offers
-            }
-          />
-          <Menu
-            resDetailsData={
-              resDetailsData?.[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards
-            }
-            restaurantId={restaurantId}
-            areaName={areaName}
-            restaurantName={restaurantName}
-            location={location}
-            resInformation={resInformation}
-          />
-          <PopupCardView />
-        </>
-      )}
+    <div className="flex flex-col mt-24 mx-2 xs:mx-[30px]  sm:mx-[50px] md:mx-[60px] lg:mx-[120px] xl:mx-[180px] 2xl:mx-[340px]">
+      <div className="flex sm:hidden">
+        <HiArrowLeft className="text-xl" onClick={goToPreviousPage} />
+      </div>
+      <div className="hidden sm:flex text-sm">
+        <span>
+          <Link to={"/"}>Home</Link>
+        </span>
+        /<span className="text-slate-300">{location}</span>/
+        <span className="text-slate-300">{restaurantName}</span>
+      </div>
+      <div className="mt-5 sm:mt-10">
+        {loading && resDetailsData.length === 0 ? (
+          <RestaurantDetailShimmer />
+        ) : (
+          <>
+            <RestaurantsInfo resDetailsData={resDetailsData} />
+            <OfferCard
+              resDetailsData={
+                resDetailsData?.[3]?.card?.card?.gridElements?.infoWithStyle
+                  ?.offers
+              }
+            />
+            <Menu
+              resDetailsData={
+                resDetailsData?.[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards
+              }
+              restaurantId={restaurantId}
+              areaName={areaName}
+              restaurantName={restaurantName}
+              location={location}
+              resInformation={resInformation}
+            />
+            <PopupCardView />
+          </>
+        )}
+      </div>
     </div>
   );
 };

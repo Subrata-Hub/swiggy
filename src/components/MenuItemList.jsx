@@ -38,7 +38,6 @@ const MenuItemList = ({ resMenu, filterOption, resInformation }) => {
 
   const showAndHideMenu = () => {
     setShowMenu(!showMenu);
-    console.log("bcjbcjc");
   };
   // if (!resMenu?.title) return;
 
