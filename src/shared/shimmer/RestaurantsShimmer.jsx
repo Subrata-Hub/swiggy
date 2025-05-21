@@ -18,7 +18,7 @@ const RestaurantsShimmer = () => {
       </div>
       <div className="h-8 w-100 bg-slate-800 mt-4"></div>
       <div className="mt-6">
-        <div className="flex flex-wrap gap-8">
+        <div className="flex flex-wrap gap-4 sm:gap-2.5 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-7">
           {Array(4)
             .fill("")
             .map((item, index) => (

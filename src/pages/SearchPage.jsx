@@ -22,6 +22,8 @@ import AddToCartSearchResults from "../components/AddToCartSearchResults";
 import useSearchResultsForEnter from "../hooks/useSearchResultsForEnter";
 
 import ResentResSearchList from "../components/ResentResSearchList";
+import PreviewCartViewForMobile from "../shared/PreviewCartViewForMobile";
+import MobileNavigation from "../components/MobileNavigation";
 
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
@@ -187,66 +189,76 @@ const SearchPage = () => {
   }, [filterSearchResults]);
 
   return (
-    <div className="mt-28 mx-0 xs:mx-[10px]  sm:mx-[30px] md:mx-[30px] lg:mx-[50px] xl:mx-[150px] 2xl:mx-[290px]">
-      <Searchbar
-        setShowSuggestion={setShowSuggestion}
-        setSearchQueryInput={setSearchQueryInput}
-        searchQueryInput={searchQueryInput}
-      />
-
-      <SuggestionList
-        searchSuggestionsData={searchSuggestionsData}
-        setShowSuggestion={setShowSuggestion}
-        showSuggestion={showSuggestion}
-        setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
-        setSearchQueryInput={setSearchQueryInput}
-        searchQueryInput={searchQueryInput}
-      />
-
-      <ResentResSearchList
-        suggestionText={suggestionText}
-        searchQueryInput={searchQueryInput}
-        setSearchQueryInput={setSearchQueryInput}
-        setShowSuggestion={setShowSuggestion}
-      />
-
-      <PopularCuisinesList
-        popularCuisinesData={popularCuisinesData}
-        suggestionText={suggestionText}
-        setSearchQueryInput={setSearchQueryInput}
-        searchQueryInput={searchQueryInput}
-        showSuggestion={showSuggestion}
-      />
-
-      {addToCardSearchResults &&
-      addToCardSearchResults !== undefined &&
-      showAddToCardSearchResultsData ? (
-        <AddToCartSearchResults
-          showSuggestion={showSuggestion}
-          loading={loading}
-          addToCardSearchResults={
-            addToCardSearchResults && addToCardSearchResults
-          }
-          setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
-          showAddToCardSearchResultsData={showAddToCardSearchResultsData}
-          city={city}
+    <>
+      <div className="mt-28 mx-0 xs:mx-[10px]  sm:mx-[30px] md:mx-[30px] lg:mx-[50px] xl:mx-[150px] 2xl:mx-[290px]">
+        <Searchbar
+          setShowSuggestion={setShowSuggestion}
+          setSearchQueryInput={setSearchQueryInput}
+          searchQueryInput={searchQueryInput}
         />
-      ) : (
-        <SearchResults
-          loading={loading}
+
+        <SuggestionList
+          searchSuggestionsData={searchSuggestionsData}
+          setShowSuggestion={setShowSuggestion}
           showSuggestion={showSuggestion}
-          searchResultsType={
-            searchResultsType || currentSearch?.searchResultType
-          }
-          selectedOption={selectedOption}
-          searchResultsRefineData={searchResultsRefineData}
-          searchResultsHeader={searchResultsHeader}
-          fillObj={fillObj}
           setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
-          showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+          setSearchQueryInput={setSearchQueryInput}
+          searchQueryInput={searchQueryInput}
         />
-      )}
-    </div>
+
+        <ResentResSearchList
+          suggestionText={suggestionText}
+          searchQueryInput={searchQueryInput}
+          setSearchQueryInput={setSearchQueryInput}
+          setShowSuggestion={setShowSuggestion}
+        />
+
+        <PopularCuisinesList
+          popularCuisinesData={popularCuisinesData}
+          suggestionText={suggestionText}
+          setSearchQueryInput={setSearchQueryInput}
+          searchQueryInput={searchQueryInput}
+          showSuggestion={showSuggestion}
+        />
+
+        {addToCardSearchResults &&
+        addToCardSearchResults !== undefined &&
+        showAddToCardSearchResultsData ? (
+          <AddToCartSearchResults
+            showSuggestion={showSuggestion}
+            loading={loading}
+            addToCardSearchResults={
+              addToCardSearchResults && addToCardSearchResults
+            }
+            setShowAddToCardSearchResultsData={
+              setShowAddToCardSearchResultsData
+            }
+            showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+            city={city}
+          />
+        ) : (
+          <SearchResults
+            loading={loading}
+            showSuggestion={showSuggestion}
+            searchResultsType={
+              searchResultsType || currentSearch?.searchResultType
+            }
+            selectedOption={selectedOption}
+            searchResultsRefineData={searchResultsRefineData}
+            searchResultsHeader={searchResultsHeader}
+            fillObj={fillObj}
+            setShowAddToCardSearchResultsData={
+              setShowAddToCardSearchResultsData
+            }
+            showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+          />
+        )}
+      </div>
+      <div className="ml-4">
+        <PreviewCartViewForMobile />
+        <MobileNavigation />
+      </div>
+    </>
   );
 };
 

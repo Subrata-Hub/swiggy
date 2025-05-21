@@ -6,7 +6,7 @@ import { EnhancedRestaurantCard } from "../shared/RestaurantCard";
 
 const TagsDetails = ({ restaurantList, city }) => {
   return (
-    <div className="flex flex-wrap gap-8 mt-8">
+    <div className="flex flex-wrap gap-4 sm:gap-2.5 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-[25px] mt-8">
       {restaurantList?.map((restaurant) => (
         <EnhancedRestaurantCard
           topRes={restaurant?.card?.card?.info}

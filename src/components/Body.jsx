@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import LocationUnAvailable from "./LocationUnAvailable";
 import useUserFromDB from "../hooks/useUserFromDB";
 import useLocationFromDB from "../hooks/useLocationFromDB";
+// import PreviewCartViewForMobile from "../shared/PreviewCartViewForMobile";
+// import MobileNavigation from "./MobileNavigation";
 // import SearchBarForMobile from "./SearchBarForMobile";
 
 const Body = () => {

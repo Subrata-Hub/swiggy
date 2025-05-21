@@ -37,8 +37,10 @@ const TagsCollectionPage = () => {
   const preview = tagsDetailData?.[0]?.card?.card;
   const restaurantList = tagsDetailData?.slice(2);
 
+  // pt-15 m-[140px] mt-0 mb-0
+
   return (
-    <div className="pt-15 m-[140px] mt-0 mb-0">
+    <div className="mt-32 mx-4 sm:mx-[40px] md:mx-[30px] lg:mx-[50px] xl:mx-[140px]">
       {loading && tagsDetailData.length === 0 ? (
         <TagDetailShimmer />
       ) : (

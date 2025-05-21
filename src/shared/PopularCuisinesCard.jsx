@@ -26,7 +26,7 @@ const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
   return (
     <div
       key={popularCuisines?.id}
-      className="w-[80px] h-[80px] rounded-full flex-shrink-0"
+      className="w-[60px] sm:w-[80px] h-[80px] sm:h-[80px]  rounded-full flex-shrink-0"
       onClick={updateUrl}
     >
       <img

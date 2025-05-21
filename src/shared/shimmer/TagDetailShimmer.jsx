@@ -7,7 +7,7 @@ const TagDetailShimmer = () => {
       <div className="mt-2 h-6 w-100 bg-slate-800"></div>
       <div className="mt-6 h-8 w-80 bg-slate-800"></div>
 
-      <div className="flex flex-wrap mt-10 gap-8">
+      <div className="flex flex-wrap mt-10 gap-4 sm:gap-2.5 md:gap-6 lg:gap-6 xl:gap-6 2xl:gap-7">
         {Array(8)
           .fill("")
           .map((item, index) => (

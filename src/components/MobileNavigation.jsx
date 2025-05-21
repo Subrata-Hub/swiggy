@@ -14,18 +14,18 @@ const MobileNavigation = () => {
     }
   };
   return (
-    <div className="sm:hidden overflow-y-auto fixed bottom-0  bg-slate-800 w-full z-[10000000] ">
+    <div className="sm:hidden -ml-4 overflow-y-auto fixed bottom-0  bg-slate-800 w-full z-[10000000] ">
       <div className="h-16 flex justify-around items-center">
         <div className="flex flex-col items-center">
           <Link to={"/"}>
-            <img src={swiggy_logo} alt="logo" className="w-8 h-5" />
+            <img src={swiggy_logo} alt="logo" className="w-8 h-6" />
           </Link>
-          <span className="text-[11px]">SWIGGY</span>
+          <span className="text-[12px]">SWIGGY</span>
         </div>
 
         <div className="flex flex-col items-center">
-          <HiOutlineSearch className="text-[22px]" onClick={goToSearchBar} />
-          <span className="text-[11px]">SEARCH</span>
+          <HiOutlineSearch className="text-[26px]" onClick={goToSearchBar} />
+          <span className="text-[12px]">SEARCH</span>
         </div>
       </div>
     </div>

@@ -17,6 +17,8 @@ import { auth, db } from "../utils/firebase";
 import { signInAnonymously } from "firebase/auth";
 
 import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
+import PreviewCartViewForMobile from "../shared/PreviewCartViewForMobile";
+import MobileNavigation from "../components/MobileNavigation";
 
 const HomePage = () => {
   console.log("HomePage component mounted"); // Check for multiple mounts
@@ -179,6 +181,8 @@ const HomePage = () => {
   return (
     <div className="mt-24 mx-4 sm:mx-[40px] md:mx-[30px] lg:mx-[50px] xl:mx-[140px] ">
       <Body />
+      <PreviewCartViewForMobile />
+      <MobileNavigation />
     </div>
   );
 };

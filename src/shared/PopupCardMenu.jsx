@@ -220,7 +220,7 @@ const PopupCardMenu = ({
   };
 
   return (
-    <div className="w-[600px] h-auto bg-slate-800 fixed z-[11999] top-15 right-[30%] rounded-3xl p-4 ">
+    <div className="w-full sm:w-[500px] md:sm:w-[600px] h-auto bg-slate-800 fixed z-[119999999] top-20 sm:top-28 right-[0%] sm:right-[10%] md:right-[10%] lg:right-[20%] xl:right-[25%] 2xl:right-[30%]  rounded-3xl p-4 ">
       <h2 className="mt-2">
         {searchDishesData?.info?.name} .{" "}
         <span>
@@ -243,7 +243,7 @@ const PopupCardMenu = ({
       <h1 className="font-bold text-2xl">Coutomise as per your test</h1>
       <div className="w-full h-[1px] bg-slate-600 mt-4"></div>
 
-      <div className="overflow-y-auto hide-scrollbar max-h-[400px]">
+      <div className="overflow-y-auto hide-scrollbar max-h-[350px] ">
         {searchDishesData?.info?.addons?.map((group, index) => (
           <>
             <h2 className="py-4" key={index}>
@@ -333,10 +333,10 @@ const PopupCardMenu = ({
 
       {showCustomizedItems && (
         <>
-          <div className="w-[570px] min-h-16 bg-slate-800 absolute bottom-24 flex items-center px-4 py-4 text-[14px]">
+          <div className="w-full sm:w-[570px] min-h-16 bg-slate-800 absolute bottom-24 flex items-center px-4 py-4 text-[14px]">
             {coustomizedItems.slice().join(" . ")}
           </div>
-          <div className="w-[570px] h-[1px] bottom-24 absolute bg-slate-700"></div>
+          <div className="w-full sm:w-[570px] h-[1px] bottom-24 absolute bg-slate-700"></div>
         </>
       )}
 
@@ -354,7 +354,7 @@ const PopupCardMenu = ({
         </div>
         <div>
           <button
-            className="px-15 py-3 bg-emerald-600 rounded-2xl"
+            className="px-8 sm:px-15 py-2 sm:py-3 bg-emerald-600 rounded-2xl"
             onClick={() => {
               handleAddItemToCart(counter + 1);
 

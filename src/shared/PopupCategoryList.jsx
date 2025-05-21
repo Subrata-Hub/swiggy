@@ -34,7 +34,7 @@ const PopupCategoryList = ({
   };
 
   return (
-    <div className="w-full sm:w-[400px] md:w-[520px] h-auto p-[30px] bg-slate-700 fixed z-[11999] bottom-52 sm:bottom-28 md:bottom-20 lg:bottom-15 right-0 sm:right-[20%] md:right-[16%] lg:right-[23%] xl:right-[30%] 2xl:right-[35%] rounded-3xl ">
+    <div className="w-full sm:w-[400px] md:w-[520px] h-auto p-[30px] bg-slate-700 fixed z-[11999] bottom-36 sm:bottom-28 md:bottom-20 lg:bottom-15 right-0 sm:right-[20%] md:right-[16%] lg:right-[23%] xl:right-[30%] 2xl:right-[35%] rounded-3xl ">
       <div
         className="overflow-y-auto hide-scrollbar max-h-[350px] category_list"
         ref={category_list_ref}

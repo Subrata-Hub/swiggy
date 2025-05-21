@@ -29,11 +29,11 @@ const PopupSearchDishesCard = ({
 }) => {
   console.log(searchDishesData);
   return (
-    <div className="w-[500px] h-auto bg-slate-800 fixed z-[11999] top-15 right-[34%] rounded-3xl ">
-      <div className="w-full h-[400px]">
+    <div className="w-[350px] sm:w-[500px] h-auto bg-slate-800 fixed z-[11999] top-24 sm:top-24 right-[5%] sm:right-[34%] rounded-3xl ">
+      <div className="w-full  h-[200px] sm:h-[400px]">
         <img
           src={IMG_SEARCH_DISH_BANNER + searchDishesData?.info?.imageId}
-          className="rounded-t-3xl w-full h-[400px] object-cover"
+          className="rounded-t-3xl w-full h-[200px] sm:h-[400px] object-cover"
         />
       </div>
       <div className="absolute top-0 right-0">

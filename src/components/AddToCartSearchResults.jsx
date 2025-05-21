@@ -75,7 +75,7 @@ const AddToCartSearchResults = ({
           {loading ? (
             <SearchResultShimmer />
           ) : (
-            <div className="bg-slate-900  h-auto mt-5 px-6 py-6">
+            <div className="bg-slate-900  h-auto mt-5 px-2 sm:px-6 py-6">
               <h2 className="mb-6">
                 {searchResultLabel?.[0]?.card?.card?.text}
               </h2>
