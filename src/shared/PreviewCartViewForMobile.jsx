@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const PreviewCartViewForMobile = () => {
   const restaurantInfo = useSelector((state) => state.cart.resInfo);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const cartNumber = useSelector((state) => state.cart.totalCardItems);
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
 
   const subTotal = cartItems
@@ -16,6 +17,11 @@ const PreviewCartViewForMobile = () => {
     userCartItems?.cartItems
       ?.map((item) => item?.menuPrice * item?.totalMenuItems)
       ?.reduce((acc, item) => acc + item, 0);
+
+  const totalItems =
+    userCartItems?.items
+      ?.map((item) => item?.totalMenuItems)
+      ?.reduce((acc, item) => acc + item, 0) || 0;
 
   console.log(restaurantInfo);
   return (
@@ -52,7 +58,7 @@ const PreviewCartViewForMobile = () => {
             </div>
 
             <div className="px-5 py-1.5 bg-green-600 rounded-[10px]">
-              <span>{cartItems?.length} Item</span> |{" "}
+              <span>{cartNumber ? cartNumber : totalItems} Item</span> |{" "}
               <span>
                 ₹{getFormatedPrice(subTotal ? subTotal : subTotalForUser)}
               </span>

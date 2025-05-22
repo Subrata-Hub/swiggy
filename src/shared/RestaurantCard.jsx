@@ -4,18 +4,20 @@ import { IMG_CARD_URL_2 } from "../utils/constant";
 
 /* eslint-disable react/prop-types */
 const RestaurantCard = ({ topRes, city }) => {
+  // w-[175px] sm:w-[180px] md:w-[180px] lg:w-[220px] xl:w-[227px] 2xl:w-[284px] h-[170px] sm:h-[182px]
+  // w-[175px] sm:w-[180px] md:w-[180px] lg:w-[220px] xl:w-[227px] 2xl:w-[284px] h-[170px] sm:h-[182px]
   return (
     <Link
       to={`/city/${city}/${topRes?.name}/${topRes?.locality}/${topRes?.id}`}
     >
       <div className="mb-4 relative">
-        <div className="w-[175px] sm:w-[180px] md:w-[180px] lg:w-[220px] xl:w-[227px] 2xl:w-[284px] h-[170px] sm:h-[182px] relative">
+        <div className="w-[170px] sm:w-[180px] md:w-[180px] lg:w-[284px] xl:w-[232px] 2xl:w-[284px] h-[170px] sm:h-[182px] grow-1 relative">
           <img
             src={IMG_CARD_URL_2 + topRes?.cloudinaryImageId}
             alt={topRes?.name}
-            className="w-[175px] sm:w-[180px] md:w-[180px] lg:w-[220px] xl:w-[227px] 2xl:w-[284px] h-[170px] sm:h-[182px] object-cover rounded-xl"
+            className=" w-full h-full object-cover rounded-xl"
           />
-          <div className="absolute w-full text-left px-[12px] pb-2 h-[81px] bg-gradient-to-t from-[rgb(27,30,36)] to-[rgba(27,30,36,0)] bottom-0"></div>
+          <div className="absolute w-full text-left px-[2px] pb-2 h-[81px] bg-gradient-to-t from-[rgb(27,30,36)] to-[rgba(27,30,36,0)] bottom-0"></div>
         </div>
         <h2 className="mt-3 ml-0 sm:ml-2 font-semibold text-xl truncate max-w-[140px] sm:max-w-[170px] md:max-w-[170px] lg:max-w-[160px] xl:max-w-[210px] 2xl:max-w-[260px]">
           {topRes?.name}

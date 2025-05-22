@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/download.png";
-import swiggy_logo from "../assets/swiggy-1.svg";
-import swiggy_logo2 from "../assets/swiggy_logo2.jpeg";
+// import swiggy_logo from "../assets/swiggy-1.svg";
+// import swiggy_logo2 from "../assets/swiggy_logo2.jpeg";
 
 import Locationbar from "./Locationbar";
 

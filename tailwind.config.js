@@ -2,7 +2,6 @@
 export default {
   theme: {
     screens: {
-      xs: "480px",
       sm: "640px",
       // => @media (min-width: 640px) { ... }
 
@@ -17,6 +16,7 @@ export default {
 
       "2xl": "1536px",
       // => @media (min-width: 1536px) { ... }
+      xs: "480px",
     },
   },
 };
