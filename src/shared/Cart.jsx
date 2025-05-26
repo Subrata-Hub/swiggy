@@ -165,6 +165,7 @@ const Cart = () => {
                             userCartItems?.cartResInfo?.resImg)
                         }
                         className="w-[80px] h-[80px] object-cover"
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex flex-col">
@@ -198,9 +199,9 @@ const Cart = () => {
                       <div className="flex gap-4">
                         <div className="w-4 h-4 mt-0.5">
                           {cart?.vegClassifier === "VEG" ? (
-                            <img src={veg} alt="Veg" />
+                            <img src={veg} alt="Veg" loading="lazy" />
                           ) : (
-                            <img src={nonVeg} alt="Non-Veg" />
+                            <img src={nonVeg} alt="Non-Veg" loading="lazy" />
                           )}
                         </div>
                         <p className="text-[14px]">

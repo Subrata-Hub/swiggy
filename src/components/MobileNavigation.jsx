@@ -18,7 +18,12 @@ const MobileNavigation = () => {
       <div className="h-16 flex justify-around items-center">
         <div className="flex flex-col items-center">
           <Link to={"/"}>
-            <img src={swiggy_logo} alt="logo" className="w-8 h-6" />
+            <img
+              src={swiggy_logo}
+              alt="logo"
+              className="w-8 h-6"
+              loading="lazy"
+            />
           </Link>
           <span className="text-[12px]">SWIGGY</span>
         </div>

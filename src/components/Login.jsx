@@ -158,7 +158,7 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
               )}
             </div>
             <div className="w-20 h-20 rounded-full bg">
-              <img src={LOGIN_IMG} alt="Login" />
+              <img src={LOGIN_IMG} alt="Login" loading="lazy" />
             </div>
           </div>
           <div className="w-full mt-14">

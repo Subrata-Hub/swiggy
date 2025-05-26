@@ -21,6 +21,7 @@ const Restaurants = ({ allResData, userLocationData, city }) => {
   return (
     <div className="mt-4 sm:mt-6">
       <h1 className="text-[17px] mx-2 sm:text-[25px] font-bold">{title}</h1>
+
       <div className="w-full flex  justify-center  md:justify-start gap-4 sm:gap-2.5 md:gap-6 lg:gap-8 xl:gap-6 2xl:gap-7 flex-wrap mt-6">
         {allRestaurants?.map((restaurant) => (
           <EnhancedRestaurantCard

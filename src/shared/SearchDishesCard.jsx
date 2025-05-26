@@ -150,9 +150,9 @@ const SearchDishesCard = ({
           <div className="flex justify-between items-center py-4 px-3">
             <div className="flex-col w-1/2">
               {searchDishesData?.info?.isVeg === 1 ? (
-                <img src={veg} />
+                <img src={veg} loading="lazy" />
               ) : (
-                <img src={nonVeg} />
+                <img src={nonVeg} loading="lazy" />
               )}
               <h2 className="text-[19px] font-semibold line-clamp-2">
                 {searchDishesData?.info?.name}
@@ -180,6 +180,7 @@ const SearchDishesCard = ({
                 <img
                   src={IMG_SEARCH_DISH + searchDishesData?.info?.imageId}
                   className="w-[136px] sm:w-[156px] h-[130px] sm:h-[144px] object-cover rounded-2xl"
+                  loading="lazy"
                 />
               ) : (
                 <div className="w-[136px] sm:w-[156px] h-[130px] sm:h-[144px] "></div>

@@ -34,6 +34,7 @@ const PopupSearchDishesCard = ({
         <img
           src={IMG_SEARCH_DISH_BANNER + searchDishesData?.info?.imageId}
           className="rounded-t-3xl w-full h-[200px] sm:h-[400px] object-cover"
+          loading="lazy"
         />
       </div>
       <div className="absolute top-0 right-0">
@@ -49,9 +50,9 @@ const PopupSearchDishesCard = ({
           <div className="flex-col">
             <div>
               {searchDishesData?.info?.isVeg === 1 ? (
-                <img src={veg} />
+                <img src={veg} loading="lazy" />
               ) : (
-                <img src={nonVeg} />
+                <img src={nonVeg} loading="lazy" />
               )}
             </div>
             <h2 className="text-[19px] font-semibold line-clamp-2 mt-1">

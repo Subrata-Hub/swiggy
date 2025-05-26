@@ -32,6 +32,7 @@ const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
       <img
         src={IMG_POPULAR_CUSINESS + popularCuisines?.imageId}
         className="w-[80px] h-[80px] object-contain"
+        loading="lazy"
       />
     </div>
   );

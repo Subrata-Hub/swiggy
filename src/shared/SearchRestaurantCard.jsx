@@ -23,6 +23,7 @@ const SearchRestaurantCard = ({ searchResData }) => {
             <img
               src={IMG_SEARCH_RES + searchResData?.cloudinaryImageId}
               className="w-[88px] h-[96px] object-cover rounded-2xl"
+              loading="lazy"
             />
           </div>
           <div className="w-2/3">

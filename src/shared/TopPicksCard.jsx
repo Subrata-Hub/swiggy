@@ -57,7 +57,7 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     addResetRef
   );
 
-  console.log(resInformation);
+  // console.log(resInformation);
 
   const menuInfo = {
     menuId: topPicksData?.info?.id,
@@ -76,10 +76,11 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
   return (
     <>
-      <div className="w-[250px] sm:w-[292px] h-[300px] sm:h-[330px] bg-cyan-950 border-slate-200  ">
+      <div className="w-[250px] sm:w-[292px] h-[300px] sm:h-[330px] shrink-0  bg-cyan-950 border-slate-200  slide">
         <img
           src={TOP_PIC_IMG + topPicksData?.info?.imageId}
           className="w-full h-full object-cover rounded-3xl  border-2"
+          loading="lazy"
         />
 
         <div
@@ -95,9 +96,9 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
         <div className="absolute w-full h-40 top-0 z-100 bg-gradient-to-t from-transparent via-slate-900/100 to-slate-900 pt-5 px-5">
           {topPicksData?.info?.itemAttribute?.vegClassifier === "NONVEG" ? (
-            <img src={nonVeg} className="w-4 sm:w-5" />
+            <img src={nonVeg} className="w-4 sm:w-5" loading="lazy" />
           ) : (
-            <img src={veg} className="w-4 sm:w-5" />
+            <img src={veg} className="w-4 sm:w-5" loading="lazy" />
           )}
           <h2 className="font-semibold text-[17px] sm:text-[19px] mt-1 line-clamp-2">
             {topPicksData?.info?.name}

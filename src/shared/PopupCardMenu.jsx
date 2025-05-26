@@ -269,9 +269,9 @@ const PopupCardMenu = ({
                       <div className="flex gap-3">
                         <div>
                           {item?.isVeg === 1 ? (
-                            <img src={veg} />
+                            <img src={veg} loading="lazy" />
                           ) : (
-                            <img src={nonVeg} />
+                            <img src={nonVeg} loading="lazy" />
                           )}
                         </div>
                         <div>{item?.name}</div>

@@ -111,7 +111,10 @@ const SuggestionList = ({
                     onClick={() => goToQueryPage(sugest?.text, sugest?.type)}
                   >
                     <div className="w-[64px] h-[64px] rounded-2xl">
-                      <img src={IMG_SUGGESTION + sugest?.cloudinaryId} />
+                      <img
+                        src={IMG_SUGGESTION + sugest?.cloudinaryId}
+                        loading="lazy"
+                      />
                     </div>
                     <div className="flex-col">
                       <h2 className="font-semibold text-[17px]">

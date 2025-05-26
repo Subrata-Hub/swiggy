@@ -9,6 +9,7 @@ const LocationUnAvailable = ({ swiggyNotPresent }) => {
           <img
             src={UNSERVICEABLE_IMG}
             className="h-[300px] w-[300px] object-center"
+            loading="lazy"
           />
         </div>
         <div>

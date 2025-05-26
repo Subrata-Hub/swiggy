@@ -10,12 +10,13 @@ const RestaurantCard = ({ topRes, city }) => {
     <Link
       to={`/city/${city}/${topRes?.name}/${topRes?.locality}/${topRes?.id}`}
     >
-      <div className="mb-4 relative">
+      <div className="mb-4 relative slide">
         <div className="w-[170px] sm:w-[180px] md:w-[180px] lg:w-[284px] xl:w-[232px] 2xl:w-[284px] h-[170px] sm:h-[182px] grow-1 relative">
           <img
             src={IMG_CARD_URL_2 + topRes?.cloudinaryImageId}
             alt={topRes?.name}
             className=" w-full h-full object-cover rounded-xl"
+            loading="lazy"
           />
           <div className="absolute w-full text-left px-[2px] pb-2 h-[81px] bg-gradient-to-t from-[rgb(27,30,36)] to-[rgba(27,30,36,0)] bottom-0"></div>
         </div>

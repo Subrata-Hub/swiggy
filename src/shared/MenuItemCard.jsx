@@ -95,9 +95,9 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
         <div className="w-3/4">
           {resMenuItem?.card?.info?.itemAttribute?.vegClassifier ===
           "NONVEG" ? (
-            <img src={nonVeg} className="w-4 sm:w-5" />
+            <img src={nonVeg} className="w-4 sm:w-5" loading="lazy" />
           ) : (
-            <img src={veg} className="w-4 sm:w-5" />
+            <img src={veg} className="w-4 sm:w-5" loading="lazy" />
           )}
           <h2 className="text-[17px] sm:text-xl font-semibold">
             {" "}
@@ -170,6 +170,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               <img
                 src={IMG_MENU + resMenuItem?.card?.info?.imageId}
                 className="object-cover w-[140px] sm:w-[156px] h-[130px] sm:h-[144px] rounded-2xl"
+                loading="lazy"
               />
             </div>
           ) : (

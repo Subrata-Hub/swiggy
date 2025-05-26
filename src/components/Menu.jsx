@@ -48,9 +48,9 @@ const Menu = ({
     <div className="mt-15">
       <div className="flex justify-center items-center">
         <div className="flex text-center">
-          <img src={menuLeft} />
+          <img src={menuLeft} loading="lazy" />
           <h2>Menu</h2>
-          <img src={menuRight} />
+          <img src={menuRight} loading="lazy" />
         </div>
       </div>
 

@@ -8,7 +8,7 @@ const ImageInfoLayoutCard = ({ resInfo }) => {
   const collectionId = match ? match[1] : null;
 
   return (
-    <div className="w-[100px] sm:w-[144px] h-[124px] sm:h-[188px] flex-shrink-0">
+    <div className="w-[100px] sm:w-[144px] h-[124px] sm:h-[188px] flex-shrink-0 slide">
       <Link
         to={`/collection/${collectionId}/layout_CCS_${resInfo?.action.text}/${resInfo?.action?.text}`}
       >
@@ -16,6 +16,7 @@ const ImageInfoLayoutCard = ({ resInfo }) => {
           src={IMG_URL + resInfo.imageId}
           // className="w-[144px] h-[180px] object-contain"
           className="w-[100px] sm:w-[144px] h-[124px] sm:h-[188px]  object-cover"
+          loading="lazy"
         />
       </Link>
     </div>

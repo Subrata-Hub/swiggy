@@ -206,6 +206,7 @@ const Navbar = () => {
                   src={Logo}
                   alt="logo"
                   className="hidden sm:flex sm:w-10 md:w-12"
+                  loading="lazy"
                 />
               </Link>
 
