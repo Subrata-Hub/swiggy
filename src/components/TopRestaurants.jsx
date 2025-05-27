@@ -32,12 +32,14 @@ const TopRestaurants = ({ topResData, city }) => {
               {topRestaurantsHeader}
             </h1>
 
-            <Slider
-              nextSlide={nextSlide}
-              previousSlide={previousSlide}
-              currentSlide={currentSlide}
-              maxSlide={maxSlide}
-            />
+            <div className="mr-2">
+              <Slider
+                nextSlide={nextSlide}
+                previousSlide={previousSlide}
+                currentSlide={currentSlide}
+                maxSlide={maxSlide}
+              />
+            </div>
           </div>
         )}
 

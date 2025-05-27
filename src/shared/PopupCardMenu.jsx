@@ -208,6 +208,7 @@ const PopupCardMenu = ({
         })
       );
       toast(`Add item to the card from ${resInformation.restaurantName}`);
+
       setShowAddToCardSearchResultsData(true);
     } else if (
       showAddToCardSearchResultsData &&
@@ -220,7 +221,7 @@ const PopupCardMenu = ({
   };
 
   return (
-    <div className="w-full sm:w-[500px] md:sm:w-[600px] h-auto bg-slate-800 fixed z-[119999999] top-20 sm:top-28 right-[0%] sm:right-[10%] md:right-[10%] lg:right-[20%] xl:right-[25%] 2xl:right-[30%]  rounded-3xl p-4 ">
+    <div className=" w-full sm:w-[500px] md:sm:w-[600px] h-auto bg-slate-800 fixed  z-[81999999933558888855]    top-20 sm:top-28 right-[0%] sm:right-[10%] md:right-[10%] lg:right-[20%] xl:right-[25%] 2xl:right-[30%]  rounded-3xl p-4 ">
       <h2 className="mt-2">
         {searchDishesData?.info?.name} .{" "}
         <span>

@@ -27,8 +27,10 @@ const MenuCarousel = ({ resMenuTopPicks, resInformation }) => {
   );
   const title = resMenuTopPicks?.[0]?.card?.card?.title;
   const carousel = resMenuTopPicks?.[0]?.card?.card?.carousel;
+
+  // flex-nowrap
   return (
-    <div className="mt-10">
+    <div className="pt-10">
       {carousel && (
         <div className="flex justify-between">
           <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
@@ -42,13 +44,13 @@ const MenuCarousel = ({ resMenuTopPicks, resInformation }) => {
         </div>
       )}
 
-      <div className="w-full  overflow-x-auto  hide-scrollbar sm:overflow-hidden  mt-4">
+      <div className="w-full overflow-x-auto  hide-scrollbar sm:overflow-hidden  mt-4">
         <div
-          className="flex flex-nowrap gap-4 translate-x-0 transition-all duration-300 ease-in-out"
+          className="flex  gap-4 translate-x-0 transition-all duration-300 ease-in-out"
           ref={topPicklistRef}
         >
           {carousel?.map((item) => (
-            <div key={item?.bannerId} className="flex relative">
+            <div key={item?.bannerId} className="">
               <TopPicksCard
                 topPicksData={item?.dish}
                 resInformation={resInformation}

@@ -1,9 +1,11 @@
+// /* eslint-disable no-irregular-whitespace */
 import { TOP_PIC_IMG } from "../utils/constant";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 import { useSelector } from "react-redux";
 
 import { useRef, useState } from "react";
+import ReactDOM from "react-dom";
 
 import PopupResetCard from "./PopupResetCard";
 import PopupCardMenu from "./PopupCardMenu";
@@ -76,7 +78,7 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
   return (
     <>
-      <div className="w-[250px] sm:w-[292px] h-[300px] sm:h-[330px] shrink-0  bg-cyan-950 border-slate-200  slide">
+      <div className="w-[250px] sm:w-[292px] h-[300px] sm:h-[330px] shrink-0  bg-cyan-950 border-slate-200 slide relative">
         <img
           src={TOP_PIC_IMG + topPicksData?.info?.imageId}
           className="w-full h-full object-cover rounded-3xl  border-2"
@@ -84,15 +86,11 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
         />
 
         <div
-          className="absolute top-0 left-0 w-full h-full rounded-3xl z-50 pointer-events-none "
+          className="absolute top-0 left-0 w-full h-full rounded-3xl z-50 pointer-events-none"
           style={{
             boxShadow: "inset 0 0 50px 60px rgba(0, 0, 0, 0.8)",
           }}
         ></div>
-
-        {/* <div className="flex-col absolute top-0 z-100 ">
-         
-        </div> */}
 
         <div className="absolute w-full h-40 top-0 z-100 bg-gradient-to-t from-transparent via-slate-900/100 to-slate-900 pt-5 px-5">
           {topPicksData?.info?.itemAttribute?.vegClassifier === "NONVEG" ? (
@@ -136,7 +134,7 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
           />
         </div>
       </div>
-      {((showMenuCardPopup && topPicksData?.info?.addons) ||
+      {/* {((showMenuCardPopup && topPicksData?.info?.addons) ||
         showPopupBeforeReset) && (
         <>
           <div className="overlay"></div>
@@ -153,6 +151,31 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
               onContinue={handleContinueClick}
             />
           </div>
+        </>
+      )} */}
+
+      {((showMenuCardPopup && topPicksData?.info?.addons) ||
+        showPopupBeforeReset) && (
+        <>
+          {ReactDOM.createPortal(
+            <div className="overlay"></div>,
+            document.getElementById("portal-root")
+          )}
+          {ReactDOM.createPortal(
+            <div ref={menuItemCardRef}>
+              <PopupCardMenu
+                searchDishesData={topPicksData}
+                setShowMenuCardPopup={setShowMenuCardPopup}
+                resInformation={resInformation}
+                counter={counter}
+                resId={resInformation?.restaurantId}
+                setShowPopupBeforeReset={setShowPopupBeforeReset}
+                showPopupBeforeReset={showPopupBeforeReset} // showMenuCardPopup={showMenuCardPopup}
+                onContinue={handleContinueClick}
+              />
+            </div>,
+            document.getElementById("portal-root")
+          )}
         </>
       )}
 

@@ -9,8 +9,21 @@ import { ToastContainer } from "react-toastify";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={appStore}>
-      <ToastContainer />
       <App />
+      {/* <ToastContainer /> */}
+      <ToastContainer
+        position="top-right"
+        toastClassName="custom-toast-container"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </Provider>
   </StrictMode>
 );
