@@ -26,7 +26,7 @@ const TopRestaurants = ({ topResData, city }) => {
       <div
         className={`${topRestaurantsHeader ? "mt-3 sm:mt-10" : "mt-0"} ml-2`}
       >
-        {topRestaurants.length > 0 && (
+        {topRestaurants?.length > 0 && (
           <div className="flex justify-between">
             <h1 className="text-[22px] font-semibold">
               {topRestaurantsHeader}
@@ -59,7 +59,7 @@ const TopRestaurants = ({ topResData, city }) => {
           </div>
         </div>
       </div>
-      {topRestaurants && (
+      {topRestaurants?.length > 0 && (
         <div className="w-full h-[1px] bg-slate-700 mt-5 sm:mt-13"></div>
       )}
     </>

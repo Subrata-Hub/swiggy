@@ -10,7 +10,7 @@ const MenuCategoryList = ({ resMenuData, filterOption, resInformation }) => {
 
   return (
     <>
-      <div className="mt-6">
+      <div className="mt-1">
         {resMenuData?.map((resMenu) => (
           <MenuItemList
             resMenu={resMenu?.card?.card}

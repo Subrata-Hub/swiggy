@@ -47,11 +47,10 @@ const MenuItemList = ({ resMenu, filterOption, resInformation }) => {
 
   return (
     <>
-      <div className="w-full h-[18px] bg-gray-800"></div>
       <div className="flex-col">
         {resMenu?.itemCards ? (
           <div
-            className={`flex justify-between items-center py-4 category category--${resMenu?.categoryId}`}
+            className={`flex justify-between items-center py-5 category category--${resMenu?.categoryId}`}
             // data-categoryid={`${resMenu?.categoryId}`}
             // id={resMenu?.categoryId}
           >
@@ -139,6 +138,7 @@ const MenuItemList = ({ resMenu, filterOption, resInformation }) => {
             </>
           ))}
       </div>
+      <div className="w-full h-[18px] bg-gray-800"></div>
     </>
   );
 };

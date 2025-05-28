@@ -2,7 +2,7 @@
 const MenuItemFilter = ({ setOption, activeOption }) => {
   return (
     <div className="pt-6">
-      <div className="flex gap-3">
+      <div className="flex gap-3 mb-8">
         {["All", "VEG", "NONVEG", "Ratings 4.0"].map((option) => (
           <button
             key={option}
@@ -16,6 +16,7 @@ const MenuItemFilter = ({ setOption, activeOption }) => {
           </button>
         ))}
       </div>
+      <div className="w-full h-[0.5px] bg-gray-800"></div>
     </div>
   );
 };

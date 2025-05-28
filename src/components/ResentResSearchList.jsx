@@ -22,14 +22,19 @@ const ResentResSearchList = ({
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
   const recentResSearchArray = JSON.parse(localStorage.getItem("resItems"));
   console.log(recentResSearchArray);
-  const recentResSearchUniqueArray = [...new Set(recentResSearchArray?.items)];
+  const recentResSearchUniqueArray = [
+    ...new Set(recentResSearchArray?.items),
+  ].slice(0, 6);
   console.log(recentResSearchUniqueArray);
 
   const renserRecentResSearch =
     recentResSearchUniqueArray?.length > 0 && !showMore
       ? recentResSearchUniqueArray.slice(0, 3)
+      : window.innerWidth < 680
+      ? recentResSearchUniqueArray.slice(0, 4)
       : recentResSearchUniqueArray;
 
+  console.log(window.innerWidth);
   const goToQueryPage = (query) => {
     navigate(`/search?query=${query}`);
 
@@ -63,7 +68,7 @@ const ResentResSearchList = ({
     !currentSearch && (
       <>
         {recentResSearchUniqueArray?.length > 0 ? (
-          <div className="px-3 sm:px-4 pt-8">
+          <div className="px-3 sm:px-4 ">
             <div className="flex justify-between">
               <h2>Resent Searches</h2>
               <p

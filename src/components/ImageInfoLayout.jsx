@@ -52,7 +52,7 @@ const ImageInfoLayout = ({ resData, userData }) => {
           {topRestaurantsHeader}
         </h1>
 
-        {topRestaurants.length > 0 && (
+        {topRestaurants?.length > 0 && (
           <Slider
             nextSlide={nextSlide}
             previousSlide={previousSlide}

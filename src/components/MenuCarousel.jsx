@@ -30,8 +30,8 @@ const MenuCarousel = ({ resMenuTopPicks, resInformation }) => {
 
   // flex-nowrap
   return (
-    <div className="pt-10">
-      {carousel && (
+    <div className={`${carousel?.length ? "pt-10" : "pt-0"}`}>
+      {carousel?.length > 0 && (
         <div className="flex justify-between">
           <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
 
@@ -59,6 +59,9 @@ const MenuCarousel = ({ resMenuTopPicks, resInformation }) => {
           ))}
         </div>
       </div>
+      {carousel?.length > 0 && (
+        <div className="w-full h-[18px] bg-gray-800 mt-10"></div>
+      )}
     </div>
   );
 };
