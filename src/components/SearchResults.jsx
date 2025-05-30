@@ -28,6 +28,7 @@ const SearchResults = ({
   fillObj,
   setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
+  searchQueryInput,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [activeSort, setActiveSort] = useState(false);
@@ -110,7 +111,7 @@ const SearchResults = ({
             <SearchResultShimmer />
           ) : (
             <>
-              <div className="flex gap-4">
+              <div className="flex pt-1 gap-4 fixed z-[24524114]">
                 {searchResultsRefineData &&
                   searchResultsHeader?.[0].card?.card?.tab?.map((btn) => (
                     <div key={btn?.id}>
@@ -130,7 +131,17 @@ const SearchResults = ({
                   ))}
               </div>
 
-              <div className="flex  mt-6  overflow-x-auto hide-scrollbar gap-1">
+              <div
+                className={`fixed w-[950px] ${
+                  !showSuggestion ? "py-28" : "py-20"
+                } bg-slate-950 top-0 z-[2000001]`}
+              ></div>
+
+              <div
+                className={`flex ${
+                  searchFilterData ? "pt-20" : "pt-8"
+                }   overflow-x-auto hide-scrollbar gap-1`}
+              >
                 <div className="w-auto shrink-0">
                   {searchFilterData &&
                     !searchResultsForAllRestaurant &&
@@ -180,7 +191,7 @@ const SearchResults = ({
                             onClick={(e) =>
                               getFilterObj(JSON.parse(e.target.value))
                             }
-                            className={`px-5 py-2  rounded-xl text-[13.5px] ${
+                            className={`px-5 py-2  rounded-xl text-[13.5px] relative ${
                               Object.values(fillObj)?.some(
                                 (item) =>
                                   item?.[0]?.id === fillter?.facetInfo?.[0]?.id
@@ -240,7 +251,7 @@ const SearchResults = ({
                 )}
               </div>
 
-              <div className=" bg-slate-900  h-auto  mt-5 px-2 xs:px-2 sm:px-2 md:px-4 lg:px-6 py-6 -z-40">
+              <div className=" bg-slate-900  h-auto  mt-6 px-2 xs:px-2 sm:px-2 md:px-4 lg:px-6 py-6 -z-40">
                 {searchResultsForDishes && searchResultsType === "DISH" && (
                   <div className="flex justify-center flex-wrap gap-0  sm:gap-1 md:gap-4 -z-50">
                     {searchResultsForDishes &&
@@ -263,7 +274,7 @@ const SearchResults = ({
                 {searchResultsForRestaurant &&
                   searchResultsType === "RESTAURANT" && (
                     <>
-                      <div className="flex justify-start   gap-0  sm:gap-1 md:gap-4">
+                      <div className="flex justify-start py-6  gap-0  sm:gap-1 md:gap-4">
                         {searchResultsForRestaurant && (
                           <SearchRestaurantCardWithOffer
                             searchResData={

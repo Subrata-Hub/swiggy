@@ -196,7 +196,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[2000000]">
+    <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[2000000565555]">
       <div className="mx-3 xs:px-4 sm:px-4 md:px-[6px] lg:px-[20px] xl:px-[120px] h-20 flex items-center justify-between">
         <div className="flex-col">
           <div className="flex gap-2 -mt-2 sm:mt-0 sm:gap-6 items-center justify-between ">

@@ -10,7 +10,6 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={appStore}>
       <App />
-      {/* <ToastContainer /> */}
       <ToastContainer
         position="top-right"
         toastClassName="custom-toast-container"
@@ -23,7 +22,10 @@ createRoot(document.getElementById("root")).render(
         draggable
         pauseOnHover
         theme="light"
+        style={{ zIndex: 9999999999 }}
       />
+
+      {/* <ToastContainer /> */}
     </Provider>
   </StrictMode>
 );

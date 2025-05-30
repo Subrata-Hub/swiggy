@@ -1,6 +1,6 @@
 const SearchResultShimmer = () => {
   return (
-    <div>
+    <div className="pt-8">
       <div className="flex gap-4">
         {Array(2)
           .fill("")

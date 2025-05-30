@@ -8,6 +8,7 @@ const PopularCuisinesList = ({
   setSearchQueryInput,
   searchQueryInput,
   showSuggestion,
+  setShowSearchIcon,
 }) => {
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
 
@@ -25,6 +26,7 @@ const PopularCuisinesList = ({
                   key={card?.id}
                   popularCuisines={card}
                   setSearchQueryInput={setSearchQueryInput}
+                  setShowSearchIcon={setShowSearchIcon}
                 />
               ))}
             </div>

@@ -18,6 +18,8 @@ const SuggestionList = ({
   setShowAddToCardSearchResultsData,
   setSearchQueryInput,
   searchQueryInput,
+  setShowSearchIcon,
+  setShowBackToSearchIcon,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -88,6 +90,8 @@ const SuggestionList = ({
     }
 
     setSearchQueryInput(query);
+    setShowSearchIcon(false);
+    setShowBackToSearchIcon(true);
 
     setShowSuggestion(false);
 
@@ -97,7 +101,7 @@ const SuggestionList = ({
   // px-40
 
   return (
-    <div className="mt-6 ml-3">
+    <div className="pt-40 ml-3 relative z-[0]">
       {showSuggestion &&
         searchQueryInput !== "" &&
         searchQueryInput !== currentSearch?.suggestionText && (

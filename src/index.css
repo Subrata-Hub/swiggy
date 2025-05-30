@@ -18,8 +18,13 @@ body {
 }
 
 .custom-toast-container {
-  margin-top: 73px;
+  margin-top: 80px;
+
 }
+
+/* width: 260px;
+  height: 30px;
+  margin-left: 15px; */
 
 .overlay {
   position: fixed;
@@ -58,4 +63,29 @@ body {
 .stickyNav {
   position: fixed;
   background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Clears the 'X' from Internet Explorer/Edge */
+input[type="search"]::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+input[type="search"]::-ms-reveal {
+  /* Also for IE/Edge to remove any other related icons */
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Clears the 'X' from Chrome, Safari, and Opera (WebKit/Blink browsers) */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+  /* You can also use -webkit-appearance: none; for these */
+  -webkit-appearance: none;
+  appearance: none;
 }

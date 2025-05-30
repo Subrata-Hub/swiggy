@@ -5,7 +5,11 @@ import { useDispatch } from "react-redux";
 import { addSearchActionType, addSuggestionText } from "../utils/configSlice";
 
 /* eslint-disable react/prop-types */
-const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
+const PopularCuisinesCard = ({
+  popularCuisines,
+  setSearchQueryInput,
+  setShowSearchIcon,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -18,6 +22,7 @@ const PopularCuisinesCard = ({ popularCuisines, setSearchQueryInput }) => {
 
     localStorage.removeItem("recent_Search");
     setSearchQueryInput(query);
+    setShowSearchIcon(false);
 
     dispatch(addSuggestionText(query));
     dispatch(addSearchActionType("SUGGESTION"));

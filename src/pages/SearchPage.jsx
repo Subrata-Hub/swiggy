@@ -39,6 +39,9 @@ const SearchPage = () => {
   );
 
   const [loading, setLoading] = useState(false);
+  const [showSearchIcon, setShowSearchIcon] = useState(true);
+  const [showBackToSearchIcon, setShowBackToSearchIcon] = useState(false);
+
   const dispatch = useDispatch();
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
@@ -167,14 +170,18 @@ const SearchPage = () => {
       setSearchResultsRefineData(getRefineData(searchResultsData));
       dispatch(resetState());
       dispatch(addIsResetStore(true));
+      // setShowSearchIcon(false);
+      // setShowBackToSearchIcon(true);
     }
   }, [searchResultsData, location.pathname, dispatch]);
 
   useEffect(() => {
     if (searchResultsDataForEnter) {
       setSearchResultsRefineData(getRefineData(searchResultsDataForEnter));
+      setShowBackToSearchIcon(true);
+      setShowSearchIcon(false);
     }
-  }, [searchResultsDataForEnter]);
+  }, [searchResultsDataForEnter, location.pathname]);
 
   useEffect(() => {
     if (selectedTabSearchResults) {
@@ -190,12 +197,20 @@ const SearchPage = () => {
 
   return (
     <>
-      <div className="mt-28 mx-0 xs:mx-[10px]  sm:mx-[30px] md:mx-[30px] lg:mx-[50px] xl:mx-[150px] 2xl:mx-[290px]">
+      <div className="mt-4 mx-0 xs:mx-[10px]  sm:mx-[30px] md:mx-[30px] lg:mx-[50px] xl:mx-[150px] 2xl:mx-[290px]">
         <Searchbar
           setShowSuggestion={setShowSuggestion}
           setSearchQueryInput={setSearchQueryInput}
           searchQueryInput={searchQueryInput}
+          showSearchIcon={showSearchIcon}
+          setShowSearchIcon={setShowSearchIcon}
+          showBackToSearchIcon={showBackToSearchIcon}
+          setShowBackToSearchIcon={setShowBackToSearchIcon}
+          showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+          setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
         />
+
+        {/* <div className="fixed w-[950px] py-28 bg-slate-950 top-0 z-200000"></div> */}
 
         <SuggestionList
           searchSuggestionsData={searchSuggestionsData}
@@ -204,6 +219,8 @@ const SearchPage = () => {
           setShowAddToCardSearchResultsData={setShowAddToCardSearchResultsData}
           setSearchQueryInput={setSearchQueryInput}
           searchQueryInput={searchQueryInput}
+          setShowSearchIcon={setShowSearchIcon}
+          setShowBackToSearchIcon={setShowBackToSearchIcon}
         />
 
         <ResentResSearchList
@@ -211,6 +228,8 @@ const SearchPage = () => {
           searchQueryInput={searchQueryInput}
           setSearchQueryInput={setSearchQueryInput}
           setShowSuggestion={setShowSuggestion}
+          setShowSearchIcon={setShowSearchIcon}
+          setShowBackToSearchIcon={setShowBackToSearchIcon}
         />
 
         <PopularCuisinesList
@@ -219,6 +238,7 @@ const SearchPage = () => {
           setSearchQueryInput={setSearchQueryInput}
           searchQueryInput={searchQueryInput}
           showSuggestion={showSuggestion}
+          setShowSearchIcon={setShowSearchIcon}
         />
 
         {addToCardSearchResults &&
@@ -251,9 +271,11 @@ const SearchPage = () => {
               setShowAddToCardSearchResultsData
             }
             showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+            searchQueryInput={searchQueryInput}
           />
         )}
       </div>
+
       <div className="ml-4">
         <PreviewCartViewForMobile />
         <MobileNavigation />

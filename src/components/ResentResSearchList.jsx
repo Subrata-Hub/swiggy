@@ -15,6 +15,8 @@ const ResentResSearchList = ({
 
   setSearchQueryInput,
   setShowSuggestion,
+  setShowSearchIcon,
+  setShowBackToSearchIcon,
 }) => {
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
@@ -53,6 +55,8 @@ const ResentResSearchList = ({
     );
 
     setSearchQueryInput(query);
+    setShowSearchIcon(false);
+    setShowBackToSearchIcon(true);
 
     setShowSuggestion(false);
   };
@@ -68,7 +72,7 @@ const ResentResSearchList = ({
     !currentSearch && (
       <>
         {recentResSearchUniqueArray?.length > 0 ? (
-          <div className="px-3 sm:px-4 ">
+          <div className="px-3 sm:px-4 mt-4 sm:mt-10">
             <div className="flex justify-between">
               <h2>Resent Searches</h2>
               <p
