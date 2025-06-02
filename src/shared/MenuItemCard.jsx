@@ -14,18 +14,20 @@ import { useSelector } from "react-redux";
 import PopupResetCard from "./PopupResetCard";
 
 import AddMenuItemToCart from "./AddMenuItemToCart";
+import PopupSearchDishesCard from "./PopupSearchDishesCard";
 
 const MenuItemCard = ({ resMenuItem, resInformation }) => {
+  const [showPopup, setShowPopup] = useState(false);
   const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
   const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  // const [counter, setCounter] = useState(0);
 
+  const menuCardRef = useRef(null);
   const menuItemCardRef = useRef(null);
   const addonButtonRef = useRef(null);
-
+  const detailMenuButtonRef = useRef(null);
   const addResetRef = useRef(null);
   const resetPopupCardRef = useRef(null);
 
@@ -41,6 +43,17 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
   );
 
   let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
+
+  useOutSideClick(
+    menuCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowPopup(false);
+      }
+    },
+
+    detailMenuButtonRef
+  );
 
   useOutSideClick(
     menuItemCardRef,
@@ -68,6 +81,11 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     setTimeout(() => setDisableOutsideClick(false), 100);
   };
 
+  const handleShowPopup = () => {
+    setShowPopup(!showPopup);
+    console.log("fvkbknknk");
+  };
+
   const handleShowMore = () => {
     setShowMore(true);
   };
@@ -80,13 +98,10 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     menuPrice: resMenuItem?.card?.info?.price
       ? resMenuItem?.card?.info?.price / 100
       : resMenuItem?.card?.info?.defaultPrice / 100,
-
-    // totalMenuItems: counter + 1,
   };
 
   return (
     <>
-      {/* <div className="w-full h-[0.3px] bg-slate-700"></div> */}
       <div
         className={`flex justify-between gap-2 py-6 ${
           resMenuItem?.card?.info?.description ? "mb-5" : "mb-8"
@@ -139,34 +154,12 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
           </p>
         </div>
         <div className="relative">
-          {/* {resMenuItem?.card?.info?.imageId ? (
-            <div className="">
-              <img
-                src={IMG_MENU + resMenuItem?.card?.info?.imageId}
-                className="object-cover w-[156px] h-[144px] rounded-2xl"
-              />
-              <AddMenuItemToCart
-                resInformation={resInformation}
-                resMenuItem={resMenuItem}
-                menuInfo={menuInfo}
-                addonButtonRef={addonButtonRef}
-                addResetRef={addResetRef}
-                setShowResetCardPopup={setShowResetCardPopup}
-                showMenuCardPopup={showMenuCardPopup}
-                setShowMenuCardPopup={setShowMenuCardPopup}
-                menuItem={menuItem}
-                userMenuItem={userMenuItem}
-                counter={counter}
-                cartItems={cartItems}
-                userCartItems={userCartItems}
-              />
-            </div>
-          ) : (
-            <div className="w-[156px] h-[144px] flex items-center"></div>
-          )} */}
-
           {resMenuItem?.card?.info?.imageId ? (
-            <div className="">
+            <div
+              className=""
+              onClick={handleShowPopup}
+              ref={detailMenuButtonRef}
+            >
               <img
                 src={IMG_MENU + resMenuItem?.card?.info?.imageId}
                 className="object-cover w-[140px] sm:w-[156px] h-[130px] sm:h-[144px] rounded-2xl"
@@ -193,15 +186,33 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             userCartItems={userCartItems}
             isImage={resMenuItem?.card?.info?.imageId ? true : false}
           />
-
-          {/* <div className=" pl-6">
-            {resMenuItem?.card?.info?.addons && (
-              <p className="">Customisable</p>
-            )}
-          </div> */}
         </div>
       </div>
       <div className="w-full h-[0.1px] bg-slate-800"></div>
+
+      {showPopup && (
+        <>
+          <div className="overlay"></div>
+          <div ref={menuCardRef}>
+            <PopupSearchDishesCard
+              searchDishesData={resMenuItem?.card}
+              handleShowPopup={handleShowPopup}
+              counter={counter}
+              setShowResetCardPopup={setShowResetCardPopup}
+              showMenuCardPopup={showMenuCardPopup}
+              setShowMenuCardPopup={setShowMenuCardPopup}
+              addResetRef={addResetRef}
+              addonButtonRef={addonButtonRef}
+              menuInfo={menuInfo}
+              resInformation={resInformation}
+              menuItem={menuItem}
+              userMenuItem={userMenuItem}
+              cartItems={cartItems}
+              userCartItems={userCartItems}
+            />
+          </div>
+        </>
+      )}
 
       {((showMenuCardPopup && resMenuItem?.card?.info?.addons) ||
         showPopupBeforeReset) && (
@@ -216,7 +227,6 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               resId={resInformation?.restaurantId}
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
-              // showMenuCardPopup={showMenuCardPopup}
               onContinue={handleContinueClick}
             />
           </div>
@@ -234,13 +244,10 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               counter={counter}
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               searchDishesData={resMenuItem?.card}
-              // setShowMenuCardPopup={setShowMenuCardPopup}
             />
           </div>
         </>
       )}
-
-      {/* <div className="w-full h-[0.3px] bg-slate-700"></div> */}
     </>
   );
 };

@@ -61,7 +61,6 @@ const SearchDishesCard = ({
     () => {
       if (!disableOutsideClick) {
         setShowMenuCardPopup(false);
-        showPopupBeforeReset(false);
       }
     },
     addonButtonRef
