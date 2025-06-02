@@ -1,34 +1,35 @@
 const SearchResultShimmer = () => {
+  // w-[438px] h-[275px]
   return (
-    <div className="pt-8">
+    <div className="pt-3">
       <div className="flex gap-4">
         {Array(2)
           .fill("")
           .map((btn, index) => (
             <button
               key={index}
-              className="w-24 h-8 bg-slate-800 animate-pulse rounded-2xl"
+              className="w-28 h-9 bg-slate-800 animate-pulse rounded-2xl"
             ></button>
           ))}
       </div>
-      <div className="flex gap-3 mt-6">
+      <div className={`flex gap-3 mt-8`}>
         {Array(8)
           .fill("")
           .map((btn, index) => (
             <button
               key={index}
-              className="w-20 h-8 rounded-2xl bg-slate-800 animate-pulse"
+              className="w-24 h-9 rounded-2xl bg-slate-800 animate-pulse"
             ></button>
           ))}
       </div>
 
-      <div className="flex flex-wrap gap-6 mt-6">
+      <div className="flex flex-wrap bg-slate-900  h-auto gap-6 mt-6 xs:px-2 sm:px-2 md:px-4 lg:px-4 py-4">
         {Array(6)
           .fill("")
           .map((card, index) => (
             <div
               key={index}
-              className="bg-slate-800 w-[438px] h-[275px] mb-2 animate-pulse"
+              className="bg-slate-800 w-[380px] xs:w-[380px] sm:w-[280px] md:w-[320px] lg:w-[430px] xl:w-[438px] h-[275px] mb-2 animate-pulse"
             >
               <div className="flex-col">
                 {/* Header Section */}

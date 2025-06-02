@@ -75,7 +75,7 @@ const Searchbar = ({
         placeholder={`Search for restaurant and food`}
         // Removed 'fixed' from input, adjust width for internal padding
         className={`${
-          showBackToSearchIcon ? "pl-14" : "pl-10"
+          showBackToSearchIcon ? "pl-8 sm:pl-14" : "pl-2 sm:pl-10"
         } w-full h-12 bg-slate-800 rounded-2xl sm:rounded-none outline-none pr-10`}
         onChange={(e) => getSearchQuery(e.target.value)}
         onKeyDown={(e) => {
@@ -87,18 +87,18 @@ const Searchbar = ({
       {/* Position the icon absolutely relative to its now fixed parent */}
 
       {showSearchIcon && (
-        <HiMagnifyingGlass className="absolute right-4 top-1/2 -translate-y-1/2 text-[22px]" />
+        <HiMagnifyingGlass className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 text-[20px] sm:text-[22px]" />
       )}
       {!showSearchIcon && (
         <HiMiniXMark
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[28px]"
+          className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 text-[22px] sm:text-[28px]"
           onClick={handleRemoveText}
         />
       )}
 
       {showBackToSearchIcon && (
         <HiChevronLeft
-          className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-[27px]"
+          className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 font-semibold text-[24px] sm:text-[27px]"
           onClick={backToSearchPage}
         />
       )}

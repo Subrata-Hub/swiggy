@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import SearchDishesCard from "../shared/SearchDishesCard";
 import SearchResultShimmer from "../shared/shimmer/SearchResultShimmer";
-// import { useEffect } from "react";
-// import { useEffect } from "react";
-// import { useSelector } from "react-redux";
-// import { useSelector } from "react-redux";
+
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
 const AddToCartSearchResults = ({
@@ -16,9 +15,8 @@ const AddToCartSearchResults = ({
   showAddToCardSearchResultsData,
   city,
 }) => {
-  // const cartNumber = useSelector((state) => state.cart.totalCardItems);
-  // const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
-  // const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
+  const cartNumber = useSelector((state) => state.cart.totalCardItems);
+  const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
 
   const searchResultLabel = addToCardSearchResults?.cards?.filter(
@@ -38,10 +36,6 @@ const AddToCartSearchResults = ({
       "type.googleapis.com/swiggy.gandalf.widgets.v2.Collection"
   );
 
-  // const userMenuItem = userCartItems?.items?.[0]?.find(
-  //   (item) => item.menuId === ?.info?.id
-  // );
-
   console.log(moreDishesData);
 
   const moreDishesDataWithResInfo =
@@ -55,19 +49,22 @@ const AddToCartSearchResults = ({
     menuURL: `/city/${city}/${moreDishesDataWithResInfo?.info?.name}/${moreDishesDataWithResInfo?.info?.locality}/${moreDishesDataWithResInfo?.info?.id}`,
   };
 
-  // const backToSearchResultsPage = () => {
-  //   setShowAddToCardSearchResultsData(false);
-  // };
+  const backToSearchResultsPage = () => {
+    if (showAddToCardSearchResultsData) {
+      setShowAddToCardSearchResultsData(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (cartNumber === 0 && showAddToCardSearchResultsData) {
-  //     setShowAddToCardSearchResultsData(false);
-  //   } else {
-  //     setShowAddToCardSearchResultsData(true);
-  //   }
-  // }, [cartNumber]);
-
-  // console.log(searchResultsForDishes);
+  useEffect(() => {
+    if (cartNumber === 0 && showAddToCardSearchResultsData) {
+      setShowAddToCardSearchResultsData(false);
+    }
+  }, [
+    cartNumber,
+    userCartItems,
+    showAddToCardSearchResultsData,
+    setShowAddToCardSearchResultsData,
+  ]);
 
   return (
     <div className="">
@@ -90,7 +87,14 @@ const AddToCartSearchResults = ({
                       searchResultsForDishes?.map((item) => (
                         <div key={item?.card?.card?.info?.id}>
                           <SearchDishesCard
+                            city={city}
                             searchDishesData={item?.card?.card}
+                            setShowAddToCardSearchResultsData={
+                              setShowAddToCardSearchResultsData
+                            }
+                            showAddToCardSearchResultsData={
+                              showAddToCardSearchResultsData
+                            }
                           />
                         </div>
                       ))}
@@ -129,7 +133,7 @@ const AddToCartSearchResults = ({
                 </Link>
                 <div
                   className="w-full h-[250px] bg-slate-800 mt-4 flex justify-center"
-                  // onClick={backToSearchResultsPage}
+                  onClick={backToSearchResultsPage}
                 >
                   <button className="mt-10">
                     {searchResultLabel?.[2]?.card?.card?.text}

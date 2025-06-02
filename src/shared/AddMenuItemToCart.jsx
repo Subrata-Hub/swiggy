@@ -30,9 +30,9 @@ const AddMenuItemToCart = ({
   setShowResetCardPopup,
   showMenuCardPopup,
   setShowMenuCardPopup,
-  setShowAddToCardSearchResultsData = false,
+  setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
-  // goToSearchResultsPage,
+
   menuItem,
   userMenuItem,
   counter,
@@ -40,8 +40,6 @@ const AddMenuItemToCart = ({
   userCartItems,
   isImage,
   topPicksData,
-
-  // isSearchResults,
 }) => {
   const dispatch = useDispatch();
   const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
@@ -50,7 +48,6 @@ const AddMenuItemToCart = ({
   const updateCardItemAndFirestore =
     (item, action, cartId) => async (dispatch) => {
       dispatch(updateCardItems({ ...item, action, cartId })); // Dispatch the synchronous Redux update
-      console.log(item);
 
       if (cartId) {
         const cartRef = doc(db, "cart", cartId);
@@ -59,13 +56,11 @@ const AddMenuItemToCart = ({
 
           if (cartSnap.exists()) {
             await updateDoc(cartRef, {
-              // cartItems: updatedCartItems,
               totalMenuItems: item.totalMenuItems, // Use the updated item count
             });
           }
         } catch (error) {
           console.error("Error updating cart in Firestore:", error);
-          // Handle error appropriately (e.g., dispatch an error action)
         }
       } else {
         console.warn("cartId is undefined, cannot update Firestore.");
@@ -96,7 +91,7 @@ const AddMenuItemToCart = ({
         setShowResetCardPopup(true);
       } else {
         setShowMenuCardPopup(!showMenuCardPopup);
-        counter = 0;
+        // counter = 0;
       }
     } else {
       if (
@@ -108,9 +103,6 @@ const AddMenuItemToCart = ({
         setShowResetCardPopup(true);
       } else {
         const newCounter = counter + 1;
-        // setCounter(newCounter);
-
-        // const tempCartId = "temp_" + Date.now();
 
         const updatedCardInfo = {
           ...menuInfo,
@@ -132,23 +124,20 @@ const AddMenuItemToCart = ({
 
         dispatch(addResInfo(resInformation));
 
-        // disPatch(addCartItems(updatedCardInfo));
         dispatch(addCartItems({ ...updatedCardInfo, cartId }));
+
+        goToSearchResultsPage(resInformation?.restaurantId, menuInfo?.menuId);
       }
     }
   };
 
   const updatingCardItem = async (item, action, cartId) => {
-    // setCounter(item);
-
     const updatedCardInfo = {
       ...menuInfo,
       totalMenuItems: item, // Use the latest item count directly
       action: action,
       cartId,
     };
-
-    // disPatch(updateCardItems(updatedCardInfo));
 
     dispatch(
       updateCardItemAndFirestore(
@@ -165,7 +154,6 @@ const AddMenuItemToCart = ({
   };
 
   const goToSearchResultsPage = (resId, menuId) => {
-    // if (showResetCardPopup) return;
     if (
       !resMenuItem?.info?.addons &&
       !showAddToCardSearchResultsData &&
@@ -190,37 +178,19 @@ const AddMenuItemToCart = ({
     }
   };
 
-  // right-[156px] top-[2px]
-  // absolute top-[124px] left-5
   return (
     <div
       className={`absolute ${
         isImage ? "top-[110px] sm:top-[124px]" : "top-14"
       } left-4.5 sm:left-6`}
-      // className={`absolute flex justify-end ${
-      //   isSearchResults ? "top-[92px] left-[156px]" : "right-[156px] top-[2px]"
-      // }  `}
     >
-      <div
-      // className={
-      //   resMenuItem?.card?.info?.imageId
-      //     ? `absolute top-[124px] left-5`
-      //     : `absolute top-[30px] right-5`
-      // }
-      >
+      <div>
         {counter === 0 && (
           <div ref={addonButtonRef}>
             <button
               className="px-8 sm:px-10 py-2 bg-slate-900 text-emerald-500 shadow-md rounded-xl shadow-cyan-950"
-              // onClick={handleShowMenuCardPopup}
               onClick={() => {
                 handleShowMenuCardPopup();
-                setTimeout(() => {
-                  goToSearchResultsPage(
-                    resInformation?.restaurantId,
-                    menuInfo?.menuId
-                  );
-                }, 2000); // Ensures this runs after state updates in handleShowMenuCardPopup
               }}
               ref={addResetRef}
             >
@@ -231,7 +201,10 @@ const AddMenuItemToCart = ({
 
         {counter >= 1 && (
           <div className="w-[100px] sm:w-[120px] h-10 bg-slate-900 text-emerald-500 rounded-xl flex items-center justify-center">
-            <div className="flex justify-center items-center gap-7">
+            <div
+              className="flex justify-center items-center gap-7"
+              ref={addonButtonRef}
+            >
               <div
                 onClick={() =>
                   updatingCardItem(

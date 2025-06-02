@@ -19,6 +19,7 @@ import SearchResultShimmer from "../shared/shimmer/SearchResultShimmer";
 /* eslint-disable react/prop-types */
 const SearchResults = ({
   loading,
+  city,
   showSuggestion,
   searchResultsType,
 
@@ -28,7 +29,6 @@ const SearchResults = ({
   fillObj,
   setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
-  searchQueryInput,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [activeSort, setActiveSort] = useState(false);
@@ -258,6 +258,7 @@ const SearchResults = ({
                       searchResultsForDishes?.map((item) => (
                         <div key={item?.card?.card?.info?.id}>
                           <SearchDishesCard
+                            city={city}
                             searchDishesData={item?.card?.card}
                             setShowAddToCardSearchResultsData={
                               setShowAddToCardSearchResultsData

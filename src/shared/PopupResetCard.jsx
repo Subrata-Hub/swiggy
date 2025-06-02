@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-
 import { useDispatch } from "react-redux";
 import { reSetStore } from "../utils/cartSlice";
-// import { addResParams } from "../utils/searchSlice";
 
 import { auth } from "../utils/firebase";
 import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
 import deleteAllUserCarts from "../actions/deleteAllUserCarts";
+import { addResParams } from "../utils/searchSlice";
 
 const PopupResetCard = ({
   setShowResetCardPopup,
@@ -16,17 +15,13 @@ const PopupResetCard = ({
 
   setShowPopupBeforeReset,
   searchDishesData,
-  // setShowAddToCardSearchResultsData,
+  setShowAddToCardSearchResultsData,
 }) => {
   const dispatch = useDispatch();
 
   const handleResetCart = async () => {
-    // setShowAddToCardSearchResultsData();
     if (searchDishesData?.info?.addons) {
       setShowPopupBeforeReset(true);
-
-      // dispatch(reSetStore());
-      // counter = 0;
 
       setShowResetCardPopup(false);
     } else {
@@ -45,7 +40,6 @@ const PopupResetCard = ({
       dispatch(reSetStore());
 
       const newCounter = counter + 1;
-      // setCounter(newCounter);
 
       const cartItemInfo = {
         cartItems: preservedMenuInfo,
@@ -56,30 +50,21 @@ const PopupResetCard = ({
 
       console.log(cartItemInfo);
 
-      // const updatedCardInfo = {
-      //   ...preservedMenuInfo,
-      //   totalMenuItems: newCounter,
-      //   userId: auth.currentUser.uid,
-      // };
-
       await createCartAndLinkToUser(auth?.currentUser?.uid, cartItemInfo);
-      // dispatch(addResInfo(preservedResInfo));
-      // dispatch(addCartItems({ ...updatedCardInfo, cartId }));
-
-      // const cartData = {
-      //   cartResInfo: preservedResInfo,
-      //   items: [preservedMenuInfo],
-      //   // totalItems,
-      //   // subTotal,
-      // };
-
-      // localStorage.setItem("cart_items", JSON.stringify(cartData));
-
       setShowResetCardPopup(false);
+
+      dispatch(
+        addResParams({
+          resId: preservedResInfo?.restaurantId,
+          menuId: preservedMenuInfo?.menuId,
+        })
+      );
+      setShowAddToCardSearchResultsData(true);
     }
   };
+
   return (
-    <div className="w-full sm:w-[520px] h-[220px] p-[20px] sm:p-[30px] bg-slate-800 fixed z-[11999] bottom-60 sm:bottom-36 md:bottom-15 right-[0%] sm:right-[10%] md:right-[18%] lg:right-[25%] xl:right-[30%] 2xl:right-[35%] rounded-3xl">
+    <div className="w-full sm:w-[520px] h-[220px] p-[20px] sm:p-[30px] bg-slate-800 fixed z-[119996552255255] bottom-60 sm:bottom-36 md:bottom-15 right-[0%] sm:right-[10%] md:right-[18%] lg:right-[25%] xl:right-[30%] 2xl:right-[35%] rounded-3xl">
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="font-bold text-[22px]">Items already in cart</h2>
@@ -98,7 +83,6 @@ const PopupResetCard = ({
           <button
             className="w-[220px] h-[50px] bg-green-500"
             onClick={() => {
-              // setShowAddToCardSearchResultsData(false);
               handleResetCart();
             }}
           >

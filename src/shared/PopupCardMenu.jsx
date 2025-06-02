@@ -108,7 +108,7 @@ const PopupCardMenu = ({
     menuId: searchDishesData?.info?.id,
     resId: resId,
     menuName: searchDishesData?.info?.name,
-    // vegClassifier: searchDishesData?.info?.itemAttribute?.vegClassifier,
+
     vegClassifier: searchDishesData?.info?.isVeg === 1 ? "VEG" : "NONVEG",
 
     menuPrice: totalPrice,
@@ -130,19 +130,18 @@ const PopupCardMenu = ({
         totalMenuItems: item,
         userId: auth.currentUser.uid,
       };
-      // const updateStore = {
-      //   ...preservedMenuInfo,
-      //   totalMenuItems: item,
-      //   userId: auth.currentUser.uid,
-      // };
 
       await createCartAndLinkToUser(auth?.currentUser?.uid, updatedCardInfo);
-      // dispatch(addResInfo(preservedResInfo));
-      // dispatch(addCartItems({ ...updateStore, cartId }));
 
       setShowPopupBeforeReset(false);
       setShowMenuCardPopup(false);
-      // setShowAddToCardSearchResultsData(true);
+      setShowAddToCardSearchResultsData(true);
+      dispatch(
+        addResParams({
+          resId: preservedResInfo?.restaurantId,
+          menuId: preservedMenuInfo?.menuId,
+        })
+      );
     } else {
       const updatedCardInfo = {
         // ...menuInfo,
@@ -167,7 +166,8 @@ const PopupCardMenu = ({
 
       setShowPopupBeforeReset(false);
       setShowMenuCardPopup(false);
-      setShowAddToCardSearchResultsData(true);
+
+      goToSearchResultsPage(resId, searchDishesData?.info?.id);
     }
   };
 
@@ -221,7 +221,7 @@ const PopupCardMenu = ({
   };
 
   return (
-    <div className=" w-full sm:w-[500px] md:sm:w-[600px] h-auto bg-slate-800 fixed  z-[81999999933558888855]    top-20 sm:top-28 right-[0%] sm:right-[10%] md:right-[10%] lg:right-[20%] xl:right-[25%] 2xl:right-[30%]  rounded-3xl p-4 ">
+    <div className=" w-full sm:w-[500px] md:sm:w-[600px] h-auto bg-slate-800 fixed  z-[819999999335588888556555555]  top-20 sm:top-28 md:top-28 lg:top-28 xl:top-24 right-[0%] sm:right-[10%] md:right-[10%] lg:right-[20%] xl:right-[25%] 2xl:right-[30%] shadow-md shadow-slate-700 rounded-3xl p-4 ">
       <h2 className="mt-2">
         {searchDishesData?.info?.name} .{" "}
         <span>
@@ -231,9 +231,9 @@ const PopupCardMenu = ({
             : searchDishesData?.info?.defaultPrice / 100}
         </span>
       </h2>
-      <div className="absolute top-0 right-0">
+      <div className="absolute top-4 right-4">
         <div
-          className="w-6 h-6 rounded-full bg-amber-500 flex justify-center items-center"
+          className="w-6 h-6 rounded-full bg-amber-600 flex justify-center items-center"
           onClick={() => (
             setShowMenuCardPopup(false), setShowPopupBeforeReset(false)
           )}
@@ -358,8 +358,6 @@ const PopupCardMenu = ({
             className="px-8 sm:px-15 py-2 sm:py-3 bg-emerald-600 rounded-2xl"
             onClick={() => {
               handleAddItemToCart(counter + 1);
-
-              goToSearchResultsPage(resId, searchDishesData?.info?.id);
             }}
           >
             Add Item to Cart

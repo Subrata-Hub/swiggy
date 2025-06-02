@@ -85,11 +85,13 @@ const SearchPage = () => {
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
   const resParamsObj = useSelector((store) => store?.search?.resParams);
+  console.log(resParamsObj);
+
   const placeData = useSelector(
     (store) => store.firebaseData?.userLocationData
   );
-  const placeArray = placeData?.address_components?.filter((cityList) =>
-    cityList?.types?.find((item) => item === "city")
+  const placeArray = (currentLocation || placeData)?.address_components?.filter(
+    (cityList) => cityList?.types?.find((item) => item === "city")
   );
 
   const city = placeArray?.[0]?.long_name;
@@ -138,7 +140,7 @@ const SearchPage = () => {
   );
 
   const addToCardSearchResults = useAddToCardSearchResults(
-    suggestionText,
+    currentSearch?.suggestionText || suggestionText,
     setLoading,
     resParamsObj?.resId,
     resParamsObj?.menuId,
@@ -259,6 +261,7 @@ const SearchPage = () => {
         ) : (
           <SearchResults
             loading={loading}
+            city={city}
             showSuggestion={showSuggestion}
             searchResultsType={
               searchResultsType || currentSearch?.searchResultType
@@ -271,7 +274,6 @@ const SearchPage = () => {
               setShowAddToCardSearchResultsData
             }
             showAddToCardSearchResultsData={showAddToCardSearchResultsData}
-            searchQueryInput={searchQueryInput}
           />
         )}
       </div>

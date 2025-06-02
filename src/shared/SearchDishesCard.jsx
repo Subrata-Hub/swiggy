@@ -15,6 +15,7 @@ import PopupResetCard from "./PopupResetCard";
 
 import AddMenuItemToCart from "./AddMenuItemToCart";
 const SearchDishesCard = ({
+  city,
   searchDishesData,
   resInformationForMoreDishes,
   hideHeader = false,
@@ -39,33 +40,28 @@ const SearchDishesCard = ({
   const userMenuItem = userCartItems?.items?.[0]?.find(
     (item) => item.menuId === searchDishesData?.info?.id
   );
-  const placeData = useSelector(
-    (store) => store.firebaseData?.userLocationData
-  );
-  const placeArray = placeData?.address_components?.filter((cityList) =>
-    cityList?.types?.find((item) => item === "city")
-  );
 
-  const city = placeArray?.[0]?.long_name;
   const menuItem = cartItems.find(
     (item) => item.menuId === searchDishesData?.info?.id
   );
   let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
 
-  useOutSideClick(searchDishesCardRef, () => {
-    if (!disableOutsideClick) {
-      setShowPopup(false);
-      // setShowPopupBeforeReset(false);
-    }
+  useOutSideClick(
+    searchDishesCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowPopup(false);
+      }
+    },
 
-    detailMenuButtonRef;
-  });
+    detailMenuButtonRef
+  );
   useOutSideClick(
     menuItemCardRef,
     () => {
       if (!disableOutsideClick) {
         setShowMenuCardPopup(false);
-        // setShowPopupBeforeReset(false);
+        showPopupBeforeReset(false);
       }
     },
     addonButtonRef
@@ -95,7 +91,7 @@ const SearchDishesCard = ({
     restaurantName: searchDishesData?.restaurant?.info?.name,
     resAreaName: searchDishesData?.restaurant?.info?.locality,
     resImg: searchDishesData?.restaurant?.info?.cloudinaryImageId,
-    menuURL: `/city/kolkata/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.locality}/${searchDishesData?.restaurant?.info?.id}`,
+    menuURL: `/city/${city}/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.locality}/${searchDishesData?.restaurant?.info?.id}`,
   };
 
   const menuInfo = {
@@ -114,7 +110,7 @@ const SearchDishesCard = ({
   return (
     <>
       <div
-        className={`bg-slate-800  w-[380px] xs:w-[380px] sm:w-[300px] md:w-[340px] lg:w-[430px] xl:w-[438px]  ${
+        className={`bg-slate-800  w-[380px] xs:w-[380px] sm:w-[280px] md:w-[320px] lg:w-[430px] xl:w-[438px]  ${
           !hideHeader ? "h-[287px]" : "h-[200px]"
         } mb-2 rounded-2xl`}
       >
@@ -194,7 +190,6 @@ const SearchDishesCard = ({
                 setShowResetCardPopup={setShowResetCardPopup}
                 showMenuCardPopup={showMenuCardPopup}
                 setShowMenuCardPopup={setShowMenuCardPopup}
-                // goToSearchResultsPage={goToSearchResultsPage}
                 menuItem={menuItem}
                 userMenuItem={userMenuItem}
                 counter={counter}
@@ -204,15 +199,8 @@ const SearchDishesCard = ({
                   setShowAddToCardSearchResultsData
                 }
                 showAddToCardSearchResultsData={showAddToCardSearchResultsData}
-                // isSearchResults={true}
                 isImage={searchDishesData?.info?.imageId ? true : false}
               />
-
-              {/* <div className="pt-5 pl-7 text-[13.5px]">
-                {searchDishesData?.info?.addons && (
-                  <p className="">Customisable</p>
-                )}
-              </div> */}
             </div>
           </div>
         </div>
@@ -232,7 +220,7 @@ const SearchDishesCard = ({
               addResetRef={addResetRef}
               addonButtonRef={addonButtonRef}
               menuInfo={menuInfo}
-              resInformation={resInformation}
+              resInformation={resInformationForMoreDishes || resInformation}
               menuItem={menuItem}
               userMenuItem={userMenuItem}
               cartItems={cartItems}
