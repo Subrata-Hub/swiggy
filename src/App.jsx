@@ -6,6 +6,7 @@ import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import MenuItemSearchPage from "./pages/MenuItemSearchPage";
 import SearchPage from "./pages/SearchPage";
 import AppLayout from "./components/AppLayout";
+import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -33,6 +34,10 @@ function App() {
         {
           path: "/search",
           element: <SearchPage />,
+        },
+        {
+          path: "/checkout",
+          element: <CheckoutPage />,
         },
       ],
     },

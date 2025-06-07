@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import PopupResetCard from "./PopupResetCard";
 
 import AddMenuItemToCart from "./AddMenuItemToCart";
+import PopupUpdateCard from "./PopupUpdateCard";
 const SearchDishesCard = ({
   city,
   searchDishesData,
@@ -27,6 +28,9 @@ const SearchDishesCard = ({
   const [showMenuCardPopup, setShowMenuCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
   const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
+  const [showMenuCardPopupBeforeUpdate, setShowMenuCardPopupBeforeUpdate] =
+    useState(false);
+  const [showPopupBeforeUpdate, setShowPopupBeforeUpdate] = useState(false);
 
   const searchDishesCardRef = useRef(null);
   const menuItemCardRef = useRef(null);
@@ -34,17 +38,39 @@ const SearchDishesCard = ({
   const detailMenuButtonRef = useRef(null);
   const addResetRef = useRef(null);
   const resetPopupCardRef = useRef(null);
+  const updatePopupCardRef = useRef(null);
+  const addUpdateRef = useRef(null);
 
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
   const cartItems = useSelector((state) => state.cart.cartItems);
-  const userMenuItem = userCartItems?.items?.[0]?.find(
-    (item) => item.menuId === searchDishesData?.info?.id
-  );
 
   const menuItem = cartItems.find(
     (item) => item.menuId === searchDishesData?.info?.id
   );
-  let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
+
+  const totalMenuItem = cartItems.filter(
+    (item) => item.menuId === searchDishesData?.info?.id
+  );
+
+  const totalMenuItemsCount = totalMenuItem
+    ?.map((item) => item?.totalMenuItems)
+    .reduce((acc, item) => acc + item, 0);
+
+  const userMenuItem = userCartItems?.items?.[0]?.find(
+    (item) => item.menuId === searchDishesData?.info?.id
+  );
+
+  const totalUserMenuItem = userCartItems?.items?.[0]?.filter(
+    (item) => item.menuId === searchDishesData?.info?.id
+  );
+
+  const totalUserMenuItemCount = totalUserMenuItem
+    ?.map((item) => item.totalMenuItems)
+    .reduce((acc, item) => acc + item, 0);
+
+  // let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
+
+  let counter = totalMenuItemsCount || totalUserMenuItemCount || 0;
 
   useOutSideClick(
     searchDishesCardRef,
@@ -76,6 +102,17 @@ const SearchDishesCard = ({
     addResetRef
   );
 
+  useOutSideClick(
+    updatePopupCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowPopupBeforeUpdate(false);
+        // setShowResetCardPopup(false);
+      }
+    },
+    addUpdateRef
+  );
+
   const handleContinueClick = () => {
     setDisableOutsideClick(true);
     setTimeout(() => setDisableOutsideClick(false), 100);
@@ -104,6 +141,13 @@ const SearchDishesCard = ({
     menuPrice: searchDishesData?.info?.price
       ? searchDishesData?.info?.price / 100
       : searchDishesData?.info?.defaultPrice / 100,
+
+    finalmenuPrice:
+      (searchDishesData?.info?.finalPrice &&
+        searchDishesData?.info?.finalPrice / 100) ||
+      0,
+
+    addons: searchDishesData?.info?.addons || [],
   };
 
   return (
@@ -199,6 +243,9 @@ const SearchDishesCard = ({
                 }
                 showAddToCardSearchResultsData={showAddToCardSearchResultsData}
                 isImage={searchDishesData?.info?.imageId ? true : false}
+                setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+                addUpdateRef={addUpdateRef}
+                totalMenuItem={totalMenuItem}
               />
             </div>
           </div>
@@ -228,12 +275,21 @@ const SearchDishesCard = ({
                 setShowAddToCardSearchResultsData
               }
               showAddToCardSearchResultsData={showAddToCardSearchResultsData}
+              showPopupBeforeUpdate={showPopupBeforeUpdate}
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              // showMenuCardPopupBeforeUpdate={showMenuCardPopupBeforeUpdate}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
+              }
+              updatePopupCardRef={updatePopupCardRef}
+              addUpdateRef={addUpdateRef}
             />
           </div>
         </>
       )}
       {((showMenuCardPopup && searchDishesData?.info?.addons) ||
-        showPopupBeforeReset) && (
+        showPopupBeforeReset ||
+        showMenuCardPopupBeforeUpdate) && (
         <>
           <div className="overlay"></div>
           <div ref={menuItemCardRef}>
@@ -249,6 +305,13 @@ const SearchDishesCard = ({
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
               onContinue={handleContinueClick}
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              showMenuCardPopupBeforeUpdate={showMenuCardPopupBeforeUpdate}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
+              }
+              menuItem={menuItem}
+              userMenuItem={userMenuItem}
               setShowAddToCardSearchResultsData={
                 setShowAddToCardSearchResultsData
               }
@@ -270,6 +333,32 @@ const SearchDishesCard = ({
               searchDishesData={searchDishesData}
               setShowAddToCardSearchResultsData={
                 setShowAddToCardSearchResultsData
+              }
+            />
+          </div>
+        </>
+      )}
+
+      {showPopupBeforeUpdate && (
+        <>
+          <div className="overlay"></div>
+          <div ref={updatePopupCardRef}>
+            <PopupUpdateCard
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              menuInfo={menuInfo}
+              // menuItem={menuItem}
+              // userMenuItem={userMenuItem}
+              menuItem={
+                totalMenuItem?.length > 0 &&
+                totalMenuItem[totalMenuItem?.length - 1]
+              }
+              userMenuItem={
+                totalUserMenuItem?.length > 0 &&
+                totalUserMenuItem[totalUserMenuItem?.length - 1]
+              }
+              // counter={counter}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
               }
             />
           </div>

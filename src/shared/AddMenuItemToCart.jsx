@@ -2,23 +2,14 @@
 import { IoAdd, IoRemove } from "react-icons/io5";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  arrayRemove,
-  deleteDoc,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { auth, db } from "../utils/firebase";
-import {
-  addCartItems,
-  addResInfo,
-  removeCardItems,
-  updateCardItems,
-} from "../utils/cartSlice";
+
+import { auth } from "../utils/firebase";
+import { addCartItems, addResInfo, removeCardItems } from "../utils/cartSlice";
 import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
 import { toast } from "react-toastify";
 import { addResParams } from "../utils/searchSlice";
+import updateCardItemAndFirestore from "../actions/updateCardItemAndFirestore";
+import deleteMenutem from "../actions/deleteMenutem";
 
 const AddMenuItemToCart = ({
   resInformation,
@@ -40,49 +31,16 @@ const AddMenuItemToCart = ({
   userCartItems,
   isImage,
   topPicksData,
+  setShowPopupBeforeUpdate,
+  addUpdateRef,
+  totalMenuItem,
 }) => {
   const dispatch = useDispatch();
   const restaurantInfoFromCard = useSelector((state) => state.cart.resInfo);
   const resParamsObj = useSelector((store) => store?.search?.resParams);
 
-  const updateCardItemAndFirestore =
-    (item, action, cartId) => async (dispatch) => {
-      dispatch(updateCardItems({ ...item, action, cartId })); // Dispatch the synchronous Redux update
-
-      if (cartId) {
-        const cartRef = doc(db, "cart", cartId);
-        try {
-          const cartSnap = await getDoc(cartRef);
-
-          if (cartSnap.exists()) {
-            await updateDoc(cartRef, {
-              totalMenuItems: item.totalMenuItems, // Use the updated item count
-            });
-          }
-        } catch (error) {
-          console.error("Error updating cart in Firestore:", error);
-        }
-      } else {
-        console.warn("cartId is undefined, cannot update Firestore.");
-      }
-    };
-
-  async function deleteMenutem(documentId) {
-    try {
-      const docRef = doc(db, "cart", documentId);
-      await deleteDoc(docRef);
-
-      const userRef = doc(db, "users", auth.currentUser.uid);
-      await updateDoc(userRef, {
-        cart: arrayRemove(documentId),
-      });
-      console.log("Document successfully deleted!");
-    } catch (error) {
-      console.error("Error deleting document:", error);
-    }
-  }
-
   const handleShowMenuCardPopup = async () => {
+    console.log(menuInfo);
     if (resMenuItem?.card?.info?.addons || resMenuItem?.info?.addons) {
       if (
         cartItems.length >= 1 &&
@@ -104,23 +62,25 @@ const AddMenuItemToCart = ({
       } else {
         const newCounter = counter + 1;
 
-        const updatedCardInfo = {
-          ...menuInfo,
-          totalMenuItems: newCounter,
-          // cartId: tempCartId,
-        };
-
         const cartItemInfo = {
           cartItems: menuInfo,
           resInfo: resInformation,
           totalMenuItems: newCounter,
-          userId: auth.currentUser.uid,
+          userId: auth?.currentUser?.uid,
         };
+
+        console.log(cartItemInfo);
 
         const cartId = await createCartAndLinkToUser(
           auth?.currentUser?.uid,
           cartItemInfo
         );
+
+        const updatedCardInfo = {
+          ...menuInfo,
+          totalMenuItems: newCounter,
+          // cartId: tempCartId,
+        };
 
         dispatch(addResInfo(resInformation));
 
@@ -132,24 +92,37 @@ const AddMenuItemToCart = ({
   };
 
   const updatingCardItem = async (item, action, cartId) => {
-    const updatedCardInfo = {
-      ...menuInfo,
-      totalMenuItems: item, // Use the latest item count directly
-      action: action,
-      cartId,
-    };
+    if (totalMenuItem?.length > 1 && action === "Remove") {
+      toast(
+        "This item has multiple customizations added. Remove the correct item from the cart."
+      );
+      return;
+    }
+    if (
+      (resMenuItem?.card?.info?.addons || resMenuItem?.info?.addons) &&
+      action === "Add"
+    ) {
+      setShowPopupBeforeUpdate(true);
+    } else {
+      const updatedCardInfo = {
+        ...menuInfo,
+        totalMenuItems: item, // Use the latest item count directly
+        action: action,
+        cartId,
+      };
 
-    dispatch(
-      updateCardItemAndFirestore(
-        { ...menuInfo, totalMenuItems: item },
-        action,
-        cartId
-      )
-    );
+      dispatch(
+        updateCardItemAndFirestore(
+          { ...menuInfo, totalMenuItems: item },
+          action,
+          cartId
+        )
+      );
 
-    if (item === 0) {
-      dispatch(removeCardItems(updatedCardInfo));
-      await deleteMenutem(cartId);
+      if (item === 0) {
+        dispatch(removeCardItems(updatedCardInfo));
+        await deleteMenutem(cartId);
+      }
     }
   };
 
@@ -221,6 +194,7 @@ const AddMenuItemToCart = ({
               <p className=""> {counter}</p>
 
               <div
+                ref={addUpdateRef}
                 className=""
                 onClick={() =>
                   updatingCardItem(

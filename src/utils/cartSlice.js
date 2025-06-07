@@ -26,7 +26,8 @@ const cartSlice = createSlice({
     },
     updateCardItems: (state, action) => {
       state.cartItems = state.cartItems.map((ele) =>
-        ele?.menuId === action.payload?.menuId
+        ele?.menuId === action.payload?.menuId &&
+        ele?.cartId === action.payload?.cartId
           ? { ...ele, totalMenuItems: action.payload?.totalMenuItems }
           : ele
       );

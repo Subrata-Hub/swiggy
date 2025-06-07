@@ -42,6 +42,7 @@ const Locationbar = () => {
           </span>
         </div>
       </div>
+
       {locationPopup && (
         <div>
           <div className="overlay"></div>

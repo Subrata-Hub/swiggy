@@ -11,6 +11,7 @@ import PopupResetCard from "./PopupResetCard";
 import PopupCardMenu from "./PopupCardMenu";
 import useOutSideClick from "../hooks/useOutsideClick";
 import AddMenuItemToCart from "./AddMenuItemToCart";
+import PopupUpdateCard from "./PopupUpdateCard";
 
 /* eslint-disable react/prop-types */
 const TopPicksCard = ({ topPicksData, resInformation }) => {
@@ -18,10 +19,16 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
   const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
+  const [showMenuCardPopupBeforeUpdate, setShowMenuCardPopupBeforeUpdate] =
+    useState(false);
+  const [showPopupBeforeUpdate, setShowPopupBeforeUpdate] = useState(false);
+
   const addonButtonRef = useRef(null);
   const addResetRef = useRef(null);
   const menuItemCardRef = useRef(null);
   const resetPopupCardRef = useRef(null);
+  const updatePopupCardRef = useRef(null);
+  const addUpdateRef = useRef(null);
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const menuItem = cartItems.find(
@@ -57,6 +64,17 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
       }
     },
     addResetRef
+  );
+
+  useOutSideClick(
+    updatePopupCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowPopupBeforeUpdate(false);
+        // setShowResetCardPopup(false);
+      }
+    },
+    addUpdateRef
   );
 
   // console.log(resInformation);
@@ -131,6 +149,8 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
             cartItems={cartItems}
             isImage={true}
             topPicksData={true}
+            setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+            addUpdateRef={addUpdateRef}
           />
         </div>
       </div>
@@ -155,7 +175,8 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
       )} */}
 
       {((showMenuCardPopup && topPicksData?.info?.addons) ||
-        showPopupBeforeReset) && (
+        showPopupBeforeReset ||
+        showMenuCardPopupBeforeUpdate) && (
         <>
           {ReactDOM.createPortal(
             <div className="overlay"></div>,
@@ -172,6 +193,13 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
                 setShowPopupBeforeReset={setShowPopupBeforeReset}
                 showPopupBeforeReset={showPopupBeforeReset} // showMenuCardPopup={showMenuCardPopup}
                 onContinue={handleContinueClick}
+                setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+                showMenuCardPopupBeforeUpdate={showMenuCardPopupBeforeUpdate}
+                setShowMenuCardPopupBeforeUpdate={
+                  setShowMenuCardPopupBeforeUpdate
+                }
+                menuItem={menuItem}
+                userMenuItem={userMenuItem}
               />
             </div>,
             document.getElementById("portal-root")
@@ -191,6 +219,23 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               searchDishesData={topPicksData}
               // setShowMenuCardPopup={setShowMenuCardPopup}
+            />
+          </div>
+        </>
+      )}
+      {showPopupBeforeUpdate && (
+        <>
+          <div className="overlay"></div>
+          <div ref={updatePopupCardRef}>
+            <PopupUpdateCard
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              menuInfo={menuInfo}
+              menuItem={menuItem}
+              userMenuItem={userMenuItem}
+              counter={counter}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
+              }
             />
           </div>
         </>

@@ -24,6 +24,7 @@ import { signOut } from "firebase/auth";
 
 import { addUserData } from "../utils/firebaseDataSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { addIsCheckOutPage } from "../utils/configSlice";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -50,6 +51,7 @@ const Navbar = () => {
   const userLocationData = useSelector(
     (store) => store.firebaseData?.userLocationData
   );
+  const isCheckOutPage = useSelector((store) => store.config.isCheckOutPage);
 
   useOutSideClick(
     logInRef,
@@ -195,39 +197,43 @@ const Navbar = () => {
     }
   };
 
+  const goToHomePage = () => {
+    navigate("/");
+    dispatch(addIsCheckOutPage(false));
+  };
+
   return (
     <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[2000000565555]">
       <div className="mx-3 xs:px-4 sm:px-4 md:px-[6px] lg:px-[20px] xl:px-[120px] h-20 flex items-center justify-between">
         <div className="flex-col">
           <div className="flex gap-2 -mt-2 sm:mt-0 sm:gap-6 items-center justify-between ">
-            <div className="">
-              <Link to={"/"}>
-                <img
-                  src={Logo}
-                  alt="logo"
-                  className="hidden sm:flex sm:w-10 md:w-12"
-                  loading="lazy"
-                />
-              </Link>
-
+            <div className="" onClick={goToHomePage}>
+              <img
+                src={Logo}
+                alt="logo"
+                className="hidden sm:flex sm:w-10 md:w-12"
+                loading="lazy"
+              />
               <Link to={"/"}>
                 {/* <img src={Logo} alt="logo" className="flex sm:hidden w-12" /> */}
                 <HiHome className="flex sm:hidden text-3xl" />
               </Link>
             </div>
 
-            <Locationbar />
+            {!isCheckOutPage ? <Locationbar /> : <div>Secure Checkout</div>}
           </div>
         </div>
 
         <div className="flex items-center sm:gap-6 md:gap-8 lg:gap-14">
-          <div
-            className="hidden sm:flex justify-center items-center gap-2 cursor-pointer"
-            onClick={goToSearchBar}
-          >
-            <HiOutlineSearch className="text-2xl" />
-            <span className="text-[18px]">Search</span>
-          </div>
+          {!isCheckOutPage && (
+            <div
+              className="hidden sm:flex justify-center items-center gap-2 cursor-pointer"
+              onClick={goToSearchBar}
+            >
+              <HiOutlineSearch className="text-2xl" />
+              <span className="text-[18px]">Search</span>
+            </div>
+          )}
           <div
             className="flex"
             onClick={() => setShowLoginPopup(true)}
@@ -274,7 +280,7 @@ const Navbar = () => {
               </div>
             )}
 
-          <Cart />
+          {!isCheckOutPage && <Cart />}
         </div>
       </div>
       <div className="flex sm:hidden ml-4 -mt-6 max-w-[250px] sm:mt-0 text-[13px] font-light truncate ">

@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-
 import { IMG_MENU } from "../utils/constant";
 import { useRef, useState } from "react";
 import veg from "../assets/veg.svg";
@@ -15,6 +14,7 @@ import PopupResetCard from "./PopupResetCard";
 
 import AddMenuItemToCart from "./AddMenuItemToCart";
 import PopupSearchDishesCard from "./PopupSearchDishesCard";
+import PopupUpdateCard from "./PopupUpdateCard";
 
 const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -22,6 +22,9 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const [showResetCardPopup, setShowResetCardPopup] = useState(false);
   const [disableOutsideClick, setDisableOutsideClick] = useState(false);
   const [showPopupBeforeReset, setShowPopupBeforeReset] = useState(false);
+  const [showMenuCardPopupBeforeUpdate, setShowMenuCardPopupBeforeUpdate] =
+    useState(false);
+  const [showPopupBeforeUpdate, setShowPopupBeforeUpdate] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
   const menuCardRef = useRef(null);
@@ -30,6 +33,8 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
   const detailMenuButtonRef = useRef(null);
   const addResetRef = useRef(null);
   const resetPopupCardRef = useRef(null);
+  const updatePopupCardRef = useRef(null);
+  const addUpdateRef = useRef(null);
 
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
 
@@ -38,11 +43,35 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     (item) => item.menuId === resMenuItem?.card?.info?.id
   );
 
+  const totalMenuItem = cartItems.filter(
+    (item) => item.menuId === resMenuItem?.card?.info?.id
+  );
+
+  const totalMenuItemsCount = totalMenuItem
+    ?.map((item) => item?.totalMenuItems)
+    .reduce((acc, item) => acc + item, 0);
+
+  console.log(totalMenuItem);
+
   const userMenuItem = userCartItems?.items?.[0]?.find(
     (item) => item.menuId === resMenuItem?.card?.info?.id
   );
 
-  let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
+  const totalUserMenuItem = userCartItems?.items?.[0]?.filter(
+    (item) => item.menuId === resMenuItem?.card?.info?.id
+  );
+
+  const totalUserMenuItemCount = totalUserMenuItem
+    ?.map((item) => item.totalMenuItems)
+    .reduce((acc, item) => acc + item, 0);
+
+  // let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
+  // let counter =
+  //   totalMenuItemsCount * menuItem?.totalMenuItems ||
+  //   totalUserMenuItemCount * userMenuItem?.toTalMenuItem ||
+  //   0;
+
+  let counter = totalMenuItemsCount || totalUserMenuItemCount || 0;
 
   useOutSideClick(
     menuCardRef,
@@ -76,6 +105,17 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     addResetRef
   );
 
+  useOutSideClick(
+    updatePopupCardRef,
+    () => {
+      if (!disableOutsideClick) {
+        setShowPopupBeforeUpdate(false);
+        // setShowResetCardPopup(false);
+      }
+    },
+    addUpdateRef
+  );
+
   const handleContinueClick = () => {
     setDisableOutsideClick(true);
     setTimeout(() => setDisableOutsideClick(false), 100);
@@ -98,7 +138,15 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     menuPrice: resMenuItem?.card?.info?.price
       ? resMenuItem?.card?.info?.price / 100
       : resMenuItem?.card?.info?.defaultPrice / 100,
+    finalmenuPrice:
+      (resMenuItem?.card?.info?.finalPrice &&
+        resMenuItem?.card?.info?.finalPrice / 100) ||
+      0,
+
+    addons: resMenuItem?.card?.info?.addons || [],
   };
+
+  console.log(menuInfo);
 
   return (
     <>
@@ -185,6 +233,9 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             cartItems={cartItems}
             userCartItems={userCartItems}
             isImage={resMenuItem?.card?.info?.imageId ? true : false}
+            setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+            addUpdateRef={addUpdateRef}
+            totalMenuItem={totalMenuItem}
           />
         </div>
       </div>
@@ -209,13 +260,22 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               userMenuItem={userMenuItem}
               cartItems={cartItems}
               userCartItems={userCartItems}
+              showPopupBeforeUpdate={showPopupBeforeUpdate}
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              // showMenuCardPopupBeforeUpdate={showMenuCardPopupBeforeUpdate}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
+              }
+              updatePopupCardRef={updatePopupCardRef}
+              addUpdateRef={addUpdateRef}
             />
           </div>
         </>
       )}
 
       {((showMenuCardPopup && resMenuItem?.card?.info?.addons) ||
-        showPopupBeforeReset) && (
+        showPopupBeforeReset ||
+        showMenuCardPopupBeforeUpdate) && (
         <>
           <div className="overlay"></div>
           <div ref={menuItemCardRef}>
@@ -228,6 +288,13 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               setShowPopupBeforeReset={setShowPopupBeforeReset}
               showPopupBeforeReset={showPopupBeforeReset}
               onContinue={handleContinueClick}
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              showMenuCardPopupBeforeUpdate={showMenuCardPopupBeforeUpdate}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
+              }
+              menuItem={menuItem}
+              // userMenuItem={userMenuItem}
             />
           </div>
         </>
@@ -248,8 +315,37 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
           </div>
         </>
       )}
+
+      {showPopupBeforeUpdate && (
+        <>
+          <div className="overlay"></div>
+          <div ref={updatePopupCardRef}>
+            <PopupUpdateCard
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              menuInfo={menuInfo}
+              // menuItem={menuItem}
+              // menuItem={totalMenuItem?.slice(-1)[0]}
+              menuItem={
+                totalMenuItem?.length > 0 &&
+                totalMenuItem[totalMenuItem?.length - 1]
+              }
+              userMenuItem={
+                totalUserMenuItem?.length > 0 &&
+                totalUserMenuItem[totalUserMenuItem?.length - 1]
+              }
+              // counter={counter}
+              setShowMenuCardPopupBeforeUpdate={
+                setShowMenuCardPopupBeforeUpdate
+              }
+              // cartIdForRepetItem={totalMenuItem?.slice(-1)[0]?.cartId}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 };
 
 export default MenuItemCard;
+
+MenuItemCard.jsx;

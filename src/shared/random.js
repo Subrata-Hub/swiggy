@@ -31,7 +31,7 @@ const PopupCardMenu = ({
   showMenuCardPopupBeforeUpdate,
   setShowMenuCardPopupBeforeUpdate,
   menuItem,
-  // userMenuItem,
+  userMenuItem,
 }) => {
   const [totalPrice, setTotalPrice] = useState(
     +searchDishesData?.info?.price / 100 ||
@@ -42,6 +42,9 @@ const PopupCardMenu = ({
 
   const dispatch = useDispatch();
 
+  // const [showIndex, setShowIndex] = useState(0);
+
+  // const [selectedRadioOption, setSelectedRadioOption] = useState({});
   const [selectedAddons, setSelectedAddons] = useState({});
 
   const [addonsList, setAddonsList] = useState([]);
@@ -49,6 +52,24 @@ const PopupCardMenu = ({
   const [showAddons, setShowAddons] = useState(true);
 
   const resParamsObj = useSelector((store) => store?.search?.resParams);
+
+  // const addons = searchDishesData?.info?.addons?.[0]?.choices;
+
+  // const handleIndex = () => {
+  //   onContinue();
+  //   if (
+  //     showIndex + 1 >=
+  //     searchDishesData?.info?.variantsV2?.variantGroups?.length
+  //   ) {
+  //     // onPopupClose();
+  //   } else {
+  //     setShowIndex((prevIndex) => prevIndex + 1);
+  //   }
+  // };
+
+  // const handleRadioOption = (value) => {
+  //   setSelectedRadioOption(value);
+  // };
 
   console.log(searchDishesData);
 
@@ -140,8 +161,6 @@ const PopupCardMenu = ({
       await createCartAndLinkToUser(auth?.currentUser?.uid, updatedCardInfo);
 
       setShowMenuCardPopup(false);
-
-      setShowMenuCardPopup(false);
       setShowPopupBeforeReset(false);
       setShowAddToCardSearchResultsData(true);
       dispatch(
@@ -150,10 +169,45 @@ const PopupCardMenu = ({
           menuId: preservedMenuInfo?.menuId,
         })
       );
+      // } else if (
+      //   showMenuCardPopupBeforeUpdate &&
+      //   menuItem?.addonsList?.length === coustomizedItems?.length
+      // ) {
+      //   //  const updatedCardInfo = {
+      //   //   ...menuInfo,
+      //   //   totalMenuItems: item, // Use the latest item count directly
+      //   //   action: "Add",
+      //   //   cartId,
+      //   // };
+
+      //   dispatch(
+      //     updateCardItemAndFirestore(
+      //       {
+      //         ...menuInfo,
+      //         totalMenuItems: item,
+      //       },
+      //       "Add",
+      //       menuItem?.cartId || userMenuItem?.cartId,
+      //       coustomizedItems
+      //     )
+      //   );
+      //   setShowMenuCardPopupBeforeUpdate(false);
     } else if (
       showMenuCardPopupBeforeUpdate &&
-      JSON.stringify(menuItem?.addonsList) !== JSON.stringify(coustomizedItems)
+      menuItem?.addonsList?.length !== coustomizedItems?.length
     ) {
+      // dispatch(
+      //   updateCardItemAndFirestore(
+      //     {
+      //       ...menuInfo,
+      //       totalMenuItems: item,
+      //     },
+      //     "Add",
+      //     menuItem?.cartId || userMenuItem?.cartId,
+      //     coustomizedItems
+      //   )
+      // );
+
       const updatedCardInfo = {
         // ...menuInfo,
         cartItems: menuInfo,
@@ -178,18 +232,31 @@ const PopupCardMenu = ({
       dispatch(addResInfo(resInformation));
       dispatch(addCartItems({ ...updateStore, cartId }));
 
-      setShowMenuCardPopupBeforeUpdate(false);
-    } else if (
-      showMenuCardPopupBeforeUpdate &&
-      JSON.stringify(menuItem?.addonsList) === JSON.stringify(coustomizedItems)
-    ) {
-      dispatch(
-        updateCardItemAndFirestore(
-          { ...menuItem, totalMenuItems: item, addonsList: coustomizedItems },
-          "Add",
-          menuItem?.cartId
-        )
-      );
+      // if (cartId) {
+      //   dispatch(addResInfo(resInformation));
+      //   dispatch(addCartItems({ ...updateStore, cartId }));
+      //   dispatch(
+      //     updateCardItemAndFirestore(
+      //       {
+      //         ...menuInfo,
+      //         totalMenuItems: item,
+      //       },
+      //       "Add",
+      //       cartId,
+      //       coustomizedItems
+      //     )
+      //   );
+      // }
+
+      // setShowMenuCardPopup(false);
+      // setShowPopupBeforeReset(false);
+      // setShowAddToCardSearchResultsData(true);
+      // dispatch(
+      //   addResParams({
+      //     resId: preservedResInfo?.restaurantId,
+      //     menuId: preservedMenuInfo?.menuId,
+      //   })
+      // );
 
       setShowMenuCardPopupBeforeUpdate(false);
     } else {
@@ -417,6 +484,70 @@ const PopupCardMenu = ({
           </button>
         </div>
       </div>
+
+      {/* <div className="overflow-y-auto hide-scrollbar max-h-[400px]">
+        {searchDishesData?.info?.variantsV2?.variantGroups?.map(
+          (variant, index) => (
+            <div key={index}>
+              {index === showIndex && (
+                <>
+                  <h2 className="py-4" key={variant?.name}>
+                    {variant?.name}
+                  </h2>
+                  <div className="p-2 bg-slate-900">
+                    {variant?.variations?.map((item) => (
+                      <div key={item?.id}>
+                        <div className="flex justify-between px-1 py-2">
+                          <div className="flex gap-3">
+                            <div>
+                              {item?.isVeg === 1 ? (
+                                <img src={veg} />
+                              ) : (
+                                <img src={nonVeg} />
+                              )}
+                            </div>
+                            <div>{item?.name}</div>
+                          </div>
+                          <div className="flex gap-3">
+                            {item?.price && <p>₹{item.price}</p>}
+                            <input
+                              type="radio"
+                              name={variant?.name}
+                              // value={item?.name}
+                              // id={item?.id}
+                              checked={
+                                selectedRadioOption?.variationId === item?.id
+                              }
+                              onChange={() =>
+                                handleRadioOption(item?.dependantVariation)
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex justify-between items-center">
+                    <div>
+                      Step {showIndex + 1}/
+                      {searchDishesData?.info?.variantsV2?.variantGroups.length}
+                    </div>
+                    <div>
+                      <button
+                        className="px-15 py-3 bg-emerald-600 rounded-2xl"
+                        onClick={handleIndex}
+                      >
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )
+        )}
+      </div> */}
     </div>
   );
 };

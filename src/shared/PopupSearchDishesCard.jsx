@@ -6,6 +6,7 @@ import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 
 import AddMenuItemToCart from "./AddMenuItemToCart";
+import PopupUpdateCard from "./PopupUpdateCard";
 
 const PopupSearchDishesCard = ({
   searchDishesData,
@@ -26,6 +27,11 @@ const PopupSearchDishesCard = ({
   userCartItems,
   setShowAddToCardSearchResultsData,
   showAddToCardSearchResultsData,
+  showPopupBeforeUpdate,
+  setShowPopupBeforeUpdate,
+  setShowMenuCardPopupBeforeUpdate,
+  updatePopupCardRef,
+  addUpdateRef,
 }) => {
   console.log(searchDishesData);
   return (
@@ -104,8 +110,27 @@ const PopupSearchDishesCard = ({
               cartItems={cartItems}
               userCartItems={userCartItems}
               isImage={true}
+              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+              addUpdateRef={addUpdateRef}
             />
           </div>
+          {showPopupBeforeUpdate && (
+            <>
+              <div className="overlay"></div>
+              <div ref={updatePopupCardRef}>
+                <PopupUpdateCard
+                  setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+                  menuInfo={menuInfo}
+                  menuItem={menuItem}
+                  userMenuItem={userMenuItem}
+                  counter={counter}
+                  setShowMenuCardPopupBeforeUpdate={
+                    setShowMenuCardPopupBeforeUpdate
+                  }
+                />
+              </div>
+            </>
+          )}
         </div>
         {/* <div className="mt-2 mb-2 font-light">
           {searchDishesData?.info?.description}

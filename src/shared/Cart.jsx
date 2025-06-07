@@ -2,12 +2,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { CART_IMG, getFormatedPrice } from "../utils/constant";
 import { useEffect, useState, useRef } from "react"; // Import useRef
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
 import { addCartItems, addResInfo } from "../utils/cartSlice";
+import { addIsCheckOutPage } from "../utils/configSlice";
 
 const Cart = () => {
   const [previewCard, setPreviewCard] = useState(false);
@@ -17,6 +18,7 @@ const Cart = () => {
   const cartNumber = useSelector((state) => state.cart.totalCardItems);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
   console.log("userCartItems from localStorage:", userCartItems);
@@ -68,14 +70,21 @@ const Cart = () => {
       const cartResInfo = carts?.[0]?.resInfo; // Be careful here, carts might be empty
 
       carts?.forEach((item) => {
+        console.log(item);
         // This effect now primarily focuses on populating Redux if it's empty or on initial load
         if (!cartItems?.length && item?.cartItems) {
+          const addonsList =
+            item?.addonsList?.length > 0
+              ? item?.addonsList
+              : item?.cartItems?.addonsList;
           dispatch(
             addCartItems({
               ...item?.cartItems,
               ["cartId"]: item?.id,
-              ["totalMenuItems"]: item?.totalMenuItems,
+              ["totalMenuItems"]:
+                item?.totalMenuItems || item?.cartItems?.totalCardItems,
               ["isCommingFromDB"]: true,
+              ["addonsList"]: addonsList,
             })
           );
         }
@@ -92,7 +101,20 @@ const Cart = () => {
     if (auth?.currentUser?.uid) {
       fetchCarts();
     }
-  }, [auth?.currentUser?.uid, dispatch, cartItems?.length, restaurantInfo]); // Added dependencies
+  }, [
+    auth?.currentUser?.uid,
+    dispatch,
+    cartItems?.length,
+    restaurantInfo,
+    cartItems,
+  ]); // Added dependencies
+
+  // auth?.currentUser?.uid,dispatch, cartItems?.length, restaurantInfo,cartItems
+
+  const handleCheckPage = () => {
+    navigate("/checkout");
+    dispatch(addIsCheckOutPage(true));
+  };
 
   return (
     <>
@@ -234,7 +256,10 @@ const Cart = () => {
                     ₹{getFormatedPrice(subTotal ? subTotal : subTotalForUser)}
                   </div>
                 </div>
-                <div className="w-full h-10 bg-amber-600 flex justify-center items-center mt-6">
+                <div
+                  className="w-full h-10 bg-amber-600 flex justify-center items-center mt-6"
+                  onClick={handleCheckPage}
+                >
                   CHECKOUT
                 </div>
               </div>
