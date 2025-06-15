@@ -38,6 +38,8 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
 
+  console.log(userCartItems);
+
   const cartItems = useSelector((state) => state.cart.cartItems);
   const menuItem = cartItems.find(
     (item) => item.menuId === resMenuItem?.card?.info?.id
@@ -51,25 +53,17 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
     ?.map((item) => item?.totalMenuItems)
     .reduce((acc, item) => acc + item, 0);
 
-  console.log(totalMenuItem);
-
-  const userMenuItem = userCartItems?.items?.[0]?.find(
+  const userMenuItem = userCartItems?.cartItems?.find(
     (item) => item.menuId === resMenuItem?.card?.info?.id
   );
 
-  const totalUserMenuItem = userCartItems?.items?.[0]?.filter(
+  const totalUserMenuItem = userCartItems?.cartItems?.filter(
     (item) => item.menuId === resMenuItem?.card?.info?.id
   );
 
   const totalUserMenuItemCount = totalUserMenuItem
     ?.map((item) => item.totalMenuItems)
     .reduce((acc, item) => acc + item, 0);
-
-  // let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
-  // let counter =
-  //   totalMenuItemsCount * menuItem?.totalMenuItems ||
-  //   totalUserMenuItemCount * userMenuItem?.toTalMenuItem ||
-  //   0;
 
   let counter = totalMenuItemsCount || totalUserMenuItemCount || 0;
 
@@ -155,7 +149,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
           resMenuItem?.card?.info?.description ? "mb-5" : "mb-8"
         }`}
       >
-        <div className="w-3/4">
+        <div className="w-3/4 relative">
           {resMenuItem?.card?.info?.itemAttribute?.vegClassifier ===
           "NONVEG" ? (
             <img src={nonVeg} className="w-4 sm:w-5" loading="lazy" />
@@ -171,8 +165,20 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             {resMenuItem?.card?.info?.price
               ? resMenuItem?.card?.info?.price / 100
               : resMenuItem?.card?.info?.defaultPrice / 100}
-            <span>
-              {resMenuItem?.card?.info?.offerTags?.[0].title ? " 🏷️" : ""}
+            {resMenuItem?.card?.info?.finalPrice && (
+              <div className="w-10 h-0.5 bg-slate-200 absolute top-[68px]"></div>
+            )}
+            <span className="ml-2">
+              {resMenuItem?.card?.info?.finalPrice &&
+                resMenuItem?.card?.info?.finalPrice / 100}
+            </span>
+            <span className="text-[14px]">
+              {resMenuItem?.card?.info?.offerTags?.[0].title ||
+              resMenuItem?.card?.info?.finalPrice
+                ? " 🏷️"
+                : ""}
+            </span>
+            <span className="text-[13px]">
               {resMenuItem?.card?.info?.offerTags?.[0].title}{" "}
               {resMenuItem?.card?.info?.offerTags?.[0].subTitle}
             </span>
@@ -323,8 +329,6 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             <PopupUpdateCard
               setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
               menuInfo={menuInfo}
-              // menuItem={menuItem}
-              // menuItem={totalMenuItem?.slice(-1)[0]}
               menuItem={
                 totalMenuItem?.length > 0 &&
                 totalMenuItem[totalMenuItem?.length - 1]
@@ -347,5 +351,3 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 };
 
 export default MenuItemCard;
-
-MenuItemCard.jsx;

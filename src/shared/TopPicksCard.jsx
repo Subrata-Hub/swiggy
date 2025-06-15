@@ -31,14 +31,31 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
   const addUpdateRef = useRef(null);
 
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
   const menuItem = cartItems.find(
     (item) => item.menuId === topPicksData?.info?.id
   );
-  const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
-  const userMenuItem = userCartItems?.items?.[0]?.find(
+
+  const totalMenuItem = cartItems.filter(
     (item) => item.menuId === topPicksData?.info?.id
   );
-  let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
+  const totalMenuItemsCount = totalMenuItem
+    ?.map((item) => item?.totalMenuItems)
+    .reduce((acc, item) => acc + item, 0);
+
+  const userMenuItem = userCartItems?.cartItems?.find(
+    (item) => item.menuId === topPicksData?.info?.id
+  );
+
+  const totalUserMenuItem = userCartItems?.cartItems?.filter(
+    (item) => item.menuId === topPicksData?.info?.id
+  );
+
+  const totalUserMenuItemCount = totalUserMenuItem
+    ?.map((item) => item.totalMenuItems)
+    .reduce((acc, item) => acc + item, 0);
+
+  let counter = totalMenuItemsCount || totalUserMenuItemCount || 0;
 
   //   useOutSideClick(
   //     menuDishesCardRef,
@@ -77,7 +94,7 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     addUpdateRef
   );
 
-  // console.log(resInformation);
+  console.log(topPicksData);
 
   const menuInfo = {
     menuId: topPicksData?.info?.id,
@@ -87,6 +104,11 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     menuPrice: topPicksData?.info?.price
       ? topPicksData?.info?.price / 100
       : topPicksData?.info?.defaultPrice / 100,
+
+    finalmenuPrice:
+      (topPicksData?.info?.finalPrice &&
+        topPicksData?.info?.finalPrice / 100) ||
+      0,
   };
 
   const handleContinueClick = () => {
@@ -125,12 +147,23 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
         </div>
 
         <div className="absolute bottom-0 w-full h-20 z-100 flex justify-between items-center bg-gradient-to-b from-transparent via-slate-900/30 to-slate-900 px-5">
-          <div>
+          <div
+            className={`absolute ${
+              topPicksData?.info?.finalPrice ? "bottom-12" : "bottom-8"
+            }`}
+          >
             ₹
             {topPicksData?.info?.price
               ? topPicksData?.info?.price / 100
               : topPicksData?.info?.defaultPrice / 100}
           </div>
+          {topPicksData?.info?.finalPrice && (
+            <div className="w-10 h-0.5 bg-slate-200 absolute bottom-14.5"></div>
+          )}
+          <span className="absolute bottom-6">
+            {topPicksData?.info?.finalPrice &&
+              topPicksData?.info?.finalPrice / 100}
+          </span>
         </div>
         <div className="absolute top-[130px] sm:top-[140px] right-[130px] sm:right-[152px] z-100">
           <AddMenuItemToCart
@@ -209,35 +242,57 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
       {showResetCardPopup && (
         <>
-          <div className="overlay"></div>
-          <div ref={resetPopupCardRef}>
-            <PopupResetCard
-              setShowResetCardPopup={setShowResetCardPopup}
-              resInformation={resInformation}
-              menuInfo={menuInfo}
-              counter={counter}
-              setShowPopupBeforeReset={setShowPopupBeforeReset}
-              searchDishesData={topPicksData}
-              // setShowMenuCardPopup={setShowMenuCardPopup}
-            />
-          </div>
+          {ReactDOM.createPortal(
+            <div className="overlay"></div>,
+            document.getElementById("portal-root")
+          )}
+
+          {ReactDOM.createPortal(
+            <div ref={resetPopupCardRef}>
+              <PopupResetCard
+                setShowResetCardPopup={setShowResetCardPopup}
+                resInformation={resInformation}
+                menuInfo={menuInfo}
+                counter={counter}
+                setShowPopupBeforeReset={setShowPopupBeforeReset}
+                searchDishesData={topPicksData}
+                // setShowMenuCardPopup={setShowMenuCardPopup}
+              />
+            </div>,
+            document.getElementById("portal-root")
+          )}
         </>
       )}
       {showPopupBeforeUpdate && (
         <>
-          <div className="overlay"></div>
-          <div ref={updatePopupCardRef}>
-            <PopupUpdateCard
-              setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
-              menuInfo={menuInfo}
-              menuItem={menuItem}
-              userMenuItem={userMenuItem}
-              counter={counter}
-              setShowMenuCardPopupBeforeUpdate={
-                setShowMenuCardPopupBeforeUpdate
-              }
-            />
-          </div>
+          {ReactDOM.createPortal(
+            <div className="overlay"></div>,
+            document.getElementById("portal-root")
+          )}
+
+          {ReactDOM.createPortal(
+            <div ref={updatePopupCardRef}>
+              <PopupUpdateCard
+                setShowPopupBeforeUpdate={setShowPopupBeforeUpdate}
+                menuInfo={menuInfo}
+                // menuItem={menuItem}
+                // userMenuItem={userMenuItem}
+                counter={counter}
+                menuItem={
+                  totalMenuItem?.length > 0 &&
+                  totalMenuItem[totalMenuItem?.length - 1]
+                }
+                userMenuItem={
+                  totalUserMenuItem?.length > 0 &&
+                  totalUserMenuItem[totalUserMenuItem?.length - 1]
+                }
+                setShowMenuCardPopupBeforeUpdate={
+                  setShowMenuCardPopupBeforeUpdate
+                }
+              />
+            </div>,
+            document.getElementById("portal-root")
+          )}
         </>
       )}
     </>

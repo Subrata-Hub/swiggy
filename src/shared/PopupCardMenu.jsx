@@ -31,6 +31,12 @@ const PopupCardMenu = ({
   showMenuCardPopupBeforeUpdate,
   setShowMenuCardPopupBeforeUpdate,
   menuItem,
+  userMenuItem,
+  isCustomize,
+  showSelectedCustomizeItems,
+  // setSelectedItemForUpdate,
+  // selectedItemForUpdate,
+
   // userMenuItem,
 }) => {
   const [totalPrice, setTotalPrice] = useState(
@@ -40,9 +46,20 @@ const PopupCardMenu = ({
         100
   );
 
+  const [totalFinalPrice, setTotalFinalPrice] = useState(
+    +searchDishesData?.info?.finalPrice / 100 ||
+      +searchDishesData?.finalPrice ||
+      menuItem?.finalmenuPrice ||
+      0
+  );
+
   const dispatch = useDispatch();
 
-  const [selectedAddons, setSelectedAddons] = useState({});
+  const [selectedAddons, setSelectedAddons] = useState(
+    (showSelectedCustomizeItems
+      ? menuItem?.selectedAddons || userMenuItem?.selectedAddons
+      : {}) || {}
+  );
 
   const [addonsList, setAddonsList] = useState([]);
   const [showCustomizedItems, setShowCustomizedItems] = useState(false);
@@ -75,7 +92,14 @@ const PopupCardMenu = ({
         [id]: true,
       }));
 
+      if (totalFinalPrice > 0) {
+        setTotalFinalPrice((prevValue) => prevValue + value);
+      } else {
+        setTotalFinalPrice((prevValue) => prevValue);
+      }
+
       setTotalPrice((prevValue) => prevValue + value);
+
       setAddonsList((preArry) => [
         ...preArry,
         { name: name, groupId: groupId },
@@ -87,10 +111,17 @@ const PopupCardMenu = ({
         [id]: false,
       }));
 
+      if (totalFinalPrice > 0) {
+        setTotalFinalPrice((prevValue) => prevValue - value);
+      }
+
       setTotalPrice((preValue) => preValue - value);
+
       setAddonsList((preArry) => preArry.filter((ele) => ele.name !== name));
     }
   };
+
+  console.log(selectedAddons);
 
   const menuInfo = {
     menuId: searchDishesData?.info?.id || searchDishesData?.menuId,
@@ -98,135 +129,224 @@ const PopupCardMenu = ({
     menuName: searchDishesData?.info?.name || searchDishesData?.menuName,
 
     vegClassifier:
-      searchDishesData?.info?.isVeg === 1 || searchDishesData?.isVeg === 1
+      searchDishesData?.info?.isVeg === 1 || searchDishesData.isVeg === 1
         ? "VEG"
         : "NONVEG",
 
     menuPrice: totalPrice,
 
-    finalmenuPrice:
-      ((searchDishesData?.info?.finalPrice ||
-        searchDishesData?.finalmenuPrice) &&
-        (searchDishesData?.info?.finalPrice ||
-          searchDishesData?.finalmenuPrice) / 100) ||
-      0,
+    // finalmenuPrice:
+    //   ((searchDishesData?.info?.finalPrice ||
+    //     searchDishesData?.finalmenuPrice) &&
+    //     (searchDishesData?.info?.finalPrice ||
+    //       searchDishesData?.finalmenuPrice) / 100) ||
+    //   0,
+
+    finalmenuPrice: totalFinalPrice,
 
     addons: searchDishesData?.info?.addons || searchDishesData?.addons || [],
   };
 
-  const coustomizedItems = addonsList.reduce(
-    (accu, item) => [...accu, item.name],
-    []
-  );
+  console.log(searchDishesData?.addons);
 
-  const handleAddItemToCart = async (item, coustomizedItems) => {
-    if (showPopupBeforeReset) {
-      counter = 0;
+  const previousCoustomizedItems = userMenuItem?.addonsList || [];
 
-      // Save previous cart info
-      const preservedMenuInfo = { ...menuInfo };
-      const preservedResInfo = { ...resInformation };
-      await deleteAllUserCarts(auth?.currentUser?.uid);
-      dispatch(reSetStore());
-      const updatedCardInfo = {
-        // ...preservedMenuInfo,
-        cartItems: preservedMenuInfo,
-        resInfo: preservedResInfo,
-        totalMenuItems: item,
-        userId: auth.currentUser.uid,
-        addonsList: coustomizedItems || [],
-      };
+  const coustomizedItem =
+    addonsList?.reduce((accu, item) => [...accu, item.name], []) || [];
 
-      await createCartAndLinkToUser(auth?.currentUser?.uid, updatedCardInfo);
+  const coustomizedItems = [...previousCoustomizedItems, ...coustomizedItem];
 
-      setShowMenuCardPopup(false);
+  console.log(addonsList);
+  console.log(coustomizedItems);
 
-      setShowMenuCardPopup(false);
-      setShowPopupBeforeReset(false);
-      setShowAddToCardSearchResultsData(true);
-      dispatch(
-        addResParams({
-          resId: preservedResInfo?.restaurantId,
-          menuId: preservedMenuInfo?.menuId,
-        })
-      );
-    } else if (
-      showMenuCardPopupBeforeUpdate &&
-      JSON.stringify(menuItem?.addonsList) !== JSON.stringify(coustomizedItems)
-    ) {
-      const updatedCardInfo = {
-        // ...menuInfo,
-        cartItems: menuInfo,
-        resInfo: resInformation,
-        totalMenuItems: 1,
-        userId: auth.currentUser.uid,
-        addonsList: coustomizedItems || [],
-      };
+  const handleAddItemToCart = async (
+    item,
+    coustomizedItems,
+    selectedAddons,
+    // actionType = "Add",
+    menuItem
+  ) => {
+    if (!isCustomize) {
+      if (showPopupBeforeReset) {
+        counter = 0;
 
-      const updateStore = {
-        ...menuInfo,
-        totalMenuItems: 1,
-        userId: auth.currentUser.uid,
-        addonsList: coustomizedItems || [],
-      };
+        // Save previous cart info
+        const preservedMenuInfo = { ...menuInfo };
+        const preservedResInfo = { ...resInformation };
+        await deleteAllUserCarts(auth?.currentUser?.uid);
+        dispatch(reSetStore());
+        const updatedCardInfo = {
+          // ...preservedMenuInfo,
+          cartItems: preservedMenuInfo,
+          resInfo: preservedResInfo,
+          totalMenuItems: item,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
 
-      const cartId = await createCartAndLinkToUser(
-        auth?.currentUser?.uid,
-        updatedCardInfo
-      );
+        await createCartAndLinkToUser(auth?.currentUser?.uid, updatedCardInfo);
 
-      dispatch(addResInfo(resInformation));
-      dispatch(addCartItems({ ...updateStore, cartId }));
+        setShowMenuCardPopup(false);
+        setShowPopupBeforeReset(false);
+        setShowAddToCardSearchResultsData(true);
+        dispatch(
+          addResParams({
+            resId: preservedResInfo?.restaurantId,
+            menuId: preservedMenuInfo?.menuId,
+          })
+        );
+        //
+      } else if (
+        showMenuCardPopupBeforeUpdate &&
+        JSON.stringify(menuItem?.addonsList) !==
+          JSON.stringify(coustomizedItems)
+      ) {
+        const updatedCardInfo = {
+          // ...menuInfo,
+          cartItems: menuInfo,
+          resInfo: resInformation,
+          totalMenuItems: 1,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
 
-      setShowMenuCardPopupBeforeUpdate(false);
-    } else if (
-      showMenuCardPopupBeforeUpdate &&
-      JSON.stringify(menuItem?.addonsList) === JSON.stringify(coustomizedItems)
-    ) {
+        const updateStore = {
+          ...menuInfo,
+          totalMenuItems: 1,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
+
+        const cartId = await createCartAndLinkToUser(
+          auth?.currentUser?.uid,
+          updatedCardInfo
+        );
+
+        dispatch(addResInfo(resInformation));
+        dispatch(addCartItems({ ...updateStore, cartId }));
+
+        setShowMenuCardPopupBeforeUpdate(false);
+        setShowMenuCardPopup();
+      } else if (
+        JSON.stringify(menuItem?.addonsList) !==
+        JSON.stringify(coustomizedItems)
+      ) {
+        const updatedCardInfo = {
+          // ...menuInfo,
+          cartItems: menuInfo,
+          resInfo: resInformation,
+          totalMenuItems: 1,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
+
+        const updateStore = {
+          ...menuInfo,
+          totalMenuItems: 1,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
+
+        const cartId = await createCartAndLinkToUser(
+          auth?.currentUser?.uid,
+          updatedCardInfo
+        );
+
+        dispatch(addResInfo(resInformation));
+        dispatch(addCartItems({ ...updateStore, cartId }));
+        setShowMenuCardPopup();
+        setShowMenuCardPopupBeforeUpdate(false);
+      } else if (
+        showMenuCardPopupBeforeUpdate &&
+        JSON.stringify(menuItem?.addonsList) ===
+          JSON.stringify(coustomizedItems)
+      ) {
+        dispatch(
+          updateCardItemAndFirestore(
+            {
+              ...menuItem,
+              totalMenuItems: item,
+              addonsList: coustomizedItems,
+              selectedAddons: selectedAddons,
+            },
+            "Add",
+            menuItem?.cartId,
+            coustomizedItems,
+            selectedAddons
+          )
+        );
+
+        setShowMenuCardPopupBeforeUpdate(false);
+      } else {
+        const updatedCardInfo = {
+          // ...menuInfo,
+          cartItems: menuInfo,
+          resInfo: resInformation,
+          totalMenuItems: item,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
+
+        const updateStore = {
+          ...menuInfo,
+          totalMenuItems: item,
+          userId: auth.currentUser.uid,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        };
+
+        const cartId = await createCartAndLinkToUser(
+          auth?.currentUser?.uid,
+          updatedCardInfo
+        );
+        dispatch(addResInfo(resInformation));
+        dispatch(addCartItems({ ...updateStore, cartId }));
+
+        setShowMenuCardPopup(false);
+
+        setShowPopupBeforeReset(false);
+
+        goToSearchResultsPage(resId, searchDishesData?.info?.id);
+      }
+    } else {
       dispatch(
         updateCardItemAndFirestore(
-          { ...menuItem, totalMenuItems: item, addonsList: coustomizedItems },
-          "Add",
-          menuItem?.cartId
+          {
+            ...menuItem,
+            totalMenuItems: menuItem?.totalMenuItems,
+            menuPrice: totalPrice,
+            finalmenuPrice: totalFinalPrice,
+            addonsList: coustomizedItems,
+            selectedAddons: selectedAddons,
+          },
+
+          "update",
+          menuItem?.cartId,
+          coustomizedItems,
+          selectedAddons
         )
       );
 
-      setShowMenuCardPopupBeforeUpdate(false);
-    } else {
-      const updatedCardInfo = {
-        // ...menuInfo,
-        cartItems: menuInfo,
-        resInfo: resInformation,
-        totalMenuItems: item,
-        userId: auth.currentUser.uid,
-        addonsList: coustomizedItems || [],
-      };
-
-      const updateStore = {
-        ...menuInfo,
-        totalMenuItems: item,
-        userId: auth.currentUser.uid,
-        addonsList: coustomizedItems || [],
-      };
-
-      const cartId = await createCartAndLinkToUser(
-        auth?.currentUser?.uid,
-        updatedCardInfo
-      );
-      dispatch(addResInfo(resInformation));
-      dispatch(addCartItems({ ...updateStore, cartId }));
-
       setShowMenuCardPopup(false);
 
-      setShowPopupBeforeReset(false);
-
-      goToSearchResultsPage(resId, searchDishesData?.info?.id);
+      setShowMenuCardPopupBeforeUpdate(false);
     }
+
+    // if (item === 0) {
+    //   dispatch(removeCardItems(updatedCardInfo));
+    //   await deleteMenutem(cartId);
+    // }
   };
 
   const getSelectedItemCount = (groupId) => {
     const selectedItemCount = addonsList
-      .map((item) => item.groupId)
+      ?.map((item) => item.groupId)
       .filter((item) => item === groupId).length;
 
     return selectedItemCount;
@@ -282,11 +402,12 @@ const PopupCardMenu = ({
       <div className="absolute top-4 right-4">
         <div
           className="w-6 h-6 rounded-full bg-amber-600 flex justify-center items-center"
-          onClick={() => (
-            setShowMenuCardPopup(false),
-            setShowPopupBeforeReset(false),
-            setShowMenuCardPopupBeforeUpdate(false)
-          )}
+          onClick={() => {
+            setShowMenuCardPopupBeforeUpdate(false);
+            setShowMenuCardPopup();
+            // setShowMenuCardPopup(false);
+            setShowPopupBeforeReset(false);
+          }}
         >
           <HiMiniXMark />
         </div>
@@ -304,7 +425,7 @@ const PopupCardMenu = ({
                 {group?.groupName} (
                 {group?.maxAddons === -1
                   ? "Optional"
-                  : `${getSelectedItemCount(group.groupId)} / ${
+                  : `${getSelectedItemCount(group?.groupId)} / ${
                       group?.maxAddons
                     }`}
                 )
@@ -335,7 +456,7 @@ const PopupCardMenu = ({
 
                         <input
                           type="checkbox"
-                          checked={!!selectedAddons[item.id]}
+                          checked={!!selectedAddons[item?.id]}
                           // disabled={
                           //   (group?.maxAddons === 1 &&
                           //     getSelectedItemCount(group?.groupId) >= 1 &&
@@ -388,7 +509,7 @@ const PopupCardMenu = ({
       {showCustomizedItems && (
         <>
           <div className="w-full sm:w-[570px] min-h-16 bg-slate-800 absolute bottom-24 flex items-center px-4 py-4 text-[14px]">
-            {coustomizedItems.slice().join(" . ")}
+            {coustomizedItems?.slice().join(" . ")}
           </div>
           <div className="w-full sm:w-[570px] h-[1px] bottom-24 absolute bg-slate-700"></div>
         </>
@@ -396,7 +517,27 @@ const PopupCardMenu = ({
 
       <div className="mt-7 flex justify-between items-center relative">
         <div className="flex flex-col">
-          {<span>₹{getFormatedPrice(totalPrice)}</span>}
+          <div className="flex gap-3.5">
+            {
+              <span>
+                ₹{getFormatedPrice(totalPrice || menuItem?.menuPrice)}
+              </span>
+            }
+            {totalFinalPrice > 0 && (
+              <div className="w-9 h-0.5 bg-slate-200 absolute bottom-8"></div>
+            )}
+            {totalFinalPrice > 0 && (
+              <span>
+                ₹
+                {getFormatedPrice(
+                  totalFinalPrice ||
+                    menuItem?.finalmenuPrice ||
+                    userMenuItem?.finalmenuPrice
+                )}
+              </span>
+            )}
+          </div>
+
           <button
             onClick={() => setShowCustomizedItems(!showCustomizedItems)}
             className="text-[14.5px] text-orange-500 font-bold"
@@ -410,10 +551,16 @@ const PopupCardMenu = ({
           <button
             className="px-8 sm:px-15 py-2 sm:py-3 bg-emerald-600 rounded-2xl"
             onClick={() => {
-              handleAddItemToCart(counter + 1, coustomizedItems || []);
+              handleAddItemToCart(
+                counter + 1,
+                coustomizedItems || [],
+
+                selectedAddons || {},
+                menuItem
+              );
             }}
           >
-            Add Item to Cart
+            {!isCustomize ? "Add Item to Cart" : "Update"}
           </button>
         </div>
       </div>

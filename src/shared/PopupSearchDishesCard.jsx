@@ -35,7 +35,7 @@ const PopupSearchDishesCard = ({
 }) => {
   console.log(searchDishesData);
   return (
-    <div className="w-[350px] sm:w-[500px] h-auto bg-slate-800 fixed z-[11999555444] top-24 sm:top-24 right-[5%] sm:right-[34%] rounded-3xl ">
+    <div className="w-[350px] sm:w-[520px] h-auto bg-slate-800 fixed z-[1199955544433333333333] top-24 sm:top-12 right-[5%] sm:right-[34%] rounded-3xl">
       <div className="w-full  h-[200px] sm:h-[400px]">
         <img
           src={IMG_SEARCH_DISH_BANNER + searchDishesData?.info?.imageId}
@@ -51,7 +51,7 @@ const PopupSearchDishesCard = ({
           <HiMiniXMark />
         </div>
       </div>
-      <div className="flex-col py-6 px-4">
+      <div className="flex-col py-6 pl-4 pr-2">
         <div className="flex justify-between items-center relative">
           <div className="flex-col">
             <div>
@@ -69,13 +69,25 @@ const PopupSearchDishesCard = ({
               {searchDishesData?.info?.price
                 ? searchDishesData?.info?.price / 100
                 : searchDishesData?.info?.defaultPrice / 100}
-              <span className="text-sm">
-                {searchDishesData?.info?.offerTags?.[0].title ? " 🏷️" : ""}
+              {searchDishesData?.info?.finalPrice && (
+                <div className="w-10 h-0.5 bg-slate-200 absolute top-[68px]"></div>
+              )}
+              <span className="ml-2">
+                {searchDishesData?.info?.finalPrice &&
+                  searchDishesData?.info?.finalPrice / 100}
+              </span>
+              <span className="text-[14px]">
+                {searchDishesData?.info?.offerTags?.[0].title ||
+                searchDishesData?.info?.finalPrice
+                  ? " 🏷️"
+                  : ""}
+              </span>
+              <span className="text-[12px]">
                 {searchDishesData?.info?.offerTags?.[0].title}{" "}
                 {searchDishesData?.info?.offerTags?.[0].subTitle}
               </span>
             </p>
-            {/* {searchDishesData?.info?.ratings?.aggregatedRating?.rating ? (
+            {searchDishesData?.info?.ratings?.aggregatedRating?.rating ? (
               <p className="text-[12px] py-3">
                 ❇️
                 {`${searchDishesData?.info?.ratings?.aggregatedRating?.rating}(
@@ -84,7 +96,7 @@ const PopupSearchDishesCard = ({
               </p>
             ) : (
               ""
-            )} */}
+            )}
             <div className="text-[14px]">
               {searchDishesData?.info?.description}
             </div>
