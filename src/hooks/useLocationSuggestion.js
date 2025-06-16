@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../utils/constant";
 
 const useLocationSuggestion = (input) => {
   const [locationSuggestion, setLocationSuggestion] = useState([]);
@@ -7,7 +8,8 @@ const useLocationSuggestion = (input) => {
   const getSuggestion = async () => {
     if (input || input !== "") {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/misc/place-autocomplete?input=${input}&types=`
+        BASE_URL +
+          `https://www.swiggy.com/dapi/misc/place-autocomplete?input=${input}&types=`
       );
       const suggestionData = await response.json();
 

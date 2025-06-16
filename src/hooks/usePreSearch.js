@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../utils/constant";
 
 const usePreSearch = (LAT, LNG) => {
   const [preSearchData, setPreSearchData] = useState([]);
@@ -7,7 +8,8 @@ const usePreSearch = (LAT, LNG) => {
   const getPreSearchData = async () => {
     if (LAT && LNG) {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/landing/PRE_SEARCH?lat=${LAT}&lng=${LNG}`
+        BASE_URL +
+          `https://www.swiggy.com/dapi/landing/PRE_SEARCH?lat=${LAT}&lng=${LNG}`
       );
       const data = await response.json();
 

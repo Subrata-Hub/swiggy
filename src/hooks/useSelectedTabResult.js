@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../utils/constant";
 
 const useSelectedTabResult = (
   suggestionText,
@@ -17,7 +18,8 @@ const useSelectedTabResult = (
     setLoading(true);
     if (isSelected) {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&selectedPLTab=${searchResultsType}`
+        BASE_URL +
+          `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&selectedPLTab=${searchResultsType}`
       );
 
       const data = await response.json();

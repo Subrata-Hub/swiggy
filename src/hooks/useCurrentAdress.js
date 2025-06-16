@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../utils/constant";
 
 const useCurrentAdress = (latLng, setLoading) => {
   const [currentAddress, setCurrentAdress] = useState([]);
@@ -9,7 +10,8 @@ const useCurrentAdress = (latLng, setLoading) => {
 
     if (latLng) {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latLng}`
+        BASE_URL +
+          `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latLng}`
       );
       const suggestionData = await response.json();
       if (!suggestionData) return;

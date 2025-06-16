@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../utils/constant";
 
 const useSearchResultsForEnter = (
   suggestionTextForEnter,
@@ -15,7 +16,8 @@ const useSearchResultsForEnter = (
     // && suggestionText === ""
     if (suggestionTextForEnter && suggestionTextForEnter !== "" && pathname) {
       const response = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionTextForEnter}&submitAction=ENTER`
+        BASE_URL +
+          `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionTextForEnter}&submitAction=ENTER`
       );
       const data = await response.json();
 
