@@ -3,8 +3,17 @@ import { updateCardItems } from "../utils/cartSlice";
 import { db } from "../utils/firebase";
 
 const updateCardItemAndFirestore =
-  (item, action, cartId, coustomizedItems) => async (dispatch) => {
-    dispatch(updateCardItems({ ...item, action, cartId, coustomizedItems })); // Dispatch the synchronous Redux update
+  (item, action, cartId, coustomizedItems, selectedAddons) =>
+  async (dispatch) => {
+    dispatch(
+      updateCardItems({
+        ...item,
+        action,
+        cartId,
+        coustomizedItems,
+        selectedAddons,
+      })
+    ); // Dispatch the synchronous Redux update
 
     if (cartId) {
       const cartRef = doc(db, "cart", cartId);
@@ -12,10 +21,23 @@ const updateCardItemAndFirestore =
         const cartSnap = await getDoc(cartRef);
 
         if (cartSnap.exists()) {
-          await updateDoc(cartRef, {
-            totalMenuItems: item.totalMenuItems, // Use the updated item count
-            addonsList: coustomizedItems || [],
-          });
+          if (action === "update") {
+            await updateDoc(cartRef, {
+              cartItems: item,
+              totalMenuItems: item.totalMenuItems, // Use the updated item count
+
+              addonsList: coustomizedItems || [],
+              selectedAddons: selectedAddons || {},
+            });
+          } else {
+            await updateDoc(cartRef, {
+              cartItems: item,
+              totalMenuItems: item.totalMenuItems, // Use the updated item count
+
+              addonsList: coustomizedItems || [],
+              selectedAddons: selectedAddons || {},
+            });
+          }
         }
       } catch (error) {
         console.error("Error updating cart in Firestore:", error);

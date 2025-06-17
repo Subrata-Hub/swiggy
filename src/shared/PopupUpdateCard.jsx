@@ -4,6 +4,7 @@ import updateCardItemAndFirestore from "../actions/updateCardItemAndFirestore";
 
 const PopupUpdateCard = ({
   setShowPopupBeforeUpdate,
+  // setSelectedItemForUpdate,
   menuInfo,
   menuItem,
   userMenuItem,
@@ -14,21 +15,37 @@ const PopupUpdateCard = ({
 }) => {
   const dispatch = useDispatch();
 
-  const updatingCardItem = async (item, action, cartId, coustomizedItems) => {
+  const updatingCardItem = async (
+    item,
+    action,
+    cartId,
+    coustomizedItems,
+    selectedAddons
+  ) => {
     dispatch(
       updateCardItemAndFirestore(
-        { ...menuItem, totalMenuItems: item, addonsList: coustomizedItems },
+        {
+          ...item,
+          totalMenuItems: item?.totalMenuItems + 1,
+          menuPrice: item.menuPrice,
+          finalmenuPrice: item.finalmenuPrice,
+          addonsList: coustomizedItems,
+          selectedAddons: selectedAddons,
+        },
+
         action,
-        cartId
+        cartId,
+        coustomizedItems,
+        selectedAddons
       )
     );
 
     setShowPopupBeforeUpdate(false);
 
-    //   if (item === 0) {
-    //     dispatch(removeCardItems(updatedCardInfo));
-    //     await deleteMenutem(cartId);
-    //   }
+    // if (item === 0) {
+    //   dispatch(removeCardItems(updatedCardInfo));
+    //   await deleteMenutem(cartId);
+    // }
   };
 
   const handleShowPopupCardMenu = () => {
@@ -38,7 +55,7 @@ const PopupUpdateCard = ({
     // setShowPopupBeforeReset(false);
   };
   return (
-    <div className="w-full sm:w-[600px] h-[300px] p-[20px] sm:p-[30px] bg-slate-800 fixed z-[119996552255255] bottom-60 sm:bottom-36 md:bottom-15 right-[0%] sm:right-[10%] md:right-[18%] lg:right-[25%] xl:right-[30%] 2xl:right-[35%] rounded-3xl">
+    <div className="w-full sm:w-[600px] h-auto p-[20px] sm:p-[30px] bg-slate-800 fixed z-[119996552255255] bottom-60 sm:bottom-36 md:bottom-15 right-[0%] sm:right-[10%] md:right-[18%] lg:right-[25%] xl:right-[30%] 2xl:right-[35%] rounded-3xl">
       <div className="flex flex-col gap-4">
         <div>
           <p className="">{menuInfo.menuName}</p>
@@ -46,7 +63,7 @@ const PopupUpdateCard = ({
         <h1 className="font-bold text-[22px]">
           Repeat previous customisation?
         </h1>
-        {(menuItem || userMenuItem)?.addonsList.length > 0 && (
+        {(menuItem || userMenuItem)?.addonsList?.length > 0 && (
           <div className="w-full py-6 bg-slate-900 flex items-center px-2">
             {(menuItem || userMenuItem)?.addonsList?.slice().join(" . ")}
           </div>
@@ -63,15 +80,17 @@ const PopupUpdateCard = ({
             className="w-[220px] h-[50px] bg-green-500"
             onClick={() => {
               updatingCardItem(
-                (menuItem || userMenuItem)?.totalMenuItems + 1,
+                menuItem,
+                // (menuItem || userMenuItem)?.totalMenuItems + 1,
                 "Add",
                 menuItem?.cartId || userMenuItem?.cartId,
                 // cartIdForRepetItem
-                menuItem?.addonsList || userMenuItem?.addonsList
+                menuItem?.addonsList || userMenuItem?.addonsList,
+                menuItem?.selectedAddons || userMenuItem?.selectedAddons
               );
             }}
           >
-            Repeat
+            Repeat Last
           </button>
         </div>
       </div>

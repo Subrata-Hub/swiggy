@@ -56,19 +56,17 @@ const SearchDishesCard = ({
     ?.map((item) => item?.totalMenuItems)
     .reduce((acc, item) => acc + item, 0);
 
-  const userMenuItem = userCartItems?.items?.[0]?.find(
+  const userMenuItem = userCartItems?.cartItems?.find(
     (item) => item.menuId === searchDishesData?.info?.id
   );
 
-  const totalUserMenuItem = userCartItems?.items?.[0]?.filter(
+  const totalUserMenuItem = userCartItems?.cartItems?.filter(
     (item) => item.menuId === searchDishesData?.info?.id
   );
 
   const totalUserMenuItemCount = totalUserMenuItem
     ?.map((item) => item.totalMenuItems)
     .reduce((acc, item) => acc + item, 0);
-
-  // let counter = menuItem?.totalMenuItems || userMenuItem?.totalMenuItems || 0;
 
   let counter = totalMenuItemsCount || totalUserMenuItemCount || 0;
 
@@ -196,12 +194,22 @@ const SearchDishesCard = ({
               <h2 className="text-[19px] font-semibold line-clamp-2">
                 {searchDishesData?.info?.name}
               </h2>
-              <p>
-                ₹
-                {searchDishesData?.info?.price
-                  ? searchDishesData?.info?.price / 100
-                  : searchDishesData?.info?.defaultPrice / 100}
-              </p>
+              <div className="flex gap-1 mt-1 relative">
+                <span>
+                  ₹
+                  {searchDishesData?.info?.price
+                    ? searchDishesData?.info?.price / 100
+                    : searchDishesData?.info?.defaultPrice / 100}
+                </span>
+                {searchDishesData?.info?.finalPrice && (
+                  <div className="w-8 h-0.5 bg-slate-200 absolute top-[12px]"></div>
+                )}
+                <span className="ml-2">
+                  {searchDishesData?.info?.finalPrice &&
+                    searchDishesData?.info?.finalPrice / 100}
+                </span>
+              </div>
+
               <button
                 className="px-4 py-2 rounded-2xl text-xs bg-slate-700 mt-4 flex items-center gap-2"
                 onClick={handleShowPopup}
