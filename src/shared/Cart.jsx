@@ -73,20 +73,18 @@ const Cart = () => {
         console.log(item);
         // This effect now primarily focuses on populating Redux if it's empty or on initial load
         if (!cartItems?.length && item?.cartItems) {
-          // const addonsList =
-          //   item?.addonsList?.length > 0
-          //     ? item?.addonsList
-          //     : item?.cartItems?.addonsList;
-
-          // || item?.cartItems?.totalCardItems
+          const addonsList =
+            item?.addonsList?.length > 0
+              ? item?.addonsList
+              : item?.cartItems?.addonsList;
           dispatch(
             addCartItems({
               ...item?.cartItems,
               ["cartId"]: item?.id,
-              ["totalMenuItems"]: item?.totalMenuItems,
+              ["totalMenuItems"]:
+                item?.totalMenuItems || item?.cartItems?.totalCardItems,
               ["isCommingFromDB"]: true,
-              ["addonsList"]: item?.addonsList,
-              ["selectedAddons"]: item?.selectedAddons,
+              ["addonsList"]: addonsList,
             })
           );
         }

@@ -13,8 +13,6 @@ export const SWIGGY_LOGO = `https://media-assets.swiggy.com/swiggy/image/upload/
 export const UNSERVICEABLE_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_476,h_476/portal/m/location_unserviceable.png`;
 export const LOGIN_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r`;
 export const TOP_PIC_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/`;
-
-export const CUPPON_LOGO = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_40,h_40/`;
 export const LAT = 22.5743545;
 export const LNG = 88.3628734;
 

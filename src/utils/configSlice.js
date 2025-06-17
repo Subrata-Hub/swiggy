@@ -11,7 +11,6 @@ const configSlice = createSlice({
     },
     resItems: [],
     isCheckOutPage: false,
-    
   },
 
   reducers: {
@@ -38,8 +37,6 @@ const configSlice = createSlice({
     addIsCheckOutPage: (state, action) => {
       state.isCheckOutPage = action.payload;
     },
-
-
   },
 });
 
