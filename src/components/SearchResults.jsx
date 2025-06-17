@@ -62,6 +62,8 @@ const SearchResults = ({
       "type.googleapis.com/swiggy.gandalf.widgets.v2.SearchFilterSortWidget"
   );
 
+  console.log(searchResultsRefineData);
+
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
     // setIsSelected(true);

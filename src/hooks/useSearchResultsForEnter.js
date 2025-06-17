@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../utils/constant";
+import { BASE_URL, MOBILE_BASE_URL } from "../utils/constant";
 
 const useSearchResultsForEnter = (
   suggestionTextForEnter,
@@ -16,7 +16,9 @@ const useSearchResultsForEnter = (
     // && suggestionText === ""
     if (suggestionTextForEnter && suggestionTextForEnter !== "" && pathname) {
       const response = await fetch(
-        `${BASE_URL}/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionTextForEnter}&submitAction=ENTER`
+        `${
+          window.innerWidth > 640 ? BASE_URL : MOBILE_BASE_URL
+        }/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionTextForEnter}&submitAction=ENTER`
       );
       const data = await response.json();
 

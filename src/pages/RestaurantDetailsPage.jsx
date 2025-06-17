@@ -81,7 +81,8 @@ const RestaurantDetailsPage = () => {
             />
             <Menu
               resDetailsData={
-                resDetailsData?.[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards
+                resDetailsData?.[window.innerWidth > 640 ? 4 : 5]?.groupedCard
+                  ?.cardGroupMap?.REGULAR?.cards
               }
               restaurantId={restaurantId}
               areaName={areaName}

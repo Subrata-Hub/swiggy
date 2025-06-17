@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../utils/constant";
+import { BASE_URL, MOBILE_BASE_URL } from "../utils/constant";
 
 const useSearchFilter = (
   suggestionText,
@@ -24,7 +24,9 @@ const useSearchFilter = (
       setLoading(true);
 
       const response = await fetch(
-        `${BASE_URL}/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&facets=${facets}
+        `${
+          window.innerWidth > 640 ? BASE_URL : MOBILE_BASE_URL
+        }/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&facets=${facets}
             &sortKey=${selectedOption}&selectedPLTab=${searchResultsType}`
       );
 

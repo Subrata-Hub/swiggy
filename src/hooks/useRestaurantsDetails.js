@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../utils/constant";
+import { BASE_URL, MOBILE_BASE_URL } from "../utils/constant";
 
 const useRestaurantsDetails = (restaurantId, setLoading, LAT, LNG) => {
   const [resDetailsData, setResDetailsData] = useState([]);
@@ -9,7 +9,9 @@ const useRestaurantsDetails = (restaurantId, setLoading, LAT, LNG) => {
     setLoading(true);
     if (LAT && LNG) {
       const response = await fetch(
-        `${BASE_URL}/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${restaurantId}&catalog_qa=undefined&submitAction=ENTER`
+        `${
+          window.innerWidth > 640 ? BASE_URL : MOBILE_BASE_URL
+        }/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${restaurantId}&catalog_qa=undefined&submitAction=ENTER`
       );
 
       const data = await response.json();

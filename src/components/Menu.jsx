@@ -30,6 +30,8 @@ const Menu = ({
     setActiveOption(value);
   };
 
+  console.log(resDetailsData);
+
   const resMenuData = resDetailsData?.filter(
     (item) =>
       item?.card?.card?.["@type"] ===
@@ -37,7 +39,6 @@ const Menu = ({
       item?.card?.card?.["@type"] ===
         "type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory"
   );
-
   const resMenuTopPicks = resDetailsData?.filter(
     (item) =>
       item?.card?.card?.["@type"] ===
