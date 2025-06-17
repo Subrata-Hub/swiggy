@@ -8,8 +8,7 @@ const usePreSearch = (LAT, LNG) => {
   const getPreSearchData = async () => {
     if (LAT && LNG) {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/landing/PRE_SEARCH?lat=${LAT}&lng=${LNG}`
+        `${BASE_URL}/landing/PRE_SEARCH?lat=${LAT}&lng=${LNG}`
       );
       const data = await response.json();
 

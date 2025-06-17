@@ -8,8 +8,7 @@ const useCupponCode = (LAT, LNG, resId, cart_value, setLoading) => {
   const getCupponData = async () => {
     setLoading(true);
     const response = await fetch(
-      BASE_URL +
-        `https://www.swiggy.com/dapi/offers/payment?lat=${LAT}&lng=${LNG}&restaurantId=${resId}&cart_value=${cart_value}&restaurant_id=${resId}`
+      `${BASE_URL}/offers/payment?lat=${LAT}&lng=${LNG}&restaurantId=${resId}&cart_value=${cart_value}&restaurant_id=${resId}`
     );
     const data = await response.json();
     setCupponData(data?.data?.cards);

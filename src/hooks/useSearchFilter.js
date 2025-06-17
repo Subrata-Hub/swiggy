@@ -24,8 +24,7 @@ const useSearchFilter = (
       setLoading(true);
 
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&facets=${facets}
+        `${BASE_URL}/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${suggestionText}&submitAction=SUGGESTION&facets=${facets}
             &sortKey=${selectedOption}&selectedPLTab=${searchResultsType}`
       );
 

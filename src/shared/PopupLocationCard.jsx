@@ -17,6 +17,7 @@ import { addUserLocationData } from "../utils/firebaseDataSlice";
 import Spineer from "./Spineer";
 import RecentLocationSearchCart from "./RecentLocationSearchCart";
 import { BASE_URL } from "../utils/constant";
+
 // import { arrayUnion } from "firebase/firestore/lite";
 
 /* eslint-disable react/prop-types */
@@ -102,8 +103,7 @@ const PopupLocationCard = ({
   const getLatLng = async (placeId) => {
     if (placeId) {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/misc/address-recommend?place_id=${placeId}`
+        `${BASE_URL}/misc/address-recommend?place_id=${placeId}`
       );
       const latLngData = await response.json();
 
@@ -176,8 +176,7 @@ const PopupLocationCard = ({
       setInput("Fetching your current Location");
       setLoading(true);
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latlngStr}`
+        `${BASE_URL}/misc/address-recommend?latlng=${latlngStr}`
       );
       const suggestionData = await response.json();
       if (!suggestionData) return;

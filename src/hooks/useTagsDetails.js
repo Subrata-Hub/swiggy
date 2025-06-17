@@ -8,8 +8,7 @@ const useTagsDetails = (collectionId, tagName, setLoading, LAT, LNG) => {
   const getTagDetailsData = async () => {
     setLoading(true);
     const response = await fetch(
-      BASE_URL +
-        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&collection=${collectionId}&tags=layout_CCS_${tagName}&sortBy=&filters=&type=rcv2`
+      `${BASE_URL}/restaurants/list/v5?lat=${LAT}&lng=${LNG}&collection=${collectionId}&tags=layout_CCS_${tagName}&sortBy=&filters=&type=rcv2`
     );
     const data = await response.json();
 

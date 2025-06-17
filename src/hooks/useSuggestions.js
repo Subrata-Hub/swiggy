@@ -10,8 +10,7 @@ const useSuggestions = (query, LAT, LNG) => {
 
     if (query && LAT && LNG) {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/restaurants/search/suggest?lat=${LAT}&lng=${LNG}&str=${query}&includeIMItem=true`
+        `${BASE_URL}/restaurants/search/suggest?lat=${LAT}&lng=${LNG}&str=${query}&includeIMItem=true`
       );
       const data = await response.json();
 

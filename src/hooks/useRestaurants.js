@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constant";
-// import { LAT, LNG } from "../utils/constant";
 
 const useRestaurants = (setLoading, LAT, LNG) => {
   const [resData, setResData] = useState([]);
@@ -10,9 +9,12 @@ const useRestaurants = (setLoading, LAT, LNG) => {
     setLoading(true);
 
     if (LAT && LNG) {
+      // const response = await fetch(
+      //   `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&page_type=DESKTOP_WEB_LISTING`
+      // );
+
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&page_type=DESKTOP_WEB_LISTING`
+        `${BASE_URL}/restaurants/list/v5?lat=${LAT}&lng=${LNG}&page_type=DESKTOP_WEB_LISTING`
       );
       const data = await response.json();
 

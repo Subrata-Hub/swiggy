@@ -8,8 +8,7 @@ const useLatLng = (placeId) => {
   const getLatLng = async () => {
     if (placeId) {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/misc/address-recommend?place_id=${placeId}`
+        `${BASE_URL}/misc/address-recommend?place_id=${placeId}`
       );
       const latLngData = await response.json();
 

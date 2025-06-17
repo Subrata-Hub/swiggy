@@ -10,8 +10,7 @@ const useCurrentAdress = (latLng, setLoading) => {
 
     if (latLng) {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/misc/address-recommend?latlng=${latLng}`
+        `${BASE_URL}/misc/address-recommend?latlng=${latLng}`
       );
       const suggestionData = await response.json();
       if (!suggestionData) return;

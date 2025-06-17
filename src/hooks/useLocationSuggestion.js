@@ -8,8 +8,7 @@ const useLocationSuggestion = (input) => {
   const getSuggestion = async () => {
     if (input || input !== "") {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/misc/place-autocomplete?input=${input}&types=`
+        `${BASE_URL}/misc/place-autocomplete?input=${input}&types=`
       );
       const suggestionData = await response.json();
 

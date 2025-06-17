@@ -12,8 +12,7 @@ const useSearchResults = (query, setLoading, LAT, LNG, submitAction) => {
     setLoading(true);
     if (query && query !== "") {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=${submitAction}`
+        `${BASE_URL}/restaurants/search/v3?lat=${LAT}&lng=${LNG}&str=${query}&submitAction=${submitAction}`
       );
       const data = await response.json();
 

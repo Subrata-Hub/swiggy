@@ -9,8 +9,7 @@ const useRestaurantsDetails = (restaurantId, setLoading, LAT, LNG) => {
     setLoading(true);
     if (LAT && LNG) {
       const response = await fetch(
-        BASE_URL +
-          `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${restaurantId}&catalog_qa=undefined&submitAction=ENTER`
+        `${BASE_URL}/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${restaurantId}&catalog_qa=undefined&submitAction=ENTER`
       );
 
       const data = await response.json();
