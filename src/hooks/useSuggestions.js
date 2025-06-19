@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../utils/constant";
+import { BASE_URL, MOBILE_BASE_URL } from "../utils/constant";
 
 const useSuggestions = (query, LAT, LNG) => {
   const [suggestionData, setSuggestionData] = useState();
@@ -10,7 +10,9 @@ const useSuggestions = (query, LAT, LNG) => {
 
     if (query && LAT && LNG) {
       const response = await fetch(
-        `${BASE_URL}/restaurants/search/suggest?lat=${LAT}&lng=${LNG}&str=${query}&includeIMItem=true`
+        `${
+          window.innerWidth > 640 ? BASE_URL : MOBILE_BASE_URL
+        }/restaurants/search/suggest?lat=${LAT}&lng=${LNG}&str=${query}&includeIMItem=true`
       );
       const data = await response.json();
 

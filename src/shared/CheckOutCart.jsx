@@ -245,6 +245,33 @@ const CheckOutCart = () => {
               ))}
             </div>
 
+            <div className="mt-4 text-[12px]">
+              {/* <input type=" w-full h-6" placeholder="Any suggestions? We will pass it on..." /> */}
+              <textarea
+                name=""
+                id=""
+                className="w-full h-15 border-2 border-slate-500 text-center py-2"
+              >
+                Any suggestions? We will pass it on...
+              </textarea>
+            </div>
+
+            <div className="w-full h-[96px]  border-2 border-slate-500 mt-4">
+              <div className="flex gap-4">
+                <input type="checkbox" />
+                <div>
+                  <h3 className="font-medium text-sm">
+                    Opt in for No-contact Delivery
+                  </h3>
+                  <p className="text-[12px]">
+                    Unwell, or avoiding contact? Please select no-contact
+                    delivery. Partner will safely place the order outside your
+                    door (not for COD)
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="w-full p-5 border-2 border-slate-500 mb-4 mt-6">
               <div
                 className="flex gap-4 items-center"
@@ -282,7 +309,7 @@ const CheckOutCart = () => {
             <div className="w-full h-[0.5px] bg-slate-700 mt-6"></div>
 
             {/* Total Section (no changes here) */}
-            <div className="fixed bottom-2 w-[370px]  z-1000">
+            <div className="fixed bottom-0 w-[370px]  z-1000">
               <div className="flex  h-10 bg-amber-600 justify-between items-center mt-6 -ml-6 px-4">
                 <h1>TO Pay</h1>
                 <div>

@@ -49,6 +49,7 @@ const SearchResults = ({
   );
 
   const searchResultsForRestaurant = searchResultsRefineData?.RESTAURANT?.cards;
+
   const searchResultsForAllRestaurant =
     searchResultsRefineData?.RESTAURANT?.cards?.filter(
       (res) =>

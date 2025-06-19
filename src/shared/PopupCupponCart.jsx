@@ -53,25 +53,25 @@ const PopupCupponCart = ({
 
   return (
     <>
-      <div className="fixed h-full top-0 right-0 w-full px-2 sm:px-0 sm:w-[450px] md:w-[550px] lg:w-[630px] bg-slate-800 z-[2316136]">
+      <div className="fixed h-full top-20 sm:top-0 right-0 w-full px-2 sm:px-0 sm:w-[450px] md:w-[550px] lg:w-[630px] bg-slate-800 z-[2316136]">
         <div
           className="fixed top-24 pl-2 sm:pl-4 md:pl-10"
           onClick={() => setShowPopupCupponCart(false)}
         >
           <HiMiniXMark className="text-3xl" />
         </div>
-        <div className="w-[400px] fixed top-40 pl-10 ">
+        <div className="w-[400px] fixed top-40 pl-0 sm:pl-10">
           <input
             className="w-full h-12 border-2 border-slate-700 pl-4"
             placeholder="Enter your Cuppon"
           />
 
-          <button className="fixed px-6 py-3 right-[190px] bg-amber-600">
+          <button className="fixed px-6 py-3 right-[10px] sm:right-[190px] bg-amber-600">
             APPLY
           </button>
         </div>
 
-        <div className="w-[400px] h-full overflow-y-scroll hide-scrollbar mt-64 ml-10 border-2 border-slate-600">
+        <div className="w-[400px] h-full overflow-y-scroll hide-scrollbar mt-40 sm:mt-64 ml-0 sm:ml-10 border-2 border-slate-600">
           <div className="px-8 py-4 text-[13px]">
             {cardMessage?.[0]?.data?.data?.message}
           </div>
