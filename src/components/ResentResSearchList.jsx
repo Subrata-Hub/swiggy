@@ -23,11 +23,10 @@ const ResentResSearchList = ({
   const dispatch = useDispatch();
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
   const recentResSearchArray = JSON.parse(localStorage.getItem("resItems"));
-  console.log(recentResSearchArray);
+
   const recentResSearchUniqueArray = [
     ...new Set(recentResSearchArray?.items),
   ].slice(0, 6);
-  console.log(recentResSearchUniqueArray);
 
   const renserRecentResSearch =
     recentResSearchUniqueArray?.length > 0 && !showMore
@@ -36,7 +35,6 @@ const ResentResSearchList = ({
       ? recentResSearchUniqueArray.slice(0, 4)
       : recentResSearchUniqueArray;
 
-  console.log(window.innerWidth);
   const goToQueryPage = (query) => {
     navigate(`/search?query=${query}`);
 

@@ -18,25 +18,12 @@ const RestaurantDetailsPage = () => {
   // localStorage.removeItem("recent_Search");
 
   const showNavigation = useSelector((store) => store.config.showNavigation);
-  console.log(showNavigation);
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
-  console.log(currentLocation);
 
   const latlang = useSelector(
     (store) => store?.firebaseData?.userLocationData?.latlng
   );
-
-  // const placeData = useSelector(
-  //   (store) => store?.firebaseData?.userLocationData
-  // );
-  // const placeArray = placeData
-  //   ? placeData
-  //   : currentLocation?.address_components?.filter((cityList) =>
-  //       cityList?.types?.find((item) => item === "city")
-  //     );
-
-  // const city = placeArray?.[0]?.long_name;
 
   const LAT = latlang?.LAT ? latlang?.LAT : currentLocation?.latlng?.LAT;
   const LNG = latlang?.LNG ? latlang?.LNG : currentLocation?.latlng?.LNG;
@@ -47,8 +34,6 @@ const RestaurantDetailsPage = () => {
     LAT,
     LNG
   );
-
-  console.log(resDetailsData);
 
   const resInformation = {
     restaurantId: restaurantId,

@@ -20,7 +20,6 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
   const email = useRef(null);
   const password = useRef(null);
 
-  // console.log(email.current.value);
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
@@ -70,8 +69,6 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           })
         );
 
-        // console.log("User signed up and data stored:", user);
-
         setIsSignIn(true);
       } else {
         await signInWithEmailAndPassword(
@@ -106,13 +103,10 @@ const Login = ({ setShowLoginPopup, logInRef, handleContineueafterSignIn }) => {
           localStorage.removeItem("anonymousUid");
         }
 
-        console.log("Sign In User");
         setShowLoginPopup(false);
         handleContineueafterSignIn();
       }
     } catch (error) {
-      const errorCode = error.code;
-      console.log(errorCode);
       const errorMessage = error.message;
       setErrorMessage(errorMessage);
     }

@@ -13,7 +13,7 @@ const useSelectedTabResult = (
 ) => {
   const [searchData, setSearchData] = useState({});
   // const dispatch = useDispatch();
-  console.log(isSelected);
+
   const getSearchData = async () => {
     setLoading(true);
     if (isSelected) {

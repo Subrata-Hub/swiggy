@@ -9,7 +9,6 @@ const PopupCategoryList = ({
   setShowCategoryListPopup,
   menuRef,
 }) => {
-  console.log(resMenuData);
   const category_list_ref = useRef(null);
 
   useMenuCategoryClick(category_list_ref, () =>

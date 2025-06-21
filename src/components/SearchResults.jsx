@@ -64,20 +64,11 @@ const SearchResults = ({
       "type.googleapis.com/swiggy.gandalf.widgets.v2.SearchFilterSortWidget"
   );
 
-  console.log(searchResultsRefineData);
-
   const getSelectedTab = (value) => {
     dispatch(addSearchResultType(value));
     // setIsSelected(true);
 
     dispatch(addIsSelected(true));
-
-    // localStorage.setItem(
-    //   "selected",
-    //   JSON.stringify({
-    //     isSelected: true,
-    //   })
-    // );
 
     dispatch(addIsSearchResults(true));
   };

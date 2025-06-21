@@ -2,11 +2,12 @@
 
 import ClipLoader from "react-spinners/ClipLoader";
 
-// const override: CSSProperties = {
-//   display: "block",
-//   margin: "0 auto",
-//   borderColor: "red",
-// };
+const override = {
+  display: "block",
+  margin: "50%",
+
+  borderColor: "white",
+};
 
 const Spineer = ({ loading }) => {
   return (
@@ -14,8 +15,8 @@ const Spineer = ({ loading }) => {
       <ClipLoader
         // color={color}
         loading={loading}
-        // cssOverride={override}
-        size={150}
+        cssOverride={override}
+        size={60}
         aria-label="Loading Spinner"
         data-testid="loader"
       />

@@ -57,11 +57,6 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
 
   let counter = totalMenuItemsCount || totalUserMenuItemCount || 0;
 
-  //   useOutSideClick(
-  //     menuDishesCardRef,
-  //     () => setShowPopup(false),
-  //     detailMenuButtonRef
-  //   );
   useOutSideClick(
     menuItemCardRef,
     () => {
@@ -77,7 +72,6 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     () => {
       if (!disableOutsideClick) {
         setShowResetCardPopup(false);
-        // setShowResetCardPopup(false);
       }
     },
     addResetRef
@@ -88,13 +82,10 @@ const TopPicksCard = ({ topPicksData, resInformation }) => {
     () => {
       if (!disableOutsideClick) {
         setShowPopupBeforeUpdate(false);
-        // setShowResetCardPopup(false);
       }
     },
     addUpdateRef
   );
-
-  console.log(topPicksData);
 
   const menuInfo = {
     menuId: topPicksData?.info?.id,

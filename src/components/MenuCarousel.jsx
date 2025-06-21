@@ -5,10 +5,7 @@ import Slider from "../shared/Slider";
 
 /* eslint-disable react/prop-types */
 const MenuCarousel = ({ resMenuTopPicks, resInformation }) => {
-  console.log(resMenuTopPicks);
   const topPicklistRef = useRef(null);
-
-  console.log(topPicklistRef.current);
 
   const noToShiftCart = 1;
   // const gapWidth = -32;

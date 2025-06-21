@@ -27,7 +27,6 @@ const PopupResetCard = ({
     } else {
       const userId = auth?.currentUser?.uid;
       if (!userId) {
-        console.log("User not authenticated.");
         return;
       }
 
@@ -47,8 +46,6 @@ const PopupResetCard = ({
         totalMenuItems: newCounter,
         userId: auth.currentUser.uid,
       };
-
-      console.log(cartItemInfo);
 
       const cartId = await createCartAndLinkToUser(
         auth?.currentUser?.uid,

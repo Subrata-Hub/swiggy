@@ -115,7 +115,6 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
   const handleShowPopup = () => {
     setShowPopup(!showPopup);
-    console.log("fvkbknknk");
   };
 
   const handleShowMore = () => {
@@ -156,7 +155,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
             {" "}
             {resMenuItem?.card?.info?.name}
           </h2>
-          <p className="mt-1 sm:mt-2">
+          <div className="mt-1 sm:mt-2">
             ₹
             {resMenuItem?.card?.info?.price
               ? resMenuItem?.card?.info?.price / 100
@@ -178,7 +177,7 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
               {resMenuItem?.card?.info?.offerTags?.[0].title}{" "}
               {resMenuItem?.card?.info?.offerTags?.[0].subTitle}
             </span>
-          </p>
+          </div>
           {resMenuItem?.card?.info?.ratings?.aggregatedRating?.rating ? (
             <p className="text-[12px] py-1.5 sm:py-3">
               ❇️

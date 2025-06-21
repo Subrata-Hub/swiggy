@@ -68,8 +68,6 @@ const PopupCardMenu = ({
 
   const resParamsObj = useSelector((store) => store?.search?.resParams);
 
-  console.log(searchDishesData);
-
   const updateTotalPrice = (
     groupId,
     groupName,
@@ -122,8 +120,6 @@ const PopupCardMenu = ({
     }
   };
 
-  console.log(selectedAddons);
-
   const menuInfo = {
     menuId: searchDishesData?.info?.id || searchDishesData?.menuId,
     resId: resId,
@@ -136,19 +132,10 @@ const PopupCardMenu = ({
 
     menuPrice: totalPrice,
 
-    // finalmenuPrice:
-    //   ((searchDishesData?.info?.finalPrice ||
-    //     searchDishesData?.finalmenuPrice) &&
-    //     (searchDishesData?.info?.finalPrice ||
-    //       searchDishesData?.finalmenuPrice) / 100) ||
-    //   0,
-
     finalmenuPrice: totalFinalPrice,
 
     addons: searchDishesData?.info?.addons || searchDishesData?.addons || [],
   };
-
-  console.log(searchDishesData?.addons);
 
   const previousCoustomizedItems = userMenuItem?.addonsList || [];
 
@@ -156,9 +143,6 @@ const PopupCardMenu = ({
     addonsList?.reduce((accu, item) => [...accu, item.name], []) || [];
 
   const coustomizedItems = [...previousCoustomizedItems, ...coustomizedItem];
-
-  console.log(addonsList);
-  console.log(coustomizedItems);
 
   const handleAddItemToCart = async (
     item,
@@ -377,7 +361,6 @@ const PopupCardMenu = ({
 
   const goToSearchResultsPage = (resId, menuId) => {
     if (!resParamsObj?.resId && !resParamsObj?.menuId) {
-      console.log("xyz");
       dispatch(
         addResParams({
           resId: resId,
@@ -396,7 +379,6 @@ const PopupCardMenu = ({
       resParamsObj?.resId &&
       resParamsObj?.menuId
     ) {
-      console.log("abc");
       dispatch(
         addResParams({
           resId: resId,
@@ -414,7 +396,6 @@ const PopupCardMenu = ({
       resParamsObj?.resId &&
       resParamsObj?.menuId
     ) {
-      console.log("pqr");
       return;
     }
   };

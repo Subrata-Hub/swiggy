@@ -58,8 +58,6 @@ const SearchPage = () => {
     (userLocationData && userLocationData?.latlng?.LNG) ||
     currentLocation.latlng.LNG;
 
-  console.log(LAT, LNG);
-
   const preSearchData = usePreSearch(LAT, LNG);
 
   const popularCuisinesData = preSearchData?.cards?.[1]?.card?.card;
@@ -86,7 +84,6 @@ const SearchPage = () => {
 
   const isReSetStore = useSelector((store) => store?.search?.isResetStore);
   const resParamsObj = useSelector((store) => store?.search?.resParams);
-  console.log(resParamsObj);
 
   const placeData = useSelector(
     (store) => store.firebaseData?.userLocationData

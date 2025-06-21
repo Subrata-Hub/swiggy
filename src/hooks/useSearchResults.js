@@ -6,8 +6,6 @@ import { BASE_URL, MOBILE_BASE_URL } from "../utils/constant";
 const useSearchResults = (query, setLoading, LAT, LNG, submitAction) => {
   const [searchData, setSearchData] = useState();
 
-  // console.log(suggestionText);
-
   const getSearchData = async () => {
     setLoading(true);
     if (query && query !== "") {

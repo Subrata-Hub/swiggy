@@ -41,8 +41,6 @@ const TagsCollectionPage = () => {
   const preview = tagsDetailData?.[0]?.card?.card;
   const restaurantList = tagsDetailData?.slice(2);
 
-  console.log(tagsDetailData);
-
   // pt-15 m-[140px] mt-0 mb-0
 
   const goToPreviousPage = () => {

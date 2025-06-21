@@ -27,8 +27,6 @@ const useAddToCardSearchResults = (
     }
   };
 
-  console.log(cartSearchResultsData);
-
   useEffect(() => {
     getCardSearchResultsData();
   }, [menuId]);

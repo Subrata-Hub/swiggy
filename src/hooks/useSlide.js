@@ -28,7 +28,6 @@ const useSlide = (listRef, noToShiftCart, gapWidth) => {
       // Get the width of a single item (including margins/gaps if any)
       // You might need to adjust this based on your actual CSS for gap
       const itemWidth = listRef.current.children[0].offsetWidth;
-      console.log(listRef.current?.getBoundingClientRect());
 
       // Assuming sm:gap-4 translates to 16px. Adjust as needed.
       const totalItemWidth = itemWidth + gapWidth;
@@ -38,11 +37,6 @@ const useSlide = (listRef, noToShiftCart, gapWidth) => {
       listRef.current.style.transform = `translateX(-${
         currentSlide * totalItemWidth * noToShiftCart
       }px)`;
-      console.log(
-        (listRef.current.style.transform = `translateX(-${
-          currentSlide * totalItemWidth * noToShiftCart
-        }px)`)
-      );
     }
   }, [currentSlide, listRef, noToShiftCart, gapWidth]); // Add noToShiftCart as dependency
 

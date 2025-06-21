@@ -44,7 +44,6 @@ const Navbar = () => {
 
   const location = useLocation();
   const pathname = location.pathname;
-  console.log(pathname);
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
 

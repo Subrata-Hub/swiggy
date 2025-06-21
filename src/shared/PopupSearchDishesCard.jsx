@@ -33,7 +33,6 @@ const PopupSearchDishesCard = ({
   updatePopupCardRef,
   addUpdateRef,
 }) => {
-  console.log(searchDishesData);
   return (
     <div className="w-[350px] sm:w-[520px] h-auto bg-slate-800 fixed z-[1199955544433333333333] top-24 sm:top-12 right-[5%] sm:right-[34%] rounded-3xl">
       <div className="w-full  h-[200px] sm:h-[400px]">

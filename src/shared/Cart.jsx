@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { CART_IMG, getFormatedPrice } from "../utils/constant";
 import { useEffect, useState, useRef } from "react"; // Import useRef
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 
@@ -22,12 +22,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const location = useLocation();
-  const pathname = location.pathname;
-  console.log(pathname);
-
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
-  console.log("userCartItems from localStorage:", userCartItems);
 
   const subTotal = cartItems
     ?.map((cart) => cart?.menuPrice * cart?.totalMenuItems)
@@ -51,16 +46,13 @@ const Cart = () => {
 
   const cartRef = useRef(null);
 
-  console.log("userCartItems after calculation:", userCartItems);
-
   useEffect(() => {
     const fetchCarts = async () => {
       const carts = await fetchUserCarts(auth?.currentUser?.uid);
-      console.log("User's carts fetched from Firebase:", carts);
+
       const cartResInfo = carts?.[0]?.resInfo; // Be careful here, carts might be empty
 
       carts?.forEach((item) => {
-        console.log(item);
         // This effect now primarily focuses on populating Redux if it's empty or on initial load
         if (!cartItems?.length && item?.cartItems) {
           dispatch(
@@ -79,13 +71,9 @@ const Cart = () => {
       if (cartResInfo && Object.keys(restaurantInfo).length === 0) {
         dispatch(addResInfo(cartResInfo));
       }
-
-      // The totalItems displayed in the SVG is now primarily driven by localStorage
-      console.log("Redux cartItems:", cartItems);
     };
 
     if (auth?.currentUser?.uid && showNavigation) {
-      console.log("carttttttttttttttttttttttttttttttttttttttttttttt");
       fetchCarts();
     }
   }, [

@@ -5,7 +5,7 @@ import useUserFromDB from "../hooks/useUserFromDB";
 
 const RecentLocationSearchCart = ({ getLocationId }) => {
   const userData = useUserFromDB();
-  console.log(userData);
+
   const userDataWithDescription =
     userData?.locations !== undefined &&
     userData?.locations?.filter((item) => item?.description);

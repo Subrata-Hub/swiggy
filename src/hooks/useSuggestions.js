@@ -25,8 +25,6 @@ const useSuggestions = (query, LAT, LNG) => {
     getSuggestionData();
   }, [query]);
 
-  console.log(suggestionData);
-
   return suggestionData;
 };
 

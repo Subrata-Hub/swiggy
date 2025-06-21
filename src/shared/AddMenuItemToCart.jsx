@@ -40,7 +40,6 @@ const AddMenuItemToCart = ({
   const resParamsObj = useSelector((store) => store?.search?.resParams);
 
   const handleShowMenuCardPopup = async () => {
-    console.log(menuInfo);
     if (resMenuItem?.card?.info?.addons || resMenuItem?.info?.addons) {
       if (
         cartItems.length >= 1 &&
@@ -68,8 +67,6 @@ const AddMenuItemToCart = ({
           totalMenuItems: newCounter,
           userId: auth?.currentUser?.uid,
         };
-
-        console.log(cartItemInfo);
 
         const cartId = await createCartAndLinkToUser(
           auth?.currentUser?.uid,

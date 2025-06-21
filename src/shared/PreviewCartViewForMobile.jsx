@@ -34,30 +34,13 @@ const PreviewCartViewForMobile = () => {
       ?.map((item) => item?.totalMenuItems)
       ?.reduce((acc, item) => acc + item, 0) || 0;
 
-  // async function fetchUserCarts(userId) {
-  //   try {
-  //     const cartsCollectionRef = collection(db, "cart");
-  //     const q = query(cartsCollectionRef, where("userId", "==", userId));
-  //     const querySnapshot = await getDocs(q);
-  //     const userCarts = [];
-  //     querySnapshot.forEach((doc) => {
-  //       userCarts.push({ id: doc.id, ...doc.data() });
-  //     });
-  //     return userCarts;
-  //   } catch (error) {
-  //     console.error("Error fetching user carts:", error);
-  //     return []; // Return an empty array in case of an error
-  //   }
-  // }
-
   useEffect(() => {
     const fetchCarts = async () => {
       const carts = await fetchUserCarts(auth?.currentUser?.uid);
-      console.log("User's carts fetched from Firebase:", carts);
+
       const cartResInfo = carts?.[0]?.resInfo; // Be careful here, carts might be empty
 
       carts?.forEach((item) => {
-        console.log(item);
         // This effect now primarily focuses on populating Redux if it's empty or on initial load
         if (!cartItems?.length && item?.cartItems) {
           dispatch(
@@ -76,16 +59,12 @@ const PreviewCartViewForMobile = () => {
       if (cartResInfo && Object.keys(restaurantInfo).length === 0) {
         dispatch(addResInfo(cartResInfo));
       }
-
-      // The totalItems displayed in the SVG is now primarily driven by localStorage
-      console.log("Redux cartItems:", cartItems);
     };
 
     if (
       (auth?.currentUser?.uid || window.innerWidth < 640) &&
       !showNavigation
     ) {
-      console.log("Previewcarttviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
       fetchCarts();
     }
   }, [

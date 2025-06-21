@@ -8,7 +8,7 @@ import {
   addShowNavigation,
   addSuggestionText,
 } from "../utils/configSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiChevronLeft } from "react-icons/hi2";
 import { HiMiniXMark } from "react-icons/hi2";
 
@@ -24,13 +24,10 @@ const Searchbar = ({
   showAddToCardSearchResultsData,
   setShowAddToCardSearchResultsData,
 }) => {
-  const location = useLocation();
-
   const dispatch = useDispatch();
-  const pathname = location.pathname;
+
   const navigate = useNavigate();
 
-  console.log(pathname);
   const showNavigation = useSelector((store) => store.config.showNavigation);
 
   const getSearchQuery = (query) => {

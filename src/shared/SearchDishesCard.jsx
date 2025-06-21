@@ -120,8 +120,6 @@ const SearchDishesCard = ({
     setShowPopup(!showPopup);
   };
 
-  console.log(searchDishesData?.restaurant?.info);
-
   const resInformation = {
     restaurantId: searchDishesData?.restaurant?.info?.id,
     restaurantName: searchDishesData?.restaurant?.info?.name,

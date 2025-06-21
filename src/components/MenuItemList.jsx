@@ -126,14 +126,12 @@ const MenuItemList = ({ resMenu, filterOption, resInformation }) => {
               </div>
               {showSubMenu[subItem?.categoryId] &&
                 subItem?.itemCards?.map((resMenuItem) => (
-                  <>
-                    <div key={resMenuItem?.card?.info?.id} className="">
-                      <MenuItemCard
-                        resMenuItem={resMenuItem}
-                        resInformation={resInformation}
-                      />
-                    </div>
-                  </>
+                  <div key={resMenuItem?.card?.info?.id} className="">
+                    <MenuItemCard
+                      resMenuItem={resMenuItem}
+                      resInformation={resInformation}
+                    />
+                  </div>
                 ))}
             </>
           ))}

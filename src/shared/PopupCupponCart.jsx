@@ -4,6 +4,7 @@ import useCupponCode from "../hooks/useCupponCode";
 import { useState } from "react";
 import { CUPPON_LOGO } from "../utils/constant";
 import { HiMiniXMark } from "react-icons/hi2";
+import Spineer from "./Spineer";
 
 const PopupCupponCart = ({
   restaurantInfo,
@@ -43,10 +44,6 @@ const PopupCupponCart = ({
       item?.cardType === "unavailableCouponCardV2"
   );
 
-  console.log(cupponCards);
-
-  console.log(cupponData);
-
   const handleShowMore = (index) => {
     setShowMore((prev) => ({ ...prev, [index]: !prev[index] }));
   };
@@ -76,7 +73,9 @@ const PopupCupponCart = ({
             {cardMessage?.[0]?.data?.data?.message}
           </div>
 
-          {!loading && (
+          {loading ? (
+            <Spineer loading={loading} />
+          ) : (
             <div className="mb-60">
               {cupponCards?.map((cuppon, index) => (
                 <>

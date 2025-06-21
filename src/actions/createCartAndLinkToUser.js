@@ -12,7 +12,6 @@ const createCartAndLinkToUser = async (userId, cartItemInfo) => {
   const cartCollection = collection(db, "cart");
   const newCartDocRef = await addDoc(cartCollection, cartItemInfo);
   const newCartId = newCartDocRef.id;
-  console.log(newCartId);
 
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
