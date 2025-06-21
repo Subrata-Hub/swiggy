@@ -14,7 +14,11 @@ const RestaurantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const { restaurantId, areaName, restaurantName, location } = useParams();
   const navigate = useNavigate();
+
   // localStorage.removeItem("recent_Search");
+
+  const showNavigation = useSelector((store) => store.config.showNavigation);
+  console.log(showNavigation);
 
   const currentLocation = JSON.parse(localStorage.getItem("current_location"));
   console.log(currentLocation);
@@ -44,19 +48,28 @@ const RestaurantDetailsPage = () => {
     LNG
   );
 
+  console.log(resDetailsData);
+
   const resInformation = {
     restaurantId: restaurantId,
     restaurantName: restaurantName,
     resAreaName: areaName,
     resImg: resDetailsData?.[2]?.card?.card?.info?.cloudinaryImageId,
+    deliveryTime: resDetailsData?.[2]?.card?.card?.info?.sla?.slaString,
+
     menuURL: `/city/${location}/${restaurantName}/${areaName}/${restaurantId}`,
   };
 
   const goToPreviousPage = () => {
     navigate(history.back());
   };
+
   return (
-    <div className="flex flex-col mt-24 mx-2 xs:mx-[30px]  sm:mx-[50px] md:mx-[60px] lg:mx-[120px] xl:mx-[180px] 2xl:mx-[340px]">
+    <div
+      className={`flex flex-col ${
+        showNavigation ? "mt-24" : "mt-6"
+      }  mx-2 xs:mx-[30px]  sm:mx-[50px] md:mx-[60px] lg:mx-[120px] xl:mx-[180px] 2xl:mx-[340px]`}
+    >
       <div className="flex sm:hidden">
         <HiArrowLeft className="text-xl" onClick={goToPreviousPage} />
       </div>

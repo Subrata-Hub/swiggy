@@ -11,6 +11,7 @@ const configSlice = createSlice({
     },
     resItems: [],
     isCheckOutPage: false,
+    showNavigation: true,
   },
 
   reducers: {
@@ -37,6 +38,10 @@ const configSlice = createSlice({
     addIsCheckOutPage: (state, action) => {
       state.isCheckOutPage = action.payload;
     },
+
+    addShowNavigation: (state, action) => {
+      state.showNavigation = action.payload;
+    },
   },
 });
 
@@ -47,5 +52,6 @@ export const {
   addIsSelected,
   addResItem,
   addIsCheckOutPage,
+  addShowNavigation,
 } = configSlice.actions;
 export default configSlice.reducer;

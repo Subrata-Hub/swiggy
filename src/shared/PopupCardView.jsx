@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addIsCheckOutPage } from "../utils/configSlice";
+import { addIsCheckOutPage, addShowNavigation } from "../utils/configSlice";
 
 const PopupCardView = () => {
   const dispatch = useDispatch();
@@ -9,6 +9,9 @@ const PopupCardView = () => {
   const handleCheckPage = () => {
     navigate("/checkout");
     dispatch(addIsCheckOutPage(true));
+    if (window.innerWidth < 640) {
+      dispatch(addShowNavigation(false));
+    }
   };
   return (
     <div className="flex justify-center" onClick={handleCheckPage}>

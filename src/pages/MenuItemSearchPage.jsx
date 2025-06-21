@@ -12,6 +12,7 @@ const MenuItemSearchPage = () => {
   const [menuItems, setMenuItems] = useState();
 
   const query = useSelector((store) => store?.menuSearch?.menuSearchQuery);
+  const showNavigation = useSelector((store) => store.config.showNavigation);
 
   useEffect(() => {
     if (!query) {
@@ -37,7 +38,11 @@ const MenuItemSearchPage = () => {
   };
 
   return (
-    <div className="mt-32 mx-2 xs:mx-[30px]  sm:mx-[50px] md:mx-[60px] lg:mx-[120px] xl:mx-[180px] 2xl:mx-[340px]">
+    <div
+      className={`${
+        showNavigation ? "mt-32" : "mt-10"
+      } mx-2 xs:mx-[30px]  sm:mx-[50px] md:mx-[60px] lg:mx-[120px] xl:mx-[180px] 2xl:mx-[340px]`}
+    >
       <MenuSearchBar
         restaurantName={restaurantName}
         restaurantId={restaurantId}

@@ -16,6 +16,7 @@ export const UNSERVICEABLE_IMG = `https://media-assets.swiggy.com/swiggy/image/u
 export const LOGIN_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r`;
 export const TOP_PIC_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/`;
 export const CUPPON_LOGO = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_40,h_40/`;
+export const TAG_BANAR_IMG = `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_900/`;
 export const LAT = 22.5743545;
 export const LNG = 88.3628734;
 

@@ -30,8 +30,6 @@ const Menu = ({
     setActiveOption(value);
   };
 
-  console.log(resDetailsData);
-
   const resMenuData = resDetailsData?.filter(
     (item) =>
       item?.card?.card?.["@type"] ===

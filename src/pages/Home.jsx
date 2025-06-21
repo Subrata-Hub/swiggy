@@ -19,11 +19,17 @@ import { signInAnonymously } from "firebase/auth";
 import { addUserData, addUserLocationData } from "../utils/firebaseDataSlice";
 import PreviewCartViewForMobile from "../shared/PreviewCartViewForMobile";
 import MobileNavigation from "../components/MobileNavigation";
+import { addShowNavigation } from "../utils/configSlice";
 
 const HomePage = () => {
   console.log("HomePage component mounted"); // Check for multiple mounts
   localStorage.removeItem("recent_Search");
+
   const dispatch = useDispatch();
+
+  if (window.innerWidth < 640) {
+    dispatch(addShowNavigation(true));
+  }
 
   const createNewLocationAndLinkToUser = async (userId, locationData) => {
     try {

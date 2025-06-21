@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useDispatch } from "react-redux";
-import { reSetStore } from "../utils/cartSlice";
+import { addCartItems, addResInfo, reSetStore } from "../utils/cartSlice";
 
 import { auth } from "../utils/firebase";
 import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
@@ -50,7 +50,23 @@ const PopupResetCard = ({
 
       console.log(cartItemInfo);
 
-      await createCartAndLinkToUser(auth?.currentUser?.uid, cartItemInfo);
+      const cartId = await createCartAndLinkToUser(
+        auth?.currentUser?.uid,
+        cartItemInfo
+      );
+      if (window.innerWidth < 640 && location.pathname !== "/search") {
+        const updateStore = {
+          ...preservedMenuInfo,
+          totalMenuItems: 1,
+          userId: auth.currentUser.uid,
+          // addonsList: coustomizedItems,
+          // selectedAddons: selectedAddons,
+        };
+
+        dispatch(addResInfo(preservedResInfo)); // Update the restaurant info in Redux
+
+        dispatch(addCartItems({ ...updateStore, cartId }));
+      }
       setShowResetCardPopup(false);
 
       dispatch(

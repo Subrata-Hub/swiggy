@@ -1,9 +1,13 @@
 /* eslint-disable react/prop-types */
 
 import { HiMagnifyingGlass } from "react-icons/hi2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { addSearchActionType, addSuggestionText } from "../utils/configSlice";
+import {
+  addSearchActionType,
+  addShowNavigation,
+  addSuggestionText,
+} from "../utils/configSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HiChevronLeft } from "react-icons/hi2";
 import { HiMiniXMark } from "react-icons/hi2";
@@ -27,6 +31,7 @@ const Searchbar = ({
   const navigate = useNavigate();
 
   console.log(pathname);
+  const showNavigation = useSelector((store) => store.config.showNavigation);
 
   const getSearchQuery = (query) => {
     setSearchQueryInput(query);
@@ -41,6 +46,9 @@ const Searchbar = ({
     dispatch(addSearchActionType("ENTER"));
     setShowSuggestion(false);
     setShowSearchIcon(false);
+    if (window.innerWidth < 640) {
+      dispatch(addShowNavigation(false));
+    }
   };
 
   const backToSearchPage = () => {
@@ -56,6 +64,10 @@ const Searchbar = ({
       setShowSuggestion(true);
       setShowSearchIcon(true);
       setShowBackToSearchIcon(false);
+
+      if (window.innerWidth < 640) {
+        dispatch(addShowNavigation(false));
+      }
     }
   };
 
@@ -68,7 +80,11 @@ const Searchbar = ({
 
   return (
     // Apply fixed positioning and z-index to the parent container
-    <div className="fixed bg-slate-800 top-28 left-1/2 -translate-x-1/2 w-full sm:w-[600px] md:w-[710px] lg:w-[925px] xl:w-[980px] 2xl:w-[945px]  flex items-center z-[24524114] px-1 sm:px-0 border-2 border-slate-700">
+    <div
+      className={`fixed bg-slate-800 ${
+        showNavigation ? "top-28" : "top-6"
+      } left-1/2 -translate-x-1/2 w-full sm:w-[600px] md:w-[710px] lg:w-[925px] xl:w-[980px] 2xl:w-[945px]  flex items-center z-[24524114] px-1 sm:px-0 border-2 border-slate-700`}
+    >
       <input
         type="search"
         value={searchQueryInput}

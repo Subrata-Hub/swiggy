@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { CART_IMG, getFormatedPrice } from "../utils/constant";
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import veg from "../assets/veg.svg";
 import nonVeg from "../assets/nonVeg.svg";
 
@@ -14,6 +14,7 @@ import useOutSideClick from "../hooks/useOutsideClick";
 import PopupUpdateCard from "./PopupUpdateCard";
 import { CiDiscount1 } from "react-icons/ci";
 import PopupCupponCart from "./PopupCupponCart";
+import { HiArrowLeft } from "react-icons/hi2";
 
 const CheckOutCart = () => {
   // --- REFACTORED STATE ---
@@ -31,6 +32,7 @@ const CheckOutCart = () => {
   const restaurantInfo = useSelector((state) => state.cart.resInfo);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
+  const showNavigation = useSelector((store) => store.config.showNavigation);
 
   const cupponCartRef = useRef(null);
   const cupponButtonRef = useRef(null);
@@ -41,6 +43,7 @@ const CheckOutCart = () => {
   // For simplicity, I've kept the logic but you might need to adjust based on final layout.
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const subTotal = cartItems
     ?.map((cart) => cart?.menuPrice * cart?.totalMenuItems)
@@ -109,46 +112,76 @@ const CheckOutCart = () => {
     setShowPopupCupponCart(true);
   };
 
+  const goToPreviousPage = () => {
+    navigate(history.back());
+  };
+
   return (
     <div>
       {(cartItems?.length > 0 || userCartItems?.cartItems?.length > 0) && (
         <div className="w-[400px] h-auto bg-slate-900 border-2 border-slate-800 shadow-xl shadow-slate-800 relative">
           <div className="p-6">
-            <div className="flex flex-col fixed z-100">
-              <div className="flex gap-4">
-                <div className="w-[60px] h-[60px]">
-                  <img
-                    src={
-                      CART_IMG +
-                      (restaurantInfo?.resImg ||
-                        userCartItems?.cartResInfo?.resImg)
-                    }
-                    className="w-[60px] h-[60px] object-cover"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h1 className="font-bold">
-                    {restaurantInfo?.restaurantName ||
-                      userCartItems?.cartResInfo?.restaurantName}
-                  </h1>
-                  <p className="font-light text-sm">
-                    {restaurantInfo?.resAreaName ||
-                      userCartItems?.cartResInfo?.resAreaName}
-                  </p>
-                  <Link
-                    to={
-                      restaurantInfo?.menuURL
-                        ? restaurantInfo?.menuURL
-                        : userCartItems?.cartResInfo?.menuURL
-                    }
-                  >
-                    <div className="mt-2 w-20 h-1 bg-amber-600"></div>
-                  </Link>
+            {showNavigation && (
+              <div className="flex flex-col  fixed z-100">
+                <div className="flex gap-4">
+                  <div className="w-[60px] h-[60px]">
+                    <img
+                      src={
+                        CART_IMG +
+                        (restaurantInfo?.resImg ||
+                          userCartItems?.cartResInfo?.resImg)
+                      }
+                      className="w-[60px] h-[60px] object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <h1 className="font-bold">
+                      {restaurantInfo?.restaurantName ||
+                        userCartItems?.cartResInfo?.restaurantName}
+                    </h1>
+                    <p className="font-light text-sm">
+                      {restaurantInfo?.resAreaName ||
+                        userCartItems?.cartResInfo?.resAreaName}
+                    </p>
+                    <Link
+                      to={
+                        restaurantInfo?.menuURL
+                          ? restaurantInfo?.menuURL
+                          : userCartItems?.cartResInfo?.menuURL
+                      }
+                    >
+                      <div className="mt-2 w-20 h-1 bg-amber-600"></div>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-full h-[0.5px] bg-slate-700 mt-20"></div>
+            )}
+
+            {!showNavigation && (
+              <div className="flex gap-4 items-center fixed z-100">
+                <div className="">
+                  <HiArrowLeft className="text-xl" onClick={goToPreviousPage} />
+                </div>
+
+                <div>
+                  <h2>
+                    {restaurantInfo?.restaurantName ||
+                      userCartItems?.cartResInfo?.restaurantName}
+                  </h2>
+                  <p>
+                    {cartItems?.length || userCartItems?.length} Item |ETA{" "}
+                    {restaurantInfo?.deliveryTime ||
+                      userCartItems?.cartResInfo?.deliveryTime}{" "}
+                  </p>
+                </div>
+              </div>
+            )}
+            <div
+              className={`w-full h-[0.5px] bg-slate-700 ${
+                showNavigation ? "mt-20" : "mt-15"
+              }`}
+            ></div>
 
             {/* --- CART ITEMS LIST --- */}
             <div className="w-full max-h-[350px] overflow-hidden overflow-y-scroll hide-scrollbar">

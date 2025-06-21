@@ -24,6 +24,7 @@ import useSearchResultsForEnter from "../hooks/useSearchResultsForEnter";
 import ResentResSearchList from "../components/ResentResSearchList";
 import PreviewCartViewForMobile from "../shared/PreviewCartViewForMobile";
 import MobileNavigation from "../components/MobileNavigation";
+import { addShowNavigation } from "../utils/configSlice";
 
 const SearchPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
@@ -148,8 +149,6 @@ const SearchPage = () => {
     LNG
   );
 
-  console.log(addToCardSearchResults);
-
   const getRefineData = (data) => {
     const refineSearchResultsData = data?.cards?.filter(
       (item) =>
@@ -174,6 +173,9 @@ const SearchPage = () => {
       dispatch(addIsResetStore(true));
       // setShowSearchIcon(false);
       // setShowBackToSearchIcon(true);
+      if (window.innerWidth < 640) {
+        dispatch(addShowNavigation(false));
+      }
     }
   }, [searchResultsData, location.pathname, dispatch]);
 
@@ -182,6 +184,9 @@ const SearchPage = () => {
       setSearchResultsRefineData(getRefineData(searchResultsDataForEnter));
       setShowBackToSearchIcon(true);
       setShowSearchIcon(false);
+      if (window.innerWidth < 640) {
+        dispatch(addShowNavigation(false));
+      }
     }
   }, [searchResultsDataForEnter, location.pathname]);
 

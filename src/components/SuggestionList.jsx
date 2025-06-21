@@ -2,7 +2,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { IMG_SUGGESTION } from "../utils/constant";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addResItem,
   addSearchActionType,
@@ -26,6 +26,7 @@ const SuggestionList = ({
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
 
   const searchSuggestions = searchSuggestionsData?.suggestions;
+  const showNavigation = useSelector((store) => store.config.showNavigation);
 
   function addResItemToLocalStorage(Item) {
     let resSearchArray;
@@ -101,7 +102,9 @@ const SuggestionList = ({
   // px-40
 
   return (
-    <div className="pt-40 ml-3 relative z-[0]">
+    <div
+      className={`${!showNavigation ? "pt-16" : "pt-40"} ml-3 relative z-[0]`}
+    >
       {showSuggestion &&
         searchQueryInput !== "" &&
         searchQueryInput !== currentSearch?.suggestionText && (

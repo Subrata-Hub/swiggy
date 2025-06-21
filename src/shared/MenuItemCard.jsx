@@ -38,8 +38,6 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
   const userCartItems = JSON.parse(localStorage.getItem("cart_items"));
 
-  console.log(userCartItems);
-
   const cartItems = useSelector((state) => state.cart.cartItems);
   const menuItem = cartItems.find(
     (item) => item.menuId === resMenuItem?.card?.info?.id
@@ -139,8 +137,6 @@ const MenuItemCard = ({ resMenuItem, resInformation }) => {
 
     addons: resMenuItem?.card?.info?.addons || [],
   };
-
-  console.log(menuInfo);
 
   return (
     <>

@@ -120,11 +120,14 @@ const SearchDishesCard = ({
     setShowPopup(!showPopup);
   };
 
+  console.log(searchDishesData?.restaurant?.info);
+
   const resInformation = {
     restaurantId: searchDishesData?.restaurant?.info?.id,
     restaurantName: searchDishesData?.restaurant?.info?.name,
     resAreaName: searchDishesData?.restaurant?.info?.locality,
     resImg: searchDishesData?.restaurant?.info?.cloudinaryImageId,
+    deliveryTime: searchDishesData?.restaurant?.info?.sla?.slaString,
     menuURL: `/city/${city}/${searchDishesData?.restaurant?.info?.name}/${searchDishesData?.restaurant?.info?.locality}/${searchDishesData?.restaurant?.info?.id}`,
   };
 

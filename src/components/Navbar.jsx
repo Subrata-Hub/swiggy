@@ -24,7 +24,7 @@ import { signOut } from "firebase/auth";
 
 import { addUserData } from "../utils/firebaseDataSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { addIsCheckOutPage } from "../utils/configSlice";
+import { addIsCheckOutPage, addShowNavigation } from "../utils/configSlice";
 
 const Navbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -52,6 +52,7 @@ const Navbar = () => {
     (store) => store.firebaseData?.userLocationData
   );
   const isCheckOutPage = useSelector((store) => store.config.isCheckOutPage);
+  const showNavigation = useSelector((store) => store.config.showNavigation);
 
   useOutSideClick(
     logInRef,
@@ -200,93 +201,100 @@ const Navbar = () => {
   const goToHomePage = () => {
     navigate("/");
     dispatch(addIsCheckOutPage(false));
+    if (window.innerWidth < 640) {
+      dispatch(addShowNavigation(true));
+    }
   };
 
   return (
     <div className="w-full  bg-slate-900 border-b-2 border-b-gray-800  fixed z-[2000000565555]">
-      <div className="mx-3 xs:px-4 sm:px-4 md:px-[6px] lg:px-[20px] xl:px-[120px] h-20 flex items-center justify-between">
-        <div className="flex-col">
-          <div className="flex gap-2 -mt-2 sm:mt-0 sm:gap-6 items-center justify-between ">
-            <div className="" onClick={goToHomePage}>
-              <img
-                src={Logo}
-                alt="logo"
-                className="hidden sm:flex sm:w-10 md:w-12"
-                loading="lazy"
-              />
-              <Link to={"/"}>
-                {/* <img src={Logo} alt="logo" className="flex sm:hidden w-12" /> */}
-                <HiHome className="flex sm:hidden text-3xl" />
-              </Link>
-            </div>
+      {showNavigation && (
+        <>
+          <div className="mx-3 xs:px-4 sm:px-4 md:px-[6px] lg:px-[20px] xl:px-[120px] h-20 flex items-center justify-between">
+            <div className="flex-col">
+              <div className="flex gap-2 -mt-2 sm:mt-0 sm:gap-6 items-center justify-between ">
+                <div className="" onClick={goToHomePage}>
+                  <img
+                    src={Logo}
+                    alt="logo"
+                    className="hidden sm:flex sm:w-10 md:w-12"
+                    loading="lazy"
+                  />
+                  <Link to={"/"}>
+                    {/* <img src={Logo} alt="logo" className="flex sm:hidden w-12" /> */}
+                    <HiHome className="flex sm:hidden text-3xl" />
+                  </Link>
+                </div>
 
-            {!isCheckOutPage ? <Locationbar /> : <div>Secure Checkout</div>}
-          </div>
-        </div>
-
-        <div className="flex items-center sm:gap-6 md:gap-8 lg:gap-14">
-          {!isCheckOutPage && (
-            <div
-              className="hidden sm:flex justify-center items-center gap-2 cursor-pointer"
-              onClick={goToSearchBar}
-            >
-              <HiOutlineSearch className="text-2xl" />
-              <span className="text-[18px]">Search</span>
-            </div>
-          )}
-          <div
-            className="flex"
-            onClick={() => setShowLoginPopup(true)}
-            ref={logBtnRef}
-          >
-            <div
-              ref={profileBtnRef}
-              onMouseOver={() => setShowProfileCard(true)}
-              className="flex items-center gap-2"
-            >
-              <HiOutlineUserCircle className="text-5xl sm:text-2xl" />{" "}
-              {userData?.name && userData?.name !== null ? (
-                <span className="hidden sm:flex">{userData?.name}</span>
-              ) : (
-                <span className="hidden sm:flex">Sign In</span>
-              )}
-              {/* <span>Sign In</span> */}
-            </div>
-          </div>
-          {showLoginPopup && (
-            <>
-              <div className="overlay"></div>
-
-              <Login
-                setShowLoginPopup={setShowLoginPopup}
-                logInRef={logInRef}
-                onContinue={handleContinueClick}
-                handleContineueafterSignIn={handleContineueafterSignIn}
-              />
-            </>
-          )}
-
-          {showProfileCard &&
-            !showLoginPopup &&
-            userData &&
-            !userData?.isAnonymous && (
-              <div
-                className="w-32 h-10 bg-slate-800 fixed top-15 right-[250px] z-[23161365] text-center"
-                onClick={handleUserSignOut}
-                onMouseLeave={() => setShowProfileCard(false)}
-                ref={profileRef}
-              >
-                SignOut
+                {!isCheckOutPage ? <Locationbar /> : <div>Secure Checkout</div>}
               </div>
-            )}
+            </div>
 
-          {!isCheckOutPage && <Cart />}
-        </div>
-      </div>
-      <div className="flex sm:hidden ml-4 -mt-6 max-w-[250px] sm:mt-0 text-[13px] font-light truncate ">
-        {userLocationData?.place?.description ||
-          currentLocation?.place?.description}
-      </div>
+            <div className="flex items-center sm:gap-6 md:gap-8 lg:gap-14">
+              {!isCheckOutPage && (
+                <div
+                  className="hidden sm:flex justify-center items-center gap-2 cursor-pointer"
+                  onClick={goToSearchBar}
+                >
+                  <HiOutlineSearch className="text-2xl" />
+                  <span className="text-[18px]">Search</span>
+                </div>
+              )}
+              <div
+                className="flex"
+                onClick={() => setShowLoginPopup(true)}
+                ref={logBtnRef}
+              >
+                <div
+                  ref={profileBtnRef}
+                  onMouseOver={() => setShowProfileCard(true)}
+                  className="flex items-center gap-2"
+                >
+                  <HiOutlineUserCircle className="text-5xl sm:text-2xl" />{" "}
+                  {userData?.name && userData?.name !== null ? (
+                    <span className="hidden sm:flex">{userData?.name}</span>
+                  ) : (
+                    <span className="hidden sm:flex">Sign In</span>
+                  )}
+                  {/* <span>Sign In</span> */}
+                </div>
+              </div>
+              {showLoginPopup && (
+                <>
+                  <div className="overlay"></div>
+
+                  <Login
+                    setShowLoginPopup={setShowLoginPopup}
+                    logInRef={logInRef}
+                    onContinue={handleContinueClick}
+                    handleContineueafterSignIn={handleContineueafterSignIn}
+                  />
+                </>
+              )}
+
+              {showProfileCard &&
+                !showLoginPopup &&
+                userData &&
+                !userData?.isAnonymous && (
+                  <div
+                    className="w-32 h-10 bg-slate-800 fixed top-15 right-[250px] z-[23161365] text-center"
+                    onClick={handleUserSignOut}
+                    onMouseLeave={() => setShowProfileCard(false)}
+                    ref={profileRef}
+                  >
+                    SignOut
+                  </div>
+                )}
+
+              {!isCheckOutPage && <Cart />}
+            </div>
+          </div>
+          <div className="flex sm:hidden ml-4 -mt-6 max-w-[250px] sm:mt-0 text-[13px] font-light truncate ">
+            {userLocationData?.place?.description ||
+              currentLocation?.place?.description}
+          </div>
+        </>
+      )}
     </div>
   );
 };

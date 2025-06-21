@@ -41,6 +41,7 @@ const SearchResults = ({
   );
 
   const currentSearch = JSON.parse(localStorage.getItem("recent_Search"));
+  const showNavigation = useSelector((store) => store.config.showNavigation);
 
   const searchResultsForDishes = searchResultsRefineData?.DISH?.cards?.filter(
     (dish) =>
@@ -114,7 +115,7 @@ const SearchResults = ({
             <SearchResultShimmer />
           ) : (
             <>
-              <div className="flex pt-1 gap-4 fixed z-[24524114]">
+              <div className="flex pt-3 sm:pt-2 gap-4 fixed z-[24524114]">
                 {searchResultsRefineData &&
                   searchResultsHeader?.[0].card?.card?.tab?.map((btn) => (
                     <div key={btn?.id}>
@@ -134,11 +135,21 @@ const SearchResults = ({
                   ))}
               </div>
 
-              <div
-                className={`fixed w-[950px] ${
-                  !showSuggestion ? "py-28" : "py-20"
-                } bg-slate-950 top-0 z-[2000001]`}
-              ></div>
+              {showNavigation && (
+                <div
+                  className={`fixed w-[950px] ${
+                    !showSuggestion ? "py-28" : "py-20"
+                  } bg-slate-950 top-0 z-[2000001]`}
+                ></div>
+              )}
+
+              {!showNavigation && (
+                <div
+                  className={`fixed w-[950px] ${
+                    !showNavigation ? "py-18" : "py-0"
+                  } bg-slate-950 top-0 z-[2000001]`}
+                ></div>
+              )}
 
               <div
                 className={`flex ${

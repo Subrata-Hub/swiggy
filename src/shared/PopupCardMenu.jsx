@@ -14,6 +14,7 @@ import createCartAndLinkToUser from "../actions/createCartAndLinkToUser";
 import { auth } from "../utils/firebase";
 import deleteAllUserCarts from "../actions/deleteAllUserCarts";
 import updateCardItemAndFirestore from "../actions/updateCardItemAndFirestore";
+import { addShowNavigation } from "../utils/configSlice";
 
 const PopupCardMenu = ({
   searchDishesData,
@@ -185,17 +186,39 @@ const PopupCardMenu = ({
           selectedAddons: selectedAddons,
         };
 
-        await createCartAndLinkToUser(auth?.currentUser?.uid, updatedCardInfo);
+        const newCartId = await createCartAndLinkToUser(
+          auth?.currentUser?.uid,
+          updatedCardInfo
+        );
+
+        if (window.innerWidth < 640 && location.pathname !== "/search") {
+          const updateStore = {
+            ...preservedMenuInfo,
+            totalMenuItems: 1,
+            userId: auth.currentUser.uid,
+            addonsList: coustomizedItems,
+            selectedAddons: selectedAddons,
+          };
+
+          dispatch(addResInfo(preservedResInfo)); // Update the restaurant info in Redux
+
+          dispatch(addCartItems({ ...updateStore, newCartId }));
+        }
 
         setShowMenuCardPopup(false);
         setShowPopupBeforeReset(false);
-        setShowAddToCardSearchResultsData(true);
+
         dispatch(
           addResParams({
             resId: preservedResInfo?.restaurantId,
             menuId: preservedMenuInfo?.menuId,
           })
         );
+
+        setShowAddToCardSearchResultsData(true);
+
+        // dispatch(addShowNavigation(false));
+
         //
       } else if (
         showMenuCardPopupBeforeUpdate &&
@@ -361,8 +384,13 @@ const PopupCardMenu = ({
           menuId: menuId,
         })
       );
+      if (window.innerWidth < 640) {
+        dispatch(addShowNavigation(false));
+      }
       toast(`Add item to the card from ${resInformation.restaurantName}`);
+
       setShowAddToCardSearchResultsData(true);
+      // dispatch(addShowNavigation(false));
     } else if (
       !showAddToCardSearchResultsData &&
       resParamsObj?.resId &&
@@ -375,6 +403,9 @@ const PopupCardMenu = ({
           menuId: menuId,
         })
       );
+      if (window.innerWidth < 640) {
+        dispatch(addShowNavigation(false));
+      }
       toast(`Add item to the card from ${resInformation.restaurantName}`);
 
       setShowAddToCardSearchResultsData(true);
